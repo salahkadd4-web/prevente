@@ -9,81 +9,26 @@
 * 🟢 You can import this file directly.
 */
 
-export const aal_level = {
-  aal1: 'aal1',
-  aal2: 'aal2',
-  aal3: 'aal3'
+export const SaleUnit = {
+  carton: 'carton',
+  sachet: 'sachet',
+  triplette: 'triplette',
+  pot: 'pot',
+  boite: 'boite',
+  bouteille: 'bouteille',
+  unite: 'unite'
 } as const
 
-export type aal_level = (typeof aal_level)[keyof typeof aal_level]
+export type SaleUnit = (typeof SaleUnit)[keyof typeof SaleUnit]
 
 
-export const code_challenge_method = {
-  s256: 's256',
-  plain: 'plain'
+export const OrderStatus = {
+  brouillon: 'brouillon',
+  en_attente: 'en_attente',
+  assignee: 'assignee',
+  en_livraison: 'en_livraison',
+  livree: 'livree',
+  annulee: 'annulee'
 } as const
 
-export type code_challenge_method = (typeof code_challenge_method)[keyof typeof code_challenge_method]
-
-
-export const factor_status = {
-  unverified: 'unverified',
-  verified: 'verified'
-} as const
-
-export type factor_status = (typeof factor_status)[keyof typeof factor_status]
-
-
-export const factor_type = {
-  totp: 'totp',
-  webauthn: 'webauthn',
-  phone: 'phone',
-  recovery_code: 'recovery_code'
-} as const
-
-export type factor_type = (typeof factor_type)[keyof typeof factor_type]
-
-
-export const oauth_authorization_status = {
-  pending: 'pending',
-  approved: 'approved',
-  denied: 'denied',
-  expired: 'expired'
-} as const
-
-export type oauth_authorization_status = (typeof oauth_authorization_status)[keyof typeof oauth_authorization_status]
-
-
-export const oauth_client_type = {
-  public: 'public',
-  confidential: 'confidential'
-} as const
-
-export type oauth_client_type = (typeof oauth_client_type)[keyof typeof oauth_client_type]
-
-
-export const oauth_registration_type = {
-  dynamic: 'dynamic',
-  manual: 'manual'
-} as const
-
-export type oauth_registration_type = (typeof oauth_registration_type)[keyof typeof oauth_registration_type]
-
-
-export const oauth_response_type = {
-  code: 'code'
-} as const
-
-export type oauth_response_type = (typeof oauth_response_type)[keyof typeof oauth_response_type]
-
-
-export const one_time_token_type = {
-  confirmation_token: 'confirmation_token',
-  reauthentication_token: 'reauthentication_token',
-  recovery_token: 'recovery_token',
-  email_change_token_new: 'email_change_token_new',
-  email_change_token_current: 'email_change_token_current',
-  phone_change_token: 'phone_change_token'
-} as const
-
-export type one_time_token_type = (typeof one_time_token_type)[keyof typeof one_time_token_type]
+export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]

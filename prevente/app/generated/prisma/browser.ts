@@ -18,168 +18,69 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
- * Model audit_log_entries
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ * Model Profile
+ * public.profiles — table existante, colonnes inchangées.
+ * `role` reste une chaîne ("admin" | "vendeur" | "livreur") pour ne pas modifier
+ * la table existante ; la valeur est validée côté serveur (lib/auth/roles.ts).
  */
-export type audit_log_entries = Prisma.audit_log_entriesModel
+export type Profile = Prisma.ProfileModel
 /**
- * Model custom_oauth_providers
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- */
-export type custom_oauth_providers = Prisma.custom_oauth_providersModel
-/**
- * Model flow_state
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type flow_state = Prisma.flow_stateModel
-/**
- * Model identities
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type identities = Prisma.identitiesModel
-/**
- * Model instances
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type instances = Prisma.instancesModel
-/**
- * Model mfa_amr_claims
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type mfa_amr_claims = Prisma.mfa_amr_claimsModel
-/**
- * Model mfa_challenges
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type mfa_challenges = Prisma.mfa_challengesModel
-/**
- * Model mfa_factors
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type mfa_factors = Prisma.mfa_factorsModel
-/**
- * Model mfa_recovery_code_sets
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- */
-export type mfa_recovery_code_sets = Prisma.mfa_recovery_code_setsModel
-/**
- * Model mfa_recovery_codes
+ * Model Category
  * 
  */
-export type mfa_recovery_codes = Prisma.mfa_recovery_codesModel
+export type Category = Prisma.CategoryModel
 /**
- * Model oauth_authorizations
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- */
-export type oauth_authorizations = Prisma.oauth_authorizationsModel
-/**
- * Model oauth_client_states
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- */
-export type oauth_client_states = Prisma.oauth_client_statesModel
-/**
- * Model oauth_clients
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- */
-export type oauth_clients = Prisma.oauth_clientsModel
-/**
- * Model oauth_consents
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- */
-export type oauth_consents = Prisma.oauth_consentsModel
-/**
- * Model one_time_tokens
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type one_time_tokens = Prisma.one_time_tokensModel
-/**
- * Model refresh_tokens
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type refresh_tokens = Prisma.refresh_tokensModel
-/**
- * Model saml_providers
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type saml_providers = Prisma.saml_providersModel
-/**
- * Model saml_relay_states
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type saml_relay_states = Prisma.saml_relay_statesModel
-/**
- * Model schema_migrations
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- */
-export type schema_migrations = Prisma.schema_migrationsModel
-/**
- * Model scim_tokens
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- */
-export type scim_tokens = Prisma.scim_tokensModel
-/**
- * Model scim_users
+ * Model Product
  * 
  */
-export type scim_users = Prisma.scim_usersModel
+export type Product = Prisma.ProductModel
 /**
- * Model sessions
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ * Model ProductVariant
+ * Un parfum/variante d'un produit (ex. Biscuit -> Chocolat). Le stock et les
+ * lignes de commande se rattachent à la variante, pas au produit parent.
+ * Seules les références Cloudinary sont stockées (jamais le fichier).
  */
-export type sessions = Prisma.sessionsModel
+export type ProductVariant = Prisma.ProductVariantModel
 /**
- * Model sso_domains
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- * This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
+ * Model StockLot
+ * FEFO : le serveur prélève dans l'ordre expiresAt ASC (NULLS LAST), puis
+ * receivedAt ASC, parmi les lots où availableQuantity > 0.
+ * Alerte « expire bientôt » : expiresAt <= (aujourd'hui + 3 mois).
+ * Les décrémentations se font côté serveur, en transaction.
  */
-export type sso_domains = Prisma.sso_domainsModel
+export type StockLot = Prisma.StockLotModel
 /**
- * Model sso_providers
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- * This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
- */
-export type sso_providers = Prisma.sso_providersModel
-/**
- * Model users
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
- * This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
- */
-export type users = Prisma.usersModel
-/**
- * Model webauthn_challenges
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- */
-export type webauthn_challenges = Prisma.webauthn_challengesModel
-/**
- * Model webauthn_credentials
+ * Model Customer
  * 
  */
-export type webauthn_credentials = Prisma.webauthn_credentialsModel
+export type Customer = Prisma.CustomerModel
 /**
- * Model profiles
- * This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
- * This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+ * Model CustomerPhoto
+ * Photos privées de la boutique (aide à la reconnaissance par le livreur).
+ * Supprimer une ligne ne supprime jamais le client. Le fichier Cloudinary est
+ * supprimé par une route serveur sécurisée AVANT de supprimer la ligne.
  */
-export type profiles = Prisma.profilesModel
+export type CustomerPhoto = Prisma.CustomerPhotoModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel
+/**
+ * Model OrderItem
+ * 
+ */
+export type OrderItem = Prisma.OrderItemModel
+/**
+ * Model OrderStatusHistory
+ * Journal append-only des changements de statut.
+ */
+export type OrderStatusHistory = Prisma.OrderStatusHistoryModel
+/**
+ * Model OrderAssignment
+ * Historique des affectations. Affectation courante = unassignedAt IS NULL
+ * (au plus une par commande, garanti par l'index unique partiel).
+ * Une réaffectation clôture l'ancienne ligne (unassignedAt) puis en crée une
+ * nouvelle, dans une même transaction.
+ */
+export type OrderAssignment = Prisma.OrderAssignmentModel

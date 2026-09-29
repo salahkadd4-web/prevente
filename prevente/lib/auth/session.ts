@@ -78,3 +78,16 @@ export async function requireRole(role: Role): Promise<Profile> {
   if (state.profile.role !== role) redirect(ROLE_HOME[state.profile.role]);
   return state.profile;
 }
+
+/**
+ * À appeler en tête de CHAQUE Server Action admin : une action est joignable
+ * par POST direct, la protection de la page ne suffit pas. Lève une erreur
+ * (pas de redirection) si l'appelant n'est pas un admin actif.
+ */
+export async function requireAdminAction(): Promise<Profile> {
+  const state = await getSessionState();
+  if (state.status !== "ok" || state.profile.role !== "admin") {
+    throw new Error("Accès refusé");
+  }
+  return state.profile;
+}
