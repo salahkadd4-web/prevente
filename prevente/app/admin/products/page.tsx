@@ -1,5 +1,6 @@
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
+import CollapsibleSection from "@/components/collapsible-section";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
 import { requireRole } from "@/lib/auth/session";
 import ConfirmButton from "@/components/confirm-button";
@@ -83,7 +84,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/products"
   return (
     <AdminShell current="products" title="Produits et parfums">
       <section className={cardCls}>
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">Nouveau produit</h2>
+        <CollapsibleSection label="Ajouter un produit">
         <ActionForm action={createProduct} className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="p-name" className={labelCls}>Nom (ex. Biscuit)</label>
@@ -110,6 +111,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/products"
             <button type="submit" className={btnPrimary}>Ajouter le produit</button>
           </div>
         </ActionForm>
+        </CollapsibleSection>
       </section>
 
       <section className={cardCls}>

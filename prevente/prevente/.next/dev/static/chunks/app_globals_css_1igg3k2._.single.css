@@ -417,10 +417,6 @@
     right: var(--spacing);
   }
 
-  .right-2 {
-    right: calc(var(--spacing) * 2);
-  }
-
   .mx-auto {
     margin-inline: auto;
   }
@@ -505,10 +501,6 @@
     display: none;
   }
 
-  .inline {
-    display: inline;
-  }
-
   .inline-flex {
     display: inline-flex;
   }
@@ -519,10 +511,6 @@
 
   .aspect-square {
     aspect-ratio: 1;
-  }
-
-  .h-4 {
-    height: calc(var(--spacing) * 4);
   }
 
   .h-5 {
@@ -585,20 +573,12 @@
     width: 33.3333%;
   }
 
-  .w-4 {
-    width: calc(var(--spacing) * 4);
-  }
-
   .w-5 {
     width: calc(var(--spacing) * 5);
   }
 
   .w-6 {
     width: calc(var(--spacing) * 6);
-  }
-
-  .w-8 {
-    width: calc(var(--spacing) * 8);
   }
 
   .w-10 {
@@ -641,24 +621,12 @@
     max-width: var(--container-md);
   }
 
-  .min-w-0 {
-    min-width: 0;
-  }
-
-  .min-w-40 {
-    min-width: calc(var(--spacing) * 40);
-  }
-
   .min-w-56 {
     min-width: calc(var(--spacing) * 56);
   }
 
   .min-w-\[420px\] {
     min-width: 420px;
-  }
-
-  .min-w-\[440px\] {
-    min-width: 440px;
   }
 
   .min-w-\[480px\] {
@@ -683,10 +651,6 @@
 
   .shrink-0 {
     flex-shrink: 0;
-  }
-
-  .rotate-180 {
-    rotate: 180deg;
   }
 
   .animate-pulse {
@@ -783,16 +747,8 @@
     margin-block-end: calc(calc(var(--spacing) * 5) * calc(1 - var(--tw-space-y-reverse)));
   }
 
-  .gap-x-4 {
-    column-gap: calc(var(--spacing) * 4);
-  }
-
   .gap-x-6 {
     column-gap: calc(var(--spacing) * 6);
-  }
-
-  .gap-y-1 {
-    row-gap: var(--spacing);
   }
 
   :where(.divide-y > :not(:last-child)) {
@@ -837,11 +793,6 @@
     border-width: 1px;
   }
 
-  .border-2 {
-    border-style: var(--tw-border-style);
-    border-width: 2px;
-  }
-
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
@@ -850,11 +801,6 @@
   .border-b {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
-  }
-
-  .border-l-2 {
-    border-left-style: var(--tw-border-style);
-    border-left-width: 2px;
   }
 
   .border-amber-200 {
@@ -869,20 +815,12 @@
     border-color: var(--color-red-200);
   }
 
-  .border-slate-100 {
-    border-color: var(--color-slate-100);
-  }
-
   .border-slate-200 {
     border-color: var(--color-slate-200);
   }
 
   .border-slate-300 {
     border-color: var(--color-slate-300);
-  }
-
-  .border-t-emerald-700 {
-    border-top-color: var(--color-emerald-700);
   }
 
   .bg-amber-50 {
@@ -957,10 +895,6 @@
     padding: calc(var(--spacing) * 6);
   }
 
-  .px-2 {
-    padding-inline: calc(var(--spacing) * 2);
-  }
-
   .px-2\.5 {
     padding-inline: calc(var(--spacing) * 2.5);
   }
@@ -1005,14 +939,6 @@
     padding-block: calc(var(--spacing) * 10);
   }
 
-  .pt-1 {
-    padding-top: var(--spacing);
-  }
-
-  .pr-2 {
-    padding-right: calc(var(--spacing) * 2);
-  }
-
   .pr-3 {
     padding-right: calc(var(--spacing) * 3);
   }
@@ -1021,20 +947,8 @@
     padding-right: calc(var(--spacing) * 14);
   }
 
-  .pr-20 {
-    padding-right: calc(var(--spacing) * 20);
-  }
-
   .pb-2 {
     padding-bottom: calc(var(--spacing) * 2);
-  }
-
-  .pb-3 {
-    padding-bottom: calc(var(--spacing) * 3);
-  }
-
-  .pl-2 {
-    padding-left: calc(var(--spacing) * 2);
   }
 
   .pl-3 {
@@ -1222,12 +1136,6 @@
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
-  .transition-transform {
-    transition-property: transform, translate, scale, rotate;
-    transition-timing-function: var(--tw-ease, var(--default-transition-timing-function));
-    transition-duration: var(--tw-duration, var(--default-transition-duration));
-  }
-
   .ring-inset {
     --tw-ring-inset: inset;
   }
@@ -1355,12 +1263,12 @@
       grid-template-columns: 1fr 1fr 1fr auto;
     }
 
-    .sm\:grid-cols-\[1fr_1fr_auto\] {
-      grid-template-columns: 1fr 1fr auto;
-    }
-
     .sm\:grid-cols-\[1fr_2fr_auto\] {
       grid-template-columns: 1fr 2fr auto;
+    }
+
+    .sm\:grid-cols-\[2fr_1fr_1fr_auto\] {
+      grid-template-columns: 2fr 1fr 1fr auto;
     }
 
     .sm\:grid-cols-\[2fr_1fr_auto\] {
@@ -1369,10 +1277,6 @@
 
     .sm\:grid-cols-\[10rem_1fr_auto\] {
       grid-template-columns: 10rem 1fr auto;
-    }
-
-    .sm\:grid-cols-\[12rem_auto\] {
-      grid-template-columns: 12rem auto;
     }
 
     .sm\:items-end {
@@ -1402,17 +1306,9 @@
       grid-column: span 4 / span 4;
     }
 
-    .lg\:grid-cols-2 {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .lg\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-  }
-
-  .\[\&\:\:-webkit-search-cancel-button\]\:appearance-none::-webkit-search-cancel-button {
-    appearance: none;
   }
 }
 

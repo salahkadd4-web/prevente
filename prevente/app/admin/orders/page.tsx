@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AdminShell from "@/components/admin-shell";
+import CollapsibleSection from "@/components/collapsible-section";
 import LiveSearch from "@/components/live-search";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
 import { OrderStatus } from "@/app/generated/prisma/enums";
@@ -47,6 +48,8 @@ export default async function Page({ searchParams }: PageProps<"/admin/orders">)
   const hasFilters = Boolean(
     filters.q || filters.from || filters.to || filters.status || filters.customerId || filters.vendeurId || filters.livreurId || filters.item,
   );
+  // Filtres actifs hors recherche (la recherche a sa propre barre, toujours visible).
+  const activeFilters = [filters.from, filters.to, filters.status, filters.customerId, filters.vendeurId, filters.livreurId, filters.item].filter(Boolean).length;
   const back = filtersToQuery(filters, page > 1 ? { page } : {});
 
   return (
@@ -55,6 +58,12 @@ export default async function Page({ searchParams }: PageProps<"/admin/orders">)
         <div className="mb-3">
           <LiveSearch id="o-q" label="Rechercher une commande" placeholder="Rechercher : n° de commande, client ou téléphone" />
         </div>
+        {warnings.length > 0 && (
+          <ul role="alert" className="mb-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-inset ring-amber-300">
+            {warnings.map((w) => <li key={w}>{w}</li>)}
+          </ul>
+        )}
+        <CollapsibleSection label="Filtres" hint={activeFilters > 0 ? `${activeFilters} actif${activeFilters > 1 ? "s" : ""}` : undefined}>
         <form method="get" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <input type="hidden" name="q" value={filters.q} />
           <div>
@@ -116,12 +125,8 @@ export default async function Page({ searchParams }: PageProps<"/admin/orders">)
             {hasFilters && <Link href="/admin/orders" className={`${btnGhost} inline-flex h-12 items-center`}>Réinitialiser</Link>}
           </div>
         </form>
-        {warnings.length > 0 && (
-          <ul role="alert" className="mt-3 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-900 ring-1 ring-inset ring-amber-300">
-            {warnings.map((w) => <li key={w}>{w}</li>)}
-          </ul>
-        )}
         <p className="mt-3 text-xs text-slate-500">Les dates filtrent la date de création de la commande (heure d&apos;Algérie).</p>
+        </CollapsibleSection>
       </section>
 
       <section className={cardCls}>

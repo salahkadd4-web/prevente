@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
+import CollapsibleSection from "@/components/collapsible-section";
 import ConfirmButton from "@/components/confirm-button";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
 import type { Prisma } from "@/app/generated/prisma/client";
@@ -112,7 +113,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
   return (
     <AdminShell current="stock" title="Stock par lot">
       <section className={cardCls}>
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">Réception d&apos;un lot</h2>
+        <CollapsibleSection label="Réception d&apos;un lot">
         {variants.length === 0 && bareProducts.length === 0 ? (
           <p className="text-sm text-slate-600">Ajoutez d&apos;abord un produit (page Produits).</p>
         ) : (
@@ -157,6 +158,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
             </div>
           </ActionForm>
         )}
+        </CollapsibleSection>
       </section>
 
       <section className={cardCls}>

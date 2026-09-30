@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
+import CollapsibleSection from "@/components/collapsible-section";
 import CustomerFields from "@/components/customer-fields";
 import LiveSearch from "@/components/live-search";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls } from "@/components/ui";
@@ -33,13 +34,14 @@ export default async function Page({ searchParams }: PageProps<"/admin/customers
   return (
     <AdminShell current="customers" title="Clients">
       <section className={cardCls}>
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">Nouveau client</h2>
+        <CollapsibleSection label="Ajouter un client">
         <ActionForm action={createCustomer} className="grid gap-4 sm:grid-cols-2">
           <CustomerFields prefix="new" />
           <div className="sm:col-span-2">
             <button type="submit" className={btnPrimary}>Ajouter le client</button>
           </div>
         </ActionForm>
+        </CollapsibleSection>
       </section>
 
       <section className={cardCls}>

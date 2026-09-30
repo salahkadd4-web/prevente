@@ -1,5 +1,6 @@
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
+import CollapsibleSection from "@/components/collapsible-section";
 import ConfirmButton from "@/components/confirm-button";
 import LiveSearch from "@/components/live-search";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
@@ -59,7 +60,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/users">) 
   return (
     <AdminShell current="users" title="Utilisateurs">
       <section className={cardCls}>
-        <h2 className="mb-4 text-lg font-semibold text-slate-900">Nouveau compte</h2>
+        <CollapsibleSection label="Ajouter un compte">
         <ActionForm action={createUser} className="grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="u-name" className={labelCls}>Nom complet</label>
@@ -85,6 +86,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/users">) 
             <button type="submit" className={btnPrimary}>Créer le compte</button>
           </div>
         </ActionForm>
+        </CollapsibleSection>
       </section>
 
       <section className={cardCls}>
