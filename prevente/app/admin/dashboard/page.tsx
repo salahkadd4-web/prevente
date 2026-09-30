@@ -2,7 +2,7 @@ import Link from "next/link";
 import AdminShell from "@/components/admin-shell";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
 import { OrderStatus } from "@/app/generated/prisma/enums";
-import { getActiveCounts, getOrderCountsByStatus, getStockStats, getVendorRevenue } from "@/lib/admin/dashboard";
+import { getActiveCounts, getMarginSummary, getOrderCountsByStatus, getStockStats, getVendorRevenue } from "@/lib/admin/dashboard";
 import { requireRole } from "@/lib/auth/session";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_TONE, formatMoney } from "@/lib/orders";
 import { PERIODS, PERIOD_LABEL, resolvePeriod } from "@/lib/period";
@@ -18,8 +18,9 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
   const sp = await searchParams;
   const period = resolvePeriod({ period: first(sp.period), from: first(sp.from), to: first(sp.to) });
 
-  const [vendors, statusCounts, stock, counts] = await Promise.all([
+  const [vendors, margin, statusCounts, stock, counts] = await Promise.all([
     getVendorRevenue(period),
+    getMarginSummary(period),
     getOrderCountsByStatus(period),
     getStockStats(),
     getActiveCounts(),
@@ -80,17 +81,54 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
         )}
       </section>
 
-      <section className={cardCls}>
-        <p className="text-sm text-slate-600">Chiffre d&apos;affaires réalisé — {period.label}</p>
-        <p className="mt-1 text-3xl font-semibold text-slate-900">{formatMoney(totalRevenue)}</p>
-        <p className="mt-1 text-sm text-slate-600">
-          {totalDelivered} commande{totalDelivered > 1 ? "s" : ""} livrée{totalDelivered > 1 ? "s" : ""}
-        </p>
-        <p className="mt-2 text-xs text-slate-500">
-          Règle : somme des lignes (prix × quantité enregistrés sur la commande) des commandes livrées durant la période.
-          Les brouillons, commandes en cours et annulées sont exclus.
-        </p>
-      </section>
+      <div className="grid gap-4 lg:grid-cols-2">
+        <section className={cardCls} aria-labelledby="kpi-revenue">
+          <p id="kpi-revenue" className="text-sm text-slate-600">Chiffre d&apos;affaires — {period.label}</p>
+          <p className="mt-1 text-3xl font-semibold text-slate-900">{formatMoney(totalRevenue)}</p>
+          <p className="mt-1 text-sm text-slate-600">
+            {totalDelivered} commande{totalDelivered > 1 ? "s" : ""} livrée{totalDelivered > 1 ? "s" : ""}
+          </p>
+          <p className="mt-2 text-xs text-slate-500">
+            Règle : somme des lignes (prix × quantité enregistrés sur la commande) des commandes livrées durant la période.
+            Les brouillons, commandes en cours et annulées sont exclus.
+          </p>
+        </section>
+
+        <section className={cardCls} aria-labelledby="kpi-margin">
+          <p id="kpi-margin" className="text-sm text-slate-600">Marge brute (CA − coût d&apos;achat) — {period.label}</p>
+          {!margin.available ? (
+            <p className="mt-2 text-sm text-amber-900">
+              Indisponible : la migration 005 (prix d&apos;achat) n&apos;est pas appliquée sur la base.
+            </p>
+          ) : margin.costedLines === 0 ? (
+            <>
+              <p className="mt-1 text-3xl font-semibold text-slate-400">—</p>
+              <p className="mt-1 text-sm text-slate-600">
+                {margin.uncostedLines > 0
+                  ? `Non calculable : le coût d'achat est inconnu pour ${margin.uncostedLines} ligne${margin.uncostedLines > 1 ? "s" : ""} livrée${margin.uncostedLines > 1 ? "s" : ""}.`
+                  : "Aucune vente livrée sur la période."}
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-1 text-3xl font-semibold text-slate-900">{formatMoney(margin.margin)}</p>
+              <p className="mt-1 text-sm text-slate-600">
+                sur {formatMoney(margin.costedRevenue)} de ventes, coût d&apos;achat {formatMoney(margin.cost)}
+              </p>
+            </>
+          )}
+          {margin.available && margin.uncostedLines > 0 && margin.costedLines > 0 && (
+            <p role="status" className="mt-2 rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-900 ring-1 ring-inset ring-amber-300">
+              Marge partielle : {margin.uncostedLines} ligne{margin.uncostedLines > 1 ? "s" : ""} livrée{margin.uncostedLines > 1 ? "s" : ""} ({formatMoney(margin.uncostedRevenue)} de ventes)
+              exclue{margin.uncostedLines > 1 ? "s" : ""} faute de prix d&apos;achat connu. Renseignez-le dans la page Stock.
+            </p>
+          )}
+          <p className="mt-2 text-xs text-slate-500">
+            Coût réel des lots prélevés (FEFO) pour chaque ligne. Il s&apos;agit d&apos;une marge brute, pas d&apos;un bénéfice net :
+            aucun frais, remise ou remboursement n&apos;est enregistré.
+          </p>
+        </section>
+      </div>
 
       <section className={cardCls}>
         <h2 className="text-lg font-semibold text-slate-900">Chiffre d&apos;affaires par pré-vendeur</h2>

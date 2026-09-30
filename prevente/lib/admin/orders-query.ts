@@ -80,6 +80,7 @@ export function buildOrderWhere(f: OrderFilters): Prisma.OrderWhereInput {
     const or: Prisma.OrderWhereInput[] = [
       { customer: { businessName: { contains: f.q, mode: "insensitive" } } },
       { customer: { phone: { contains: f.q } } },
+      { createdBy: { fullName: { contains: f.q, mode: "insensitive" } } },
     ];
     if (/^\d{1,9}$/.test(term)) or.push({ number: Number(term) });
     and.push({ OR: or });

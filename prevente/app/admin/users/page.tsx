@@ -1,6 +1,7 @@
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
 import ConfirmButton from "@/components/confirm-button";
+import LiveSearch from "@/components/live-search";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
 import { ROLES, ROLE_LABEL, isRole } from "@/lib/auth/roles";
 import { requireRole } from "@/lib/auth/session";
@@ -38,13 +39,20 @@ export default async function Page({ searchParams }: PageProps<"/admin/users">) 
     prisma.profile.findMany({
       where: { ...(role ? { role } : {}), ...(status ? { isActive: status === "active" } : {}) },
       orderBy: [{ role: "asc" }, { fullName: "asc" }],
+      take: 1000,
     }),
     loadEmails(),
   ]);
 
-  // Recherche nom / e-mail en mémoire : l'e-mail vit dans Supabase Auth, et l'effectif est réduit.
+  // Recherche nom / e-mail / rôle en mémoire : l'e-mail vit dans Supabase Auth, et l'effectif est réduit.
   const rows = q
-    ? profiles.filter((p) => p.fullName.toLowerCase().includes(q) || (emailById.get(p.id) ?? "").toLowerCase().includes(q))
+    ? profiles.filter(
+        (p) =>
+          p.fullName.toLowerCase().includes(q) ||
+          (emailById.get(p.id) ?? "").toLowerCase().includes(q) ||
+          p.role.toLowerCase().includes(q) ||
+          (isRole(p.role) && ROLE_LABEL[p.role].toLowerCase().includes(q)),
+      )
     : profiles;
   const filtered = Boolean(q || role || status);
 
@@ -81,11 +89,11 @@ export default async function Page({ searchParams }: PageProps<"/admin/users">) 
 
       <section className={cardCls}>
         <h2 className="text-lg font-semibold text-slate-900">Comptes</h2>
-        <form method="get" className="mt-3 grid gap-2 sm:grid-cols-[2fr_1fr_1fr_auto] sm:items-end">
-          <div>
-            <label htmlFor="f-q" className={labelCls}>Recherche</label>
-            <input id="f-q" name="q" defaultValue={q} placeholder="Nom ou email" className={inputCls} />
-          </div>
+        <div className="mt-3">
+          <LiveSearch id="f-q" label="Rechercher un compte" placeholder="Rechercher : nom, email ou rôle" />
+        </div>
+        <form method="get" className="mt-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+          <input type="hidden" name="q" value={q} />
           <div>
             <label htmlFor="f-role" className={labelCls}>Rôle</label>
             <select id="f-role" name="role" defaultValue={role} className={inputCls}>

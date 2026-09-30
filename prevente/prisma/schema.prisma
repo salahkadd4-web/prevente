@@ -110,6 +110,9 @@ model Product {
   /// Photo du produit lui-même (migration 004) — utile pour un produit sans parfum.
   imagePublicId   String? @map("image_public_id")
   imageSecureUrl  String? @map("image_secure_url")
+  /// Prix de vente catalogue par unité de vente (migration 005). NULL = non défini.
+  /// Défaut du produit ; un parfum peut définir le sien (ProductVariant.salePrice).
+  salePrice       Decimal? @map("sale_price") @db.Decimal(12, 2)
 
   category Category?        @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   variants ProductVariant[]
@@ -130,6 +133,8 @@ model ProductVariant {
   sku            String?  @unique
   imagePublicId  String?  @map("image_public_id")
   imageSecureUrl String?  @map("image_secure_url")
+  /// Prix de vente propre au parfum (migration 005). NULL = utilise celui du produit.
+  salePrice      Decimal? @map("sale_price") @db.Decimal(12, 2)
   isActive       Boolean  @default(true) @map("is_active")
   createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
@@ -159,6 +164,10 @@ model StockLot {
   availableQuantity Int       @map("available_quantity")
   expiresAt         DateTime? @map("expires_at") @db.Date
   receivedAt        DateTime  @default(now()) @map("received_at") @db.Date
+  /// Prix d'achat unitaire de CE lot (migration 005). Un lot = un achat distinct : le prix
+  /// d'un nouvel achat crée un nouveau lot, les anciens ne sont pas écrasés.
+  /// NULL = inconnu (lots antérieurs à la migration) : jamais remplacé par un coût inventé.
+  unitCost          Decimal?  @map("unit_cost") @db.Decimal(12, 2)
   createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt         DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
 

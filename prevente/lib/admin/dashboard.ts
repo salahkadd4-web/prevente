@@ -126,3 +126,93 @@ export async function getActiveCounts() {
   ]);
   return { customers, products, users };
 }
+
+/**
+ * MARGE BRUTE (et non « bénéfice net ») — règle documentée, appliquée en SQL :
+ *  - Périmètre : mêmes commandes que le CA (statut « livrée », rattachées à la période par leur date de
+ *    passage à « livrée », une seule date par commande) → jamais de double comptage.
+ *  - Revenu d'une ligne = unit_price × quantity (instantané de la commande, jamais le catalogue actuel).
+ *  - Coût d'une ligne = Σ (quantité allouée × stock_lots.unit_cost) sur ses allocations réelles
+ *    (order_item_allocations non libérées) : une ligne prélevée sur plusieurs lots est coûtée lot par lot.
+ *  - Une ligne est « coûtée » seulement si TOUTE sa quantité est couverte par des allocations dont le lot a
+ *    un prix d'achat. Sinon elle est comptée dans `uncostedLines` et exclue de la marge : aucun coût n'est
+ *    inventé (commandes antérieures au suivi des allocations, lots sans prix d'achat).
+ *  - Aucun frais, remise ou remboursement n'est enregistré dans la base : la mesure est donc une marge
+ *    brute (CA − coût d'achat), pas un bénéfice net.
+ */
+export type MarginSummary =
+  | {
+      available: true;
+      /** CA et coût des seules lignes entièrement coûtées. */
+      costedRevenue: number;
+      cost: number;
+      margin: number;
+      costedLines: number;
+      /** Lignes livrées dont le coût est incomplet (exclues de la marge). */
+      uncostedLines: number;
+      /** CA de ces lignes exclues. */
+      uncostedRevenue: number;
+    }
+  | { available: false; reason: "migration" };
+
+type RawMargin = {
+  costed_revenue: number; cost: number; costed_lines: number; uncosted_lines: number; uncosted_revenue: number;
+};
+
+export async function getMarginSummary(period: Period): Promise<MarginSummary> {
+  try {
+    const rows = await prisma.$queryRaw<RawMargin[]>`
+      WITH delivered AS (
+        SELECT o.id, COALESCE(h.delivered_at, o.updated_at) AS delivered_at
+        FROM public.orders o
+        LEFT JOIN LATERAL (
+          SELECT MAX(s.created_at) AS delivered_at
+          FROM public.order_status_history s
+          WHERE s.order_id = o.id AND s.to_status = 'livree'
+        ) h ON TRUE
+        WHERE o.status = 'livree'
+      ),
+      lines AS (
+        SELECT oi.id, oi.quantity, oi.unit_price
+        FROM delivered d
+        JOIN public.order_items oi ON oi.order_id = d.id
+        WHERE d.delivered_at >= ${period.start} AND d.delivered_at < ${period.end}
+      ),
+      alloc AS (
+        SELECT a.order_item_id,
+               SUM(a.quantity) FILTER (WHERE l.unit_cost IS NOT NULL) AS costed_qty,
+               SUM(a.quantity * l.unit_cost) FILTER (WHERE l.unit_cost IS NOT NULL) AS cost
+        FROM public.order_item_allocations a
+        JOIN public.stock_lots l ON l.id = a.lot_id
+        WHERE a.released_at IS NULL
+        GROUP BY a.order_item_id
+      ),
+      joined AS (
+        SELECT ln.quantity, ln.unit_price, COALESCE(al.cost, 0) AS cost,
+               (COALESCE(al.costed_qty, 0) = ln.quantity) AS fully_costed
+        FROM lines ln LEFT JOIN alloc al ON al.order_item_id = ln.id
+      )
+      SELECT
+        COALESCE(SUM(quantity * unit_price) FILTER (WHERE fully_costed), 0)::float8 AS costed_revenue,
+        COALESCE(SUM(cost) FILTER (WHERE fully_costed), 0)::float8 AS cost,
+        (COUNT(*) FILTER (WHERE fully_costed))::int AS costed_lines,
+        (COUNT(*) FILTER (WHERE NOT fully_costed))::int AS uncosted_lines,
+        COALESCE(SUM(quantity * unit_price) FILTER (WHERE NOT fully_costed), 0)::float8 AS uncosted_revenue
+      FROM joined
+    `;
+    const r = rows[0];
+    return {
+      available: true,
+      costedRevenue: r.costed_revenue,
+      cost: r.cost,
+      margin: r.costed_revenue - r.cost,
+      costedLines: r.costed_lines,
+      uncostedLines: r.uncosted_lines,
+      uncostedRevenue: r.uncosted_revenue,
+    };
+  } catch (e) {
+    // Colonne stock_lots.unit_cost absente : la migration 005 n'est pas appliquée.
+    if (e instanceof Error && /unit_cost|does not exist/i.test(e.message)) return { available: false, reason: "migration" };
+    throw e;
+  }
+}

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdminAction } from "@/lib/auth/session";
 import { DEFAULT_FLAVOR_NAME } from "@/lib/catalog";
 import { dateOnly, integer, isUniqueViolation, isUuid, optionalText, text, type ActionResult } from "@/lib/form";
+import { parseMoney } from "@/lib/money";
 
 const MAX_QUANTITY = 1_000_000; // garde-fou contre une faute de frappe (et contre le dépassement d'entier)
 
@@ -32,6 +33,9 @@ export async function createLot(_: ActionResult, formData: FormData): Promise<Ac
   if (!expiresAt) return { error: "La date d'expiration est obligatoire." };
   if (expiresAt < receivedAt) return { error: "La date d'expiration ne peut pas précéder la date de réception." };
   if (lotNumber && lotNumber.length > 60) return { error: "N° de lot : 60 caractères max." };
+  // Prix d'achat unitaire de CE lot (facultatif : vide = inconnu, signalé au dashboard, jamais inventé).
+  const cost = parseMoney(text(formData, "unitCost"), "Prix d'achat");
+  if ("error" in cost) return { error: cost.error };
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -62,7 +66,7 @@ export async function createLot(_: ActionResult, formData: FormData): Promise<Ac
       }
 
       await tx.stockLot.create({
-        data: { variantId, lotNumber, initialQuantity: quantity, availableQuantity: quantity, expiresAt, receivedAt },
+        data: { variantId, lotNumber, initialQuantity: quantity, availableQuantity: quantity, expiresAt, receivedAt, unitCost: cost.value },
       });
     });
   } catch (e) {
@@ -137,4 +141,32 @@ export async function correctLotQuantity(_: ActionResult, formData: FormData): P
 
   refresh();
   return { ok: "Quantité corrigée et enregistrée dans le journal." };
+}
+
+/**
+ * Renseigne ou corrige le prix d'achat unitaire d'UN lot (ex. lots antérieurs à la migration 005, ou
+ * faute de frappe). Ne touche que ce lot : un nouvel achat à un autre prix = un nouveau lot, les autres
+ * lots ne sont jamais modifiés. Attention : le coût des commandes déjà livrées prélevées sur ce lot
+ * se recalcule dans le dashboard (le coût est lu sur le lot alloué).
+ */
+export async function setLotCost(_: ActionResult, formData: FormData): Promise<ActionResult> {
+  await requireAdminAction();
+  const id = text(formData, "id");
+  if (!isUuid(id)) return { error: "Lot invalide." };
+  const cost = parseMoney(text(formData, "unitCost"), "Prix d'achat", true);
+  if ("error" in cost) return { error: cost.error };
+
+  try {
+    const res = await prisma.stockLot.updateMany({ where: { id }, data: { unitCost: cost.value } });
+    if (res.count !== 1) return { error: "Lot introuvable." };
+  } catch (e) {
+    if (e instanceof Error && /unit_cost|does not exist|Unknown argument/i.test(e.message)) {
+      return { error: "Prix d'achat indisponible : la migration 005 n'est pas appliquée sur la base." };
+    }
+    console.error("[setLotCost]", e instanceof Error ? e.message : e);
+    return { error: "Enregistrement impossible. Réessayez." };
+  }
+  refresh();
+  revalidatePath("/admin/products");
+  return { ok: "Prix d'achat enregistré." };
 }

@@ -9,7 +9,10 @@ import { SALE_UNIT_LABEL, itemLabel } from "@/lib/catalog";
 import { formatDateTime } from "@/lib/orders";
 import { prisma } from "@/lib/prisma";
 import { alertLimitDate, expiryInfo, formatDate } from "@/lib/stock/expiry";
-import { correctLotQuantity, createLot } from "./actions";
+import LiveSearch from "@/components/live-search";
+import { moneyInputValue } from "@/lib/money";
+import { formatMoney } from "@/lib/orders";
+import { correctLotQuantity, createLot, setLotCost } from "./actions";
 
 export const metadata = { title: "Stock · Grossiste Pro" };
 
@@ -46,7 +49,19 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
         OR: [
           { lotNumber: { contains: q, mode: "insensitive" } },
           { variant: { name: { contains: q, mode: "insensitive" } } },
+          { variant: { sku: { contains: q, mode: "insensitive" } } },
           { variant: { product: { name: { contains: q, mode: "insensitive" } } } },
+        ],
+      }
+    : {};
+  // Même recherche sur le tableau « Disponible par produit et parfum ».
+  const variantSearch: Prisma.ProductVariantWhereInput = q
+    ? {
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          { sku: { contains: q, mode: "insensitive" } },
+          { product: { name: { contains: q, mode: "insensitive" } } },
+          { stockLots: { some: { lotNumber: { contains: q, mode: "insensitive" } } } },
         ],
       }
     : {};
@@ -54,7 +69,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
 
   const [variants, availability, lots, lotCount, bareProducts] = await Promise.all([
     prisma.productVariant.findMany({
-      where: { isActive: true, product: { isActive: true } },
+      where: { isActive: true, product: { isActive: true }, ...variantSearch },
       include: { product: true },
       orderBy: [{ product: { name: "asc" } }, { name: "asc" }],
     }),
@@ -75,7 +90,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
     prisma.stockLot.count({ where: lotWhere }),
     // Produits actifs sans aucun parfum : réceptionnables directement (un parfum technique est créé à la 1re réception).
     prisma.product.findMany({
-      where: { isActive: true, variants: { none: {} } },
+      where: { isActive: true, variants: { none: {} }, ...(q ? { name: { contains: q, mode: "insensitive" as const } } : {}) },
       select: { id: true, name: true, saleUnit: true },
       orderBy: { name: "asc" },
     }),
@@ -129,6 +144,13 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
             <div>
               <label htmlFor="l-rec" className={labelCls}>Date de réception</label>
               <input id="l-rec" name="receivedAt" type="date" defaultValue={receivedToday} className={inputCls} />
+            </div>
+            <div className="sm:col-span-2">
+              <label htmlFor="l-cost" className={labelCls}>Prix d&apos;achat unitaire de ce lot (facultatif)</label>
+              <input id="l-cost" name="unitCost" type="text" inputMode="decimal" pattern="[0-9]+([.,][0-9]{1,2})?" title="Nombre positif, 2 décimales maximum" placeholder="ex. 980,00" className={inputCls} />
+              <p className="mt-1 text-xs text-slate-500">
+                Chaque réception est un lot distinct : un nouveau prix d&apos;achat s&apos;enregistre sur un nouveau lot et ne modifie jamais les anciens. Laissé vide, le coût du lot est « inconnu » et la marge du dashboard l&apos;indiquera.
+              </p>
             </div>
             <div className="sm:col-span-2">
               <button type="submit" className={btnPrimary}>Ajouter au stock</button>
@@ -202,11 +224,9 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
             </Link>
           ))}
         </nav>
-        <form method="get" className="mt-3 flex gap-2">
-          <input type="hidden" name="filter" value={filter} />
-          <input name="q" defaultValue={q} placeholder="Produit, parfum ou n° de lot" aria-label="Rechercher un lot" className={inputCls} />
-          <button type="submit" className={btnGhost}>Chercher</button>
-        </form>
+        <div className="mt-3">
+          <LiveSearch id="s-search" label="Rechercher un lot" placeholder="Produit, parfum, référence ou n° de lot" />
+        </div>
 
         {lots.length === 0 && <p className="mt-4 text-sm text-slate-500">{filter === "all" && !q ? "Aucun lot pour le moment." : "Aucun lot ne correspond."}</p>}
         {lotCount > LOT_LIMIT && (
@@ -227,6 +247,9 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
                       {lot.availableQuantity} / {lot.initialQuantity} {unit}
                       {lot.lotNumber && ` · lot ${lot.lotNumber}`} · reçu le {formatDate(lot.receivedAt)}
                     </p>
+                    <p className="text-sm text-slate-600">
+                      Prix d&apos;achat : {lot.unitCost === null ? <span className="text-amber-900">inconnu</span> : formatMoney(Number(lot.unitCost.toString()))}
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm text-slate-800">{formatDate(lot.expiresAt)}</p>
@@ -234,6 +257,19 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
                     {empty && <span className={`${badgeCls} ${badgeTone.none}`}>Épuisé</span>}
                   </div>
                 </div>
+                <details className="mt-1">
+                  <summary className="cursor-pointer text-xs font-medium text-emerald-800">{lot.unitCost === null ? "Renseigner le prix d'achat" : "Modifier le prix d'achat"}</summary>
+                  <ActionForm action={setLotCost} className="mt-2 grid gap-2 sm:grid-cols-[12rem_auto] sm:items-end">
+                    <input type="hidden" name="id" value={lot.id} />
+                    <div>
+                      <label htmlFor={`c-c-${lot.id}`} className="mb-1 block text-xs font-medium text-slate-700">Prix d&apos;achat unitaire</label>
+                      <input id={`c-c-${lot.id}`} name="unitCost" type="text" inputMode="decimal" required pattern="[0-9]+([.,][0-9]{1,2})?" title="Nombre positif, 2 décimales maximum" defaultValue={moneyInputValue(lot.unitCost)} className={inputCls} />
+                    </div>
+                    <ConfirmButton message="Enregistrer ce prix d'achat pour ce lot uniquement ? Il sert au calcul de la marge des ventes prélevées sur ce lot." className={btnGhost + " h-12"}>
+                      Enregistrer
+                    </ConfirmButton>
+                  </ActionForm>
+                </details>
                 <details className="mt-1">
                   <summary className="cursor-pointer text-xs font-medium text-emerald-800">Corriger la quantité (inventaire)</summary>
                   <ActionForm action={correctLotQuantity} className="mt-2 grid gap-2 sm:grid-cols-[10rem_1fr_auto] sm:items-end">

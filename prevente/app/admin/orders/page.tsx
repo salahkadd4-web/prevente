@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AdminShell from "@/components/admin-shell";
+import LiveSearch from "@/components/live-search";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
 import { OrderStatus } from "@/app/generated/prisma/enums";
 import { PAGE_SIZE, buildOrderBy, buildOrderWhere, filtersToQuery, parseOrderFilters } from "@/lib/admin/orders-query";
@@ -51,11 +52,11 @@ export default async function Page({ searchParams }: PageProps<"/admin/orders">)
   return (
     <AdminShell current="orders" title="Commandes">
       <section className={cardCls}>
+        <div className="mb-3">
+          <LiveSearch id="o-q" label="Rechercher une commande" placeholder="Rechercher : n° de commande, client ou téléphone" />
+        </div>
         <form method="get" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="sm:col-span-2">
-            <label htmlFor="o-q" className={labelCls}>Recherche</label>
-            <input id="o-q" name="q" defaultValue={filters.q} placeholder="N° de commande, client ou téléphone" className={inputCls} />
-          </div>
+          <input type="hidden" name="q" value={filters.q} />
           <div>
             <label htmlFor="o-from" className={labelCls}>Du</label>
             <input id="o-from" name="from" type="date" defaultValue={filters.from} className={inputCls} />

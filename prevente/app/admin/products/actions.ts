@@ -7,6 +7,7 @@ import { deleteImage, uploadImage } from "@/lib/cloudinary";
 import { isSaleUnit } from "@/lib/catalog";
 import { validateJpeg } from "@/lib/image-upload";
 import { isUniqueViolation, isUuid, optionalText, text, type ActionResult } from "@/lib/form";
+import { parseMoney } from "@/lib/money";
 
 const done = (ok: string): ActionResult => {
   revalidatePath("/admin/products");
@@ -20,9 +21,11 @@ export async function createProduct(_: ActionResult, formData: FormData): Promis
   const unit = text(formData, "saleUnit");
   if (!name || name.length > 120) return { error: "Nom du produit obligatoire (120 caractères max)." };
   if (!isSaleUnit(unit)) return { error: "Choisissez une unité de vente." };
+  const price = parseMoney(text(formData, "salePrice"), "Prix de vente");
+  if ("error" in price) return { error: price.error };
 
   await prisma.product.create({
-    data: { name, saleUnit: unit, description: optionalText(formData, "description") },
+    data: { name, saleUnit: unit, description: optionalText(formData, "description"), salePrice: price.value },
   });
   return done("Produit ajouté.");
 }
@@ -33,11 +36,14 @@ export async function updateProduct(_: ActionResult, formData: FormData): Promis
   const name = text(formData, "name");
   if (!isUuid(id)) return { error: "Produit invalide." };
   if (!name || name.length > 120) return { error: "Nom du produit obligatoire (120 caractères max)." };
+  const price = parseMoney(text(formData, "salePrice"), "Prix de vente");
+  if ("error" in price) return { error: price.error };
 
   // L'unité n'est volontairement pas modifiable : les quantités du stock en dépendent.
+  // Le prix de vente catalogue ne touche pas les commandes existantes (order_items.unit_price est un instantané).
   await prisma.product.update({
     where: { id },
-    data: { name, description: optionalText(formData, "description") },
+    data: { name, description: optionalText(formData, "description"), salePrice: price.value },
   });
   return done("Produit modifié.");
 }
@@ -56,10 +62,12 @@ export async function createVariant(_: ActionResult, formData: FormData): Promis
   const name = text(formData, "name");
   if (!isUuid(productId)) return { error: "Produit invalide." };
   if (!name || name.length > 80) return { error: "Nom du parfum obligatoire (80 caractères max)." };
+  const price = parseMoney(text(formData, "salePrice"), "Prix de vente du parfum");
+  if ("error" in price) return { error: price.error };
 
   try {
     await prisma.productVariant.create({
-      data: { productId, name, sku: optionalText(formData, "sku") },
+      data: { productId, name, sku: optionalText(formData, "sku"), salePrice: price.value },
     });
   } catch (e) {
     if (isUniqueViolation(e)) return { error: "Ce parfum ou cette référence existe déjà." };
@@ -74,11 +82,13 @@ export async function updateVariant(_: ActionResult, formData: FormData): Promis
   const name = text(formData, "name");
   if (!isUuid(id)) return { error: "Parfum invalide." };
   if (!name || name.length > 80) return { error: "Nom du parfum obligatoire (80 caractères max)." };
+  const price = parseMoney(text(formData, "salePrice"), "Prix de vente du parfum");
+  if ("error" in price) return { error: price.error };
 
   try {
     await prisma.productVariant.update({
       where: { id },
-      data: { name, sku: optionalText(formData, "sku") },
+      data: { name, sku: optionalText(formData, "sku"), salePrice: price.value },
     });
   } catch (e) {
     if (isUniqueViolation(e)) return { error: "Ce parfum ou cette référence existe déjà." };

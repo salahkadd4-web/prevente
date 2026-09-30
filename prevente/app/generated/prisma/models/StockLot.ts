@@ -32,11 +32,13 @@ export type AggregateStockLot = {
 export type StockLotAvgAggregateOutputType = {
   initialQuantity: number | null
   availableQuantity: number | null
+  unitCost: runtime.Decimal | null
 }
 
 export type StockLotSumAggregateOutputType = {
   initialQuantity: number | null
   availableQuantity: number | null
+  unitCost: runtime.Decimal | null
 }
 
 export type StockLotMinAggregateOutputType = {
@@ -47,6 +49,7 @@ export type StockLotMinAggregateOutputType = {
   availableQuantity: number | null
   expiresAt: Date | null
   receivedAt: Date | null
+  unitCost: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +62,7 @@ export type StockLotMaxAggregateOutputType = {
   availableQuantity: number | null
   expiresAt: Date | null
   receivedAt: Date | null
+  unitCost: runtime.Decimal | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -71,6 +75,7 @@ export type StockLotCountAggregateOutputType = {
   availableQuantity: number
   expiresAt: number
   receivedAt: number
+  unitCost: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -80,11 +85,13 @@ export type StockLotCountAggregateOutputType = {
 export type StockLotAvgAggregateInputType = {
   initialQuantity?: true
   availableQuantity?: true
+  unitCost?: true
 }
 
 export type StockLotSumAggregateInputType = {
   initialQuantity?: true
   availableQuantity?: true
+  unitCost?: true
 }
 
 export type StockLotMinAggregateInputType = {
@@ -95,6 +102,7 @@ export type StockLotMinAggregateInputType = {
   availableQuantity?: true
   expiresAt?: true
   receivedAt?: true
+  unitCost?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -107,6 +115,7 @@ export type StockLotMaxAggregateInputType = {
   availableQuantity?: true
   expiresAt?: true
   receivedAt?: true
+  unitCost?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -119,6 +128,7 @@ export type StockLotCountAggregateInputType = {
   availableQuantity?: true
   expiresAt?: true
   receivedAt?: true
+  unitCost?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -218,6 +228,7 @@ export type StockLotGroupByOutputType = {
   availableQuantity: number
   expiresAt: Date | null
   receivedAt: Date
+  unitCost: runtime.Decimal | null
   createdAt: Date
   updatedAt: Date
   _count: StockLotCountAggregateOutputType | null
@@ -253,6 +264,7 @@ export type StockLotWhereInput = {
   availableQuantity?: Prisma.IntFilter<"StockLot"> | number
   expiresAt?: Prisma.DateTimeNullableFilter<"StockLot"> | Date | string | null
   receivedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
+  unitCost?: Prisma.DecimalNullableFilter<"StockLot"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   variant?: Prisma.XOR<Prisma.ProductVariantScalarRelationFilter, Prisma.ProductVariantWhereInput>
@@ -268,6 +280,7 @@ export type StockLotOrderByWithRelationInput = {
   availableQuantity?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   variant?: Prisma.ProductVariantOrderByWithRelationInput
@@ -287,6 +300,7 @@ export type StockLotWhereUniqueInput = Prisma.AtLeast<{
   availableQuantity?: Prisma.IntFilter<"StockLot"> | number
   expiresAt?: Prisma.DateTimeNullableFilter<"StockLot"> | Date | string | null
   receivedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
+  unitCost?: Prisma.DecimalNullableFilter<"StockLot"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   variant?: Prisma.XOR<Prisma.ProductVariantScalarRelationFilter, Prisma.ProductVariantWhereInput>
@@ -302,6 +316,7 @@ export type StockLotOrderByWithAggregationInput = {
   availableQuantity?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StockLotCountOrderByAggregateInput
@@ -322,6 +337,7 @@ export type StockLotScalarWhereWithAggregatesInput = {
   availableQuantity?: Prisma.IntWithAggregatesFilter<"StockLot"> | number
   expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"StockLot"> | Date | string | null
   receivedAt?: Prisma.DateTimeWithAggregatesFilter<"StockLot"> | Date | string
+  unitCost?: Prisma.DecimalNullableWithAggregatesFilter<"StockLot"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StockLot"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"StockLot"> | Date | string
 }
@@ -333,6 +349,7 @@ export type StockLotCreateInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   variant: Prisma.ProductVariantCreateNestedOneWithoutStockLotsInput
@@ -348,6 +365,7 @@ export type StockLotUncheckedCreateInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   adjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutLotInput
@@ -361,6 +379,7 @@ export type StockLotUpdateInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   variant?: Prisma.ProductVariantUpdateOneRequiredWithoutStockLotsNestedInput
@@ -376,6 +395,7 @@ export type StockLotUncheckedUpdateInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   adjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutLotNestedInput
@@ -390,6 +410,7 @@ export type StockLotCreateManyInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -401,6 +422,7 @@ export type StockLotUpdateManyMutationInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -413,6 +435,7 @@ export type StockLotUncheckedUpdateManyInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -440,6 +463,7 @@ export type StockLotCountOrderByAggregateInput = {
   availableQuantity?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -447,6 +471,7 @@ export type StockLotCountOrderByAggregateInput = {
 export type StockLotAvgOrderByAggregateInput = {
   initialQuantity?: Prisma.SortOrder
   availableQuantity?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
 }
 
 export type StockLotMaxOrderByAggregateInput = {
@@ -457,6 +482,7 @@ export type StockLotMaxOrderByAggregateInput = {
   availableQuantity?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -469,6 +495,7 @@ export type StockLotMinOrderByAggregateInput = {
   availableQuantity?: Prisma.SortOrder
   expiresAt?: Prisma.SortOrder
   receivedAt?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -476,6 +503,7 @@ export type StockLotMinOrderByAggregateInput = {
 export type StockLotSumOrderByAggregateInput = {
   initialQuantity?: Prisma.SortOrder
   availableQuantity?: Prisma.SortOrder
+  unitCost?: Prisma.SortOrder
 }
 
 export type StockLotScalarRelationFilter = {
@@ -572,6 +600,7 @@ export type StockLotCreateWithoutVariantInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   adjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutLotInput
@@ -585,6 +614,7 @@ export type StockLotUncheckedCreateWithoutVariantInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   adjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutLotInput
@@ -628,6 +658,7 @@ export type StockLotScalarWhereInput = {
   availableQuantity?: Prisma.IntFilter<"StockLot"> | number
   expiresAt?: Prisma.DateTimeNullableFilter<"StockLot"> | Date | string | null
   receivedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
+  unitCost?: Prisma.DecimalNullableFilter<"StockLot"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
 }
@@ -639,6 +670,7 @@ export type StockLotCreateWithoutAdjustmentsInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   variant: Prisma.ProductVariantCreateNestedOneWithoutStockLotsInput
@@ -653,6 +685,7 @@ export type StockLotUncheckedCreateWithoutAdjustmentsInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   allocations?: Prisma.OrderItemAllocationUncheckedCreateNestedManyWithoutLotInput
@@ -681,6 +714,7 @@ export type StockLotUpdateWithoutAdjustmentsInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   variant?: Prisma.ProductVariantUpdateOneRequiredWithoutStockLotsNestedInput
@@ -695,6 +729,7 @@ export type StockLotUncheckedUpdateWithoutAdjustmentsInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   allocations?: Prisma.OrderItemAllocationUncheckedUpdateManyWithoutLotNestedInput
@@ -707,6 +742,7 @@ export type StockLotCreateWithoutAllocationsInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   variant: Prisma.ProductVariantCreateNestedOneWithoutStockLotsInput
@@ -721,6 +757,7 @@ export type StockLotUncheckedCreateWithoutAllocationsInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   adjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutLotInput
@@ -749,6 +786,7 @@ export type StockLotUpdateWithoutAllocationsInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   variant?: Prisma.ProductVariantUpdateOneRequiredWithoutStockLotsNestedInput
@@ -763,6 +801,7 @@ export type StockLotUncheckedUpdateWithoutAllocationsInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   adjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutLotNestedInput
@@ -775,6 +814,7 @@ export type StockLotCreateManyVariantInput = {
   availableQuantity: number
   expiresAt?: Date | string | null
   receivedAt?: Date | string
+  unitCost?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -786,6 +826,7 @@ export type StockLotUpdateWithoutVariantInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   adjustments?: Prisma.StockAdjustmentUpdateManyWithoutLotNestedInput
@@ -799,6 +840,7 @@ export type StockLotUncheckedUpdateWithoutVariantInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   adjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutLotNestedInput
@@ -812,6 +854,7 @@ export type StockLotUncheckedUpdateManyWithoutVariantInput = {
   availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
   expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  unitCost?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -864,6 +907,7 @@ export type StockLotSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   availableQuantity?: boolean
   expiresAt?: boolean
   receivedAt?: boolean
+  unitCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   variant?: boolean | Prisma.ProductVariantDefaultArgs<ExtArgs>
@@ -880,6 +924,7 @@ export type StockLotSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   availableQuantity?: boolean
   expiresAt?: boolean
   receivedAt?: boolean
+  unitCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   variant?: boolean | Prisma.ProductVariantDefaultArgs<ExtArgs>
@@ -893,6 +938,7 @@ export type StockLotSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   availableQuantity?: boolean
   expiresAt?: boolean
   receivedAt?: boolean
+  unitCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   variant?: boolean | Prisma.ProductVariantDefaultArgs<ExtArgs>
@@ -906,11 +952,12 @@ export type StockLotSelectScalar = {
   availableQuantity?: boolean
   expiresAt?: boolean
   receivedAt?: boolean
+  unitCost?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StockLotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "variantId" | "lotNumber" | "initialQuantity" | "availableQuantity" | "expiresAt" | "receivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["stockLot"]>
+export type StockLotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "variantId" | "lotNumber" | "initialQuantity" | "availableQuantity" | "expiresAt" | "receivedAt" | "unitCost" | "createdAt" | "updatedAt", ExtArgs["result"]["stockLot"]>
 export type StockLotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   variant?: boolean | Prisma.ProductVariantDefaultArgs<ExtArgs>
   adjustments?: boolean | Prisma.StockLot$adjustmentsArgs<ExtArgs>
@@ -939,6 +986,12 @@ export type $StockLotPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     availableQuantity: number
     expiresAt: Date | null
     receivedAt: Date
+    /**
+     * Prix d'achat unitaire de CE lot (migration 005). Un lot = un achat distinct : le prix
+     * d'un nouvel achat crée un nouveau lot, les anciens ne sont pas écrasés.
+     * NULL = inconnu (lots antérieurs à la migration) : jamais remplacé par un coût inventé.
+     */
+    unitCost: runtime.Decimal | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["stockLot"]>
@@ -1374,6 +1427,7 @@ export interface StockLotFieldRefs {
   readonly availableQuantity: Prisma.FieldRef<"StockLot", 'Int'>
   readonly expiresAt: Prisma.FieldRef<"StockLot", 'DateTime'>
   readonly receivedAt: Prisma.FieldRef<"StockLot", 'DateTime'>
+  readonly unitCost: Prisma.FieldRef<"StockLot", 'Decimal'>
   readonly createdAt: Prisma.FieldRef<"StockLot", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"StockLot", 'DateTime'>
 }

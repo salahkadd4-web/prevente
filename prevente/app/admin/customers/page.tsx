@@ -2,6 +2,7 @@ import Link from "next/link";
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
 import CustomerFields from "@/components/customer-fields";
+import LiveSearch from "@/components/live-search";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls } from "@/components/ui";
 import { requireRole } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
@@ -42,14 +43,17 @@ export default async function Page({ searchParams }: PageProps<"/admin/customers
       </section>
 
       <section className={cardCls}>
+        <div className="mb-3">
+          <LiveSearch id="c-search" label="Rechercher un client" placeholder="Rechercher : boutique, téléphone, adresse" />
+        </div>
         <form method="get" className="flex flex-wrap gap-2">
-          <input name="q" defaultValue={q} placeholder="Rechercher : boutique, téléphone, adresse" aria-label="Rechercher un client" className={`${inputCls} min-w-56 flex-1`} />
+          <input type="hidden" name="q" value={q} />
           <select name="status" defaultValue={status} aria-label="Statut" className={`${inputCls} w-auto`}>
             <option value="all">Tous</option>
             <option value="active">Actifs</option>
             <option value="inactive">Désactivés</option>
           </select>
-          <button type="submit" className={btnGhost}>Chercher</button>
+          <button type="submit" className={btnGhost}>Filtrer</button>
         </form>
 
         {customers.length === 0 && <p className="mt-4 text-sm text-slate-500">{q || status !== "all" ? "Aucun client trouvé." : "Aucun client pour le moment."}</p>}
