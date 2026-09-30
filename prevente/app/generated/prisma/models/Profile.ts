@@ -198,6 +198,7 @@ export type ProfileWhereInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentListRelationFilter
   assignmentsMade?: Prisma.OrderAssignmentListRelationFilter
   statusChanges?: Prisma.OrderStatusHistoryListRelationFilter
+  stockAdjustments?: Prisma.StockAdjustmentListRelationFilter
 }
 
 export type ProfileOrderByWithRelationInput = {
@@ -213,6 +214,7 @@ export type ProfileOrderByWithRelationInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentOrderByRelationAggregateInput
   assignmentsMade?: Prisma.OrderAssignmentOrderByRelationAggregateInput
   statusChanges?: Prisma.OrderStatusHistoryOrderByRelationAggregateInput
+  stockAdjustments?: Prisma.StockAdjustmentOrderByRelationAggregateInput
 }
 
 export type ProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -231,6 +233,7 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   assignmentsAsDriver?: Prisma.OrderAssignmentListRelationFilter
   assignmentsMade?: Prisma.OrderAssignmentListRelationFilter
   statusChanges?: Prisma.OrderStatusHistoryListRelationFilter
+  stockAdjustments?: Prisma.StockAdjustmentListRelationFilter
 }, "id">
 
 export type ProfileOrderByWithAggregationInput = {
@@ -270,6 +273,7 @@ export type ProfileCreateInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUncheckedCreateInput = {
@@ -285,6 +289,7 @@ export type ProfileUncheckedCreateInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUpdateInput = {
@@ -300,6 +305,7 @@ export type ProfileUpdateInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUncheckedUpdateInput = {
@@ -315,6 +321,7 @@ export type ProfileUncheckedUpdateInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileCreateManyInput = {
@@ -472,6 +479,20 @@ export type ProfileUpdateOneRequiredWithoutAssignmentsMadeNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutAssignmentsMadeInput, Prisma.ProfileUpdateWithoutAssignmentsMadeInput>, Prisma.ProfileUncheckedUpdateWithoutAssignmentsMadeInput>
 }
 
+export type ProfileCreateNestedOneWithoutStockAdjustmentsInput = {
+  create?: Prisma.XOR<Prisma.ProfileCreateWithoutStockAdjustmentsInput, Prisma.ProfileUncheckedCreateWithoutStockAdjustmentsInput>
+  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutStockAdjustmentsInput
+  connect?: Prisma.ProfileWhereUniqueInput
+}
+
+export type ProfileUpdateOneRequiredWithoutStockAdjustmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProfileCreateWithoutStockAdjustmentsInput, Prisma.ProfileUncheckedCreateWithoutStockAdjustmentsInput>
+  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutStockAdjustmentsInput
+  upsert?: Prisma.ProfileUpsertWithoutStockAdjustmentsInput
+  connect?: Prisma.ProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutStockAdjustmentsInput, Prisma.ProfileUpdateWithoutStockAdjustmentsInput>, Prisma.ProfileUncheckedUpdateWithoutStockAdjustmentsInput>
+}
+
 export type ProfileCreateWithoutCustomersCreatedInput = {
   id: string
   fullName: string
@@ -484,6 +505,7 @@ export type ProfileCreateWithoutCustomersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUncheckedCreateWithoutCustomersCreatedInput = {
@@ -498,6 +520,7 @@ export type ProfileUncheckedCreateWithoutCustomersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileCreateOrConnectWithoutCustomersCreatedInput = {
@@ -528,6 +551,7 @@ export type ProfileUpdateWithoutCustomersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutCustomersCreatedInput = {
@@ -542,6 +566,7 @@ export type ProfileUncheckedUpdateWithoutCustomersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileCreateWithoutCustomerPhotosAddedInput = {
@@ -556,6 +581,7 @@ export type ProfileCreateWithoutCustomerPhotosAddedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUncheckedCreateWithoutCustomerPhotosAddedInput = {
@@ -570,6 +596,7 @@ export type ProfileUncheckedCreateWithoutCustomerPhotosAddedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileCreateOrConnectWithoutCustomerPhotosAddedInput = {
@@ -600,6 +627,7 @@ export type ProfileUpdateWithoutCustomerPhotosAddedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutCustomerPhotosAddedInput = {
@@ -614,6 +642,7 @@ export type ProfileUncheckedUpdateWithoutCustomerPhotosAddedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileCreateWithoutOrdersCreatedInput = {
@@ -628,6 +657,7 @@ export type ProfileCreateWithoutOrdersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUncheckedCreateWithoutOrdersCreatedInput = {
@@ -642,6 +672,7 @@ export type ProfileUncheckedCreateWithoutOrdersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileCreateOrConnectWithoutOrdersCreatedInput = {
@@ -672,6 +703,7 @@ export type ProfileUpdateWithoutOrdersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutOrdersCreatedInput = {
@@ -686,6 +718,7 @@ export type ProfileUncheckedUpdateWithoutOrdersCreatedInput = {
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileCreateWithoutStatusChangesInput = {
@@ -700,6 +733,7 @@ export type ProfileCreateWithoutStatusChangesInput = {
   ordersCreated?: Prisma.OrderCreateNestedManyWithoutCreatedByInput
   assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUncheckedCreateWithoutStatusChangesInput = {
@@ -714,6 +748,7 @@ export type ProfileUncheckedCreateWithoutStatusChangesInput = {
   ordersCreated?: Prisma.OrderUncheckedCreateNestedManyWithoutCreatedByInput
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileCreateOrConnectWithoutStatusChangesInput = {
@@ -744,6 +779,7 @@ export type ProfileUpdateWithoutStatusChangesInput = {
   ordersCreated?: Prisma.OrderUpdateManyWithoutCreatedByNestedInput
   assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutStatusChangesInput = {
@@ -758,6 +794,7 @@ export type ProfileUncheckedUpdateWithoutStatusChangesInput = {
   ordersCreated?: Prisma.OrderUncheckedUpdateManyWithoutCreatedByNestedInput
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileCreateWithoutAssignmentsAsDriverInput = {
@@ -772,6 +809,7 @@ export type ProfileCreateWithoutAssignmentsAsDriverInput = {
   ordersCreated?: Prisma.OrderCreateNestedManyWithoutCreatedByInput
   assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUncheckedCreateWithoutAssignmentsAsDriverInput = {
@@ -786,6 +824,7 @@ export type ProfileUncheckedCreateWithoutAssignmentsAsDriverInput = {
   ordersCreated?: Prisma.OrderUncheckedCreateNestedManyWithoutCreatedByInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileCreateOrConnectWithoutAssignmentsAsDriverInput = {
@@ -805,6 +844,7 @@ export type ProfileCreateWithoutAssignmentsMadeInput = {
   ordersCreated?: Prisma.OrderCreateNestedManyWithoutCreatedByInput
   assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
   statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileUncheckedCreateWithoutAssignmentsMadeInput = {
@@ -819,6 +859,7 @@ export type ProfileUncheckedCreateWithoutAssignmentsMadeInput = {
   ordersCreated?: Prisma.OrderUncheckedCreateNestedManyWithoutCreatedByInput
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
 }
 
 export type ProfileCreateOrConnectWithoutAssignmentsMadeInput = {
@@ -849,6 +890,7 @@ export type ProfileUpdateWithoutAssignmentsAsDriverInput = {
   ordersCreated?: Prisma.OrderUpdateManyWithoutCreatedByNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutAssignmentsAsDriverInput = {
@@ -863,6 +905,7 @@ export type ProfileUncheckedUpdateWithoutAssignmentsAsDriverInput = {
   ordersCreated?: Prisma.OrderUncheckedUpdateManyWithoutCreatedByNestedInput
   assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUpsertWithoutAssignmentsMadeInput = {
@@ -888,6 +931,7 @@ export type ProfileUpdateWithoutAssignmentsMadeInput = {
   ordersCreated?: Prisma.OrderUpdateManyWithoutCreatedByNestedInput
   assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutAssignmentsMadeInput = {
@@ -901,6 +945,83 @@ export type ProfileUncheckedUpdateWithoutAssignmentsMadeInput = {
   customerPhotosAdded?: Prisma.CustomerPhotoUncheckedUpdateManyWithoutAddedByNestedInput
   ordersCreated?: Prisma.OrderUncheckedUpdateManyWithoutCreatedByNestedInput
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
+  statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
+}
+
+export type ProfileCreateWithoutStockAdjustmentsInput = {
+  id: string
+  fullName: string
+  role?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customersCreated?: Prisma.CustomerCreateNestedManyWithoutCreatedByInput
+  customerPhotosAdded?: Prisma.CustomerPhotoCreateNestedManyWithoutAddedByInput
+  ordersCreated?: Prisma.OrderCreateNestedManyWithoutCreatedByInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
+  assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
+  statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+}
+
+export type ProfileUncheckedCreateWithoutStockAdjustmentsInput = {
+  id: string
+  fullName: string
+  role?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customersCreated?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPhotosAdded?: Prisma.CustomerPhotoUncheckedCreateNestedManyWithoutAddedByInput
+  ordersCreated?: Prisma.OrderUncheckedCreateNestedManyWithoutCreatedByInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
+  assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+}
+
+export type ProfileCreateOrConnectWithoutStockAdjustmentsInput = {
+  where: Prisma.ProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProfileCreateWithoutStockAdjustmentsInput, Prisma.ProfileUncheckedCreateWithoutStockAdjustmentsInput>
+}
+
+export type ProfileUpsertWithoutStockAdjustmentsInput = {
+  update: Prisma.XOR<Prisma.ProfileUpdateWithoutStockAdjustmentsInput, Prisma.ProfileUncheckedUpdateWithoutStockAdjustmentsInput>
+  create: Prisma.XOR<Prisma.ProfileCreateWithoutStockAdjustmentsInput, Prisma.ProfileUncheckedCreateWithoutStockAdjustmentsInput>
+  where?: Prisma.ProfileWhereInput
+}
+
+export type ProfileUpdateToOneWithWhereWithoutStockAdjustmentsInput = {
+  where?: Prisma.ProfileWhereInput
+  data: Prisma.XOR<Prisma.ProfileUpdateWithoutStockAdjustmentsInput, Prisma.ProfileUncheckedUpdateWithoutStockAdjustmentsInput>
+}
+
+export type ProfileUpdateWithoutStockAdjustmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customersCreated?: Prisma.CustomerUpdateManyWithoutCreatedByNestedInput
+  customerPhotosAdded?: Prisma.CustomerPhotoUpdateManyWithoutAddedByNestedInput
+  ordersCreated?: Prisma.OrderUpdateManyWithoutCreatedByNestedInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
+  assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
+  statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+}
+
+export type ProfileUncheckedUpdateWithoutStockAdjustmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customersCreated?: Prisma.CustomerUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPhotosAdded?: Prisma.CustomerPhotoUncheckedUpdateManyWithoutAddedByNestedInput
+  ordersCreated?: Prisma.OrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
+  assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
 }
 
@@ -916,6 +1037,7 @@ export type ProfileCountOutputType = {
   assignmentsAsDriver: number
   assignmentsMade: number
   statusChanges: number
+  stockAdjustments: number
 }
 
 export type ProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -925,6 +1047,7 @@ export type ProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   assignmentsAsDriver?: boolean | ProfileCountOutputTypeCountAssignmentsAsDriverArgs
   assignmentsMade?: boolean | ProfileCountOutputTypeCountAssignmentsMadeArgs
   statusChanges?: boolean | ProfileCountOutputTypeCountStatusChangesArgs
+  stockAdjustments?: boolean | ProfileCountOutputTypeCountStockAdjustmentsArgs
 }
 
 /**
@@ -979,6 +1102,13 @@ export type ProfileCountOutputTypeCountStatusChangesArgs<ExtArgs extends runtime
   where?: Prisma.OrderStatusHistoryWhereInput
 }
 
+/**
+ * ProfileCountOutputType without action
+ */
+export type ProfileCountOutputTypeCountStockAdjustmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockAdjustmentWhereInput
+}
+
 
 export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -993,6 +1123,7 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   assignmentsAsDriver?: boolean | Prisma.Profile$assignmentsAsDriverArgs<ExtArgs>
   assignmentsMade?: boolean | Prisma.Profile$assignmentsMadeArgs<ExtArgs>
   statusChanges?: boolean | Prisma.Profile$statusChangesArgs<ExtArgs>
+  stockAdjustments?: boolean | Prisma.Profile$stockAdjustmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["profile"]>
 
@@ -1031,6 +1162,7 @@ export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   assignmentsAsDriver?: boolean | Prisma.Profile$assignmentsAsDriverArgs<ExtArgs>
   assignmentsMade?: boolean | Prisma.Profile$assignmentsMadeArgs<ExtArgs>
   statusChanges?: boolean | Prisma.Profile$statusChangesArgs<ExtArgs>
+  stockAdjustments?: boolean | Prisma.Profile$stockAdjustmentsArgs<ExtArgs>
   _count?: boolean | Prisma.ProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1045,6 +1177,7 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     assignmentsAsDriver: Prisma.$OrderAssignmentPayload<ExtArgs>[]
     assignmentsMade: Prisma.$OrderAssignmentPayload<ExtArgs>[]
     statusChanges: Prisma.$OrderStatusHistoryPayload<ExtArgs>[]
+    stockAdjustments: Prisma.$StockAdjustmentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1453,6 +1586,7 @@ export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends runtime.
   assignmentsAsDriver<T extends Prisma.Profile$assignmentsAsDriverArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$assignmentsAsDriverArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assignmentsMade<T extends Prisma.Profile$assignmentsMadeArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$assignmentsMadeArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderAssignmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   statusChanges<T extends Prisma.Profile$statusChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$statusChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderStatusHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  stockAdjustments<T extends Prisma.Profile$stockAdjustmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$stockAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2022,6 +2156,30 @@ export type Profile$statusChangesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.OrderStatusHistoryScalarFieldEnum | Prisma.OrderStatusHistoryScalarFieldEnum[]
+}
+
+/**
+ * Profile.stockAdjustments
+ */
+export type Profile$stockAdjustmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockAdjustment
+   */
+  select?: Prisma.StockAdjustmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockAdjustment
+   */
+  omit?: Prisma.StockAdjustmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockAdjustmentInclude<ExtArgs> | null
+  where?: Prisma.StockAdjustmentWhereInput
+  orderBy?: Prisma.StockAdjustmentOrderByWithRelationInput | Prisma.StockAdjustmentOrderByWithRelationInput[]
+  cursor?: Prisma.StockAdjustmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockAdjustmentScalarFieldEnum | Prisma.StockAdjustmentScalarFieldEnum[]
 }
 
 /**

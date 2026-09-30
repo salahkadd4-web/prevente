@@ -7,11 +7,26 @@ import { createHash } from "node:crypto";
  * Le secret ne quitte jamais le serveur ; la base ne stocke que public_id et secure_url.
  */
 function config() {
-  const cloud = process.env.CLOUDINARY_CLOUD_NAME;
-  const key = process.env.CLOUDINARY_API_KEY;
-  const secret = process.env.CLOUDINARY_API_SECRET;
+  let cloud = process.env.CLOUDINARY_CLOUD_NAME;
+  let key = process.env.CLOUDINARY_API_KEY;
+  let secret = process.env.CLOUDINARY_API_SECRET;
+
+  // Repli : CLOUDINARY_URL au format officiel « cloudinary://<clé>:<secret>@<cloud> ».
+  if ((!cloud || !key || !secret) && process.env.CLOUDINARY_URL) {
+    try {
+      const url = new URL(process.env.CLOUDINARY_URL);
+      if (url.protocol === "cloudinary:") {
+        cloud = cloud || url.hostname;
+        key = key || decodeURIComponent(url.username);
+        secret = secret || decodeURIComponent(url.password);
+      }
+    } catch {
+      // URL mal formée : on retombe sur l'erreur de configuration ci-dessous (sans afficher la valeur).
+    }
+  }
+
   if (!cloud || !key || !secret) {
-    throw new Error("CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY et CLOUDINARY_API_SECRET sont requises dans .env.local");
+    throw new Error("Cloudinary non configuré : définir CLOUDINARY_URL, ou CLOUDINARY_CLOUD_NAME + CLOUDINARY_API_KEY + CLOUDINARY_API_SECRET.");
   }
   return { cloud, key, secret };
 }

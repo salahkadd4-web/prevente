@@ -13,11 +13,17 @@ export default async function Page({ searchParams }: PageProps<"/admin/customers
   await requireRole("admin");
   const raw = (await searchParams).q;
   const q = (Array.isArray(raw) ? raw[0] : raw)?.trim().slice(0, 80) ?? "";
+  const rawStatus = (await searchParams).status;
+  const statusParam = Array.isArray(rawStatus) ? rawStatus[0] : rawStatus;
+  const status = statusParam === "active" || statusParam === "inactive" ? statusParam : "all";
 
   const customers = await prisma.customer.findMany({
-    where: q
-      ? { OR: [{ businessName: { contains: q, mode: "insensitive" } }, { phone: { contains: q } }, { address: { contains: q, mode: "insensitive" } }] }
-      : undefined,
+    where: {
+      ...(status === "active" ? { isActive: true } : status === "inactive" ? { isActive: false } : {}),
+      ...(q
+        ? { OR: [{ businessName: { contains: q, mode: "insensitive" as const } }, { phone: { contains: q } }, { address: { contains: q, mode: "insensitive" as const } }] }
+        : {}),
+    },
     orderBy: { businessName: "asc" },
     include: { createdBy: { select: { fullName: true } }, _count: { select: { orders: true } } },
     take: 300,
@@ -36,12 +42,17 @@ export default async function Page({ searchParams }: PageProps<"/admin/customers
       </section>
 
       <section className={cardCls}>
-        <form method="get" className="flex gap-2">
-          <input name="q" defaultValue={q} placeholder="Rechercher : boutique, téléphone, adresse" aria-label="Rechercher un client" className={inputCls} />
+        <form method="get" className="flex flex-wrap gap-2">
+          <input name="q" defaultValue={q} placeholder="Rechercher : boutique, téléphone, adresse" aria-label="Rechercher un client" className={`${inputCls} min-w-56 flex-1`} />
+          <select name="status" defaultValue={status} aria-label="Statut" className={`${inputCls} w-auto`}>
+            <option value="all">Tous</option>
+            <option value="active">Actifs</option>
+            <option value="inactive">Désactivés</option>
+          </select>
           <button type="submit" className={btnGhost}>Chercher</button>
         </form>
 
-        {customers.length === 0 && <p className="mt-4 text-sm text-slate-500">{q ? "Aucun client trouvé." : "Aucun client pour le moment."}</p>}
+        {customers.length === 0 && <p className="mt-4 text-sm text-slate-500">{q || status !== "all" ? "Aucun client trouvé." : "Aucun client pour le moment."}</p>}
         <ul className="mt-2 divide-y divide-slate-100">
           {customers.map((c) => (
             <li key={c.id} className={`py-3 ${c.isActive ? "" : "opacity-60"}`}>

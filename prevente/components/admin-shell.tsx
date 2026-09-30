@@ -3,7 +3,8 @@ import { logout } from "@/lib/auth/actions";
 import { btnGhost } from "@/components/ui";
 
 const NAV = [
-  { href: "/admin/dashboard", label: "Accueil", key: "dashboard" },
+  { href: "/admin/dashboard", label: "Dashboard", key: "dashboard" },
+  { href: "/admin/orders", label: "Commandes", key: "orders" },
   { href: "/admin/customers", label: "Clients", key: "customers" },
   { href: "/admin/products", label: "Produits", key: "products" },
   { href: "/admin/stock", label: "Stock", key: "stock" },
@@ -24,7 +25,7 @@ export default function AdminShell({
   return (
     <div className="min-h-dvh bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
             <div aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-700 text-lg font-bold text-white">
               G
@@ -35,7 +36,7 @@ export default function AdminShell({
             <button type="submit" className={btnGhost}>Se déconnecter</button>
           </form>
         </div>
-        <nav aria-label="Administration" className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-4 pb-2">
+        <nav aria-label="Administration" className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-2">
           {NAV.map((item) => (
             <Link
               key={item.key}
@@ -50,7 +51,7 @@ export default function AdminShell({
           ))}
         </nav>
       </header>
-      <main className="mx-auto max-w-5xl px-4 py-6 sm:py-8">
+      <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
         <h1 className="mb-5 text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
         <div className="space-y-5">{children}</div>
       </main>

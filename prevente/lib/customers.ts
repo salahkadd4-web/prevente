@@ -1,6 +1,9 @@
 import { optionalText, text } from "@/lib/form";
 
 const MAPS_HOSTS = ["google.com", "www.google.com", "maps.google.com", "maps.app.goo.gl", "goo.gl"];
+/** Nombre maximal de photos conservées par boutique. */
+export const MAX_CUSTOMER_PHOTOS = 10;
+
 const PHONE = /^\+?[0-9 .()-]{6,20}$/;
 
 export type CustomerInput = {

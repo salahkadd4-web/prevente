@@ -61,7 +61,9 @@ export const ModelName = {
   Order: 'Order',
   OrderItem: 'OrderItem',
   OrderStatusHistory: 'OrderStatusHistory',
-  OrderAssignment: 'OrderAssignment'
+  OrderAssignment: 'OrderAssignment',
+  StockAdjustment: 'StockAdjustment',
+  OrderItemAllocation: 'OrderItemAllocation'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -111,7 +113,9 @@ export const ProductScalarFieldEnum = {
   saleUnit: 'saleUnit',
   isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  imagePublicId: 'imagePublicId',
+  imageSecureUrl: 'imageSecureUrl'
 } as const
 
 export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -230,6 +234,31 @@ export const OrderAssignmentScalarFieldEnum = {
 } as const
 
 export type OrderAssignmentScalarFieldEnum = (typeof OrderAssignmentScalarFieldEnum)[keyof typeof OrderAssignmentScalarFieldEnum]
+
+
+export const StockAdjustmentScalarFieldEnum = {
+  id: 'id',
+  lotId: 'lotId',
+  previousQuantity: 'previousQuantity',
+  newQuantity: 'newQuantity',
+  reason: 'reason',
+  changedById: 'changedById',
+  createdAt: 'createdAt'
+} as const
+
+export type StockAdjustmentScalarFieldEnum = (typeof StockAdjustmentScalarFieldEnum)[keyof typeof StockAdjustmentScalarFieldEnum]
+
+
+export const OrderItemAllocationScalarFieldEnum = {
+  id: 'id',
+  orderItemId: 'orderItemId',
+  lotId: 'lotId',
+  quantity: 'quantity',
+  createdAt: 'createdAt',
+  releasedAt: 'releasedAt'
+} as const
+
+export type OrderItemAllocationScalarFieldEnum = (typeof OrderItemAllocationScalarFieldEnum)[keyof typeof OrderItemAllocationScalarFieldEnum]
 
 
 export const SortOrder = {

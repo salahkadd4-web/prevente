@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { requireAdminAction } from "@/lib/auth/session";
 import { deleteImage, uploadImage } from "@/lib/cloudinary";
 import { isSaleUnit } from "@/lib/catalog";
+import { validateJpeg } from "@/lib/image-upload";
 import { isUniqueViolation, isUuid, optionalText, text, type ActionResult } from "@/lib/form";
 
 const done = (ok: string): ActionResult => {
@@ -94,26 +95,23 @@ export async function setVariantActive(_: ActionResult, formData: FormData): Pro
   return done("Statut du parfum mis à jour.");
 }
 
-const MAX_IMAGE_BYTES = 800_000; // l'image est réduite côté navigateur ; limite de sécurité côté serveur
-
 export async function setVariantImage(_: ActionResult, formData: FormData): Promise<ActionResult> {
   await requireAdminAction();
   const id = text(formData, "variantId");
   const file = formData.get("image");
   if (!isUuid(id)) return { error: "Parfum invalide." };
-  if (!(file instanceof File) || file.size === 0) return { error: "Aucune image reçue." };
-  if (file.type !== "image/jpeg") return { error: "Format d'image non pris en charge." };
-  if (file.size > MAX_IMAGE_BYTES) return { error: "Image trop lourde." };
+  const invalid = await validateJpeg(file);
+  if (invalid) return { error: invalid };
 
   const variant = await prisma.productVariant.findUnique({ where: { id }, select: { imagePublicId: true } });
   if (!variant) return { error: "Parfum introuvable." };
 
   let uploaded;
   try {
-    uploaded = await uploadImage(file, "prevente/variants");
+    uploaded = await uploadImage(file as File, "prevente/variants");
   } catch (e) {
     console.error("[setVariantImage]", e instanceof Error ? e.message : e);
-    return { error: "Envoi de la photo impossible. Voir le message dans le terminal." };
+    return { error: "Envoi de la photo impossible (service d'images indisponible ou mal configuré). L'ancienne photo est conservée." };
   }
 
   try {
@@ -150,4 +148,78 @@ export async function removeVariantImage(_: ActionResult, formData: FormData): P
   await prisma.productVariant.update({ where: { id }, data: { imagePublicId: null, imageSecureUrl: null } });
   revalidatePath("/admin/products");
   return { ok: "Photo supprimée." };
+}
+
+/** Colonnes photo de products : ajoutées par la migration 004. */
+function isMissingImageColumn(e: unknown): boolean {
+  return e instanceof Error && /image_public_id|image_secure_url|does not exist|Unknown argument/i.test(e.message);
+}
+const MIGRATION_004 = "Photo produit indisponible : la migration 004 n'est pas encore appliquée sur la base.";
+
+export async function setProductImage(_: ActionResult, formData: FormData): Promise<ActionResult> {
+  await requireAdminAction();
+  const id = text(formData, "productId");
+  const file = formData.get("image");
+  if (!isUuid(id)) return { error: "Produit invalide." };
+  const invalid = await validateJpeg(file);
+  if (invalid) return { error: invalid };
+
+  let product;
+  try {
+    product = await prisma.product.findUnique({ where: { id }, select: { imagePublicId: true } });
+  } catch (e) {
+    if (isMissingImageColumn(e)) return { error: MIGRATION_004 };
+    throw e;
+  }
+  if (!product) return { error: "Produit introuvable." };
+
+  let uploaded;
+  try {
+    uploaded = await uploadImage(file as File, "prevente/products");
+  } catch (e) {
+    console.error("[setProductImage]", e instanceof Error ? e.message : e);
+    return { error: "Envoi de la photo impossible (service d'images indisponible ou mal configuré). L'ancienne photo est conservée." };
+  }
+
+  try {
+    await prisma.product.update({
+      where: { id },
+      data: { imagePublicId: uploaded.publicId, imageSecureUrl: uploaded.secureUrl },
+    });
+  } catch (e) {
+    await deleteImage(uploaded.publicId).catch(() => {}); // pas de fichier orphelin
+    throw e;
+  }
+  if (product.imagePublicId) await deleteImage(product.imagePublicId).catch(() => {}); // ancienne photo
+
+  revalidatePath("/admin/products");
+  return { ok: "Photo du produit enregistrée." };
+}
+
+export async function removeProductImage(_: ActionResult, formData: FormData): Promise<ActionResult> {
+  await requireAdminAction();
+  const id = text(formData, "id");
+  if (!isUuid(id)) return { error: "Produit invalide." };
+
+  let product;
+  try {
+    product = await prisma.product.findUnique({ where: { id }, select: { imagePublicId: true } });
+  } catch (e) {
+    if (isMissingImageColumn(e)) return { error: MIGRATION_004 };
+    throw e;
+  }
+  if (!product) return { error: "Produit introuvable." };
+
+  // Cloudinary d'abord : en cas d'échec, la référence en base est conservée.
+  if (product.imagePublicId) {
+    try {
+      await deleteImage(product.imagePublicId);
+    } catch (e) {
+      console.error("[removeProductImage]", e instanceof Error ? e.message : e);
+      return { error: "Suppression de la photo impossible. Réessayez." };
+    }
+  }
+  await prisma.product.update({ where: { id }, data: { imagePublicId: null, imageSecureUrl: null } });
+  revalidatePath("/admin/products");
+  return { ok: "Photo du produit supprimée." };
 }

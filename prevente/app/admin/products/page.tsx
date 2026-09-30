@@ -2,21 +2,28 @@ import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
 import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
 import { requireRole } from "@/lib/auth/session";
+import ConfirmButton from "@/components/confirm-button";
 import VariantImage from "@/components/variant-image";
-import { SALE_UNITS, SALE_UNIT_LABEL, thumbUrl } from "@/lib/catalog";
+import { DEFAULT_FLAVOR_NAME, SALE_UNITS, SALE_UNIT_LABEL, thumbUrl } from "@/lib/catalog";
 import { prisma } from "@/lib/prisma";
 import {
-  createProduct, createVariant, removeVariantImage, setProductActive, setVariantActive, setVariantImage, updateProduct, updateVariant,
+  createProduct, createVariant, removeProductImage, removeVariantImage, setProductActive, setProductImage, setVariantActive, setVariantImage, updateProduct, updateVariant,
 } from "./actions";
 
 export const metadata = { title: "Produits · Grossiste Pro" };
 
-function ToggleForm({ action, id, active }: { action: typeof setProductActive; id: string; active: boolean }) {
+function ToggleForm({ action, id, active, what }: { action: typeof setProductActive; id: string; active: boolean; what: string }) {
   return (
     <ActionForm action={action}>
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="active" value={String(!active)} />
-      <button type="submit" className={btnGhost}>{active ? "Désactiver" : "Réactiver"}</button>
+      {active ? (
+        <ConfirmButton message={`Désactiver ${what} ? Il n'apparaîtra plus pour de nouvelles commandes ni de nouveaux lots ; l'historique est conservé.`} className={btnGhost}>
+          Désactiver
+        </ConfirmButton>
+      ) : (
+        <button type="submit" className={btnGhost}>Réactiver</button>
+      )}
     </ActionForm>
   );
 }
@@ -61,15 +68,23 @@ export default async function Page() {
       {products.map((p) => (
         <section key={p.id} className={`${cardCls} ${p.isActive ? "" : "opacity-70"}`}>
           <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
+            <div className="flex items-start gap-3">
+              {p.imageSecureUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={thumbUrl(p.imageSecureUrl)} alt={p.name} width={64} height={64} className="h-16 w-16 shrink-0 rounded-lg object-cover ring-1 ring-slate-200" />
+              ) : (
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400" aria-hidden>Photo</div>
+              )}
+              <div>
               <h2 className="text-lg font-semibold text-slate-900">{p.name}</h2>
               <p className="mt-1 flex flex-wrap gap-2">
                 <span className={`${badgeCls} ${badgeTone.none}`}>{SALE_UNIT_LABEL[p.saleUnit]}</span>
                 {!p.isActive && <span className={`${badgeCls} ${badgeTone.expired}`}>Désactivé</span>}
               </p>
               {p.description && <p className="mt-2 text-sm text-slate-600">{p.description}</p>}
+              </div>
             </div>
-            <ToggleForm action={setProductActive} id={p.id} active={p.isActive} />
+            <ToggleForm action={setProductActive} id={p.id} active={p.isActive} what={`le produit « ${p.name} »`} />
           </div>
 
           <details className="mt-3">
@@ -83,9 +98,20 @@ export default async function Page() {
             </ActionForm>
           </details>
 
+          <h3 className="mt-5 text-sm font-semibold text-slate-800">Photo du produit</h3>
+          <p className="mb-2 text-xs text-slate-500">Pour un produit sans parfum, ou comme photo générale du produit.</p>
+          <VariantImage
+            variantId={p.id}
+            idField="productId"
+            hasImage={!!p.imageSecureUrl}
+            uploadAction={setProductImage}
+            removeAction={removeProductImage}
+            removeConfirm="Retirer la photo de ce produit ?"
+          />
+
           <h3 className="mt-5 text-sm font-semibold text-slate-800">Parfums</h3>
           <ul className="mt-2 divide-y divide-slate-100">
-            {p.variants.length === 0 && <li className="py-2 text-sm text-slate-500">Aucun parfum : ajoutez-en un pour pouvoir mettre du stock.</li>}
+            {p.variants.length === 0 && <li className="py-2 text-sm text-slate-500">Produit sans parfum : réceptionnez directement du stock dans la page Stock (ou ajoutez un parfum).</li>}
             {p.variants.map((v) => (
               <li key={v.id} className={`py-3 ${v.isActive ? "" : "opacity-60"}`}>
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -97,12 +123,12 @@ export default async function Page() {
                       <div aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400">Photo</div>
                     )}
                     <div>
-                    <span className="font-medium text-slate-900">{v.name}</span>
+                    <span className="font-medium text-slate-900">{v.name === DEFAULT_FLAVOR_NAME ? `${v.name} (parfum technique)` : v.name}</span>
                     {v.sku && <span className="ml-2 text-xs text-slate-500">réf. {v.sku}</span>}
                     {!v.isActive && <span className={`${badgeCls} ${badgeTone.expired} ml-2`}>Désactivé</span>}
                     </div>
                   </div>
-                  <ToggleForm action={setVariantActive} id={v.id} active={v.isActive} />
+                  <ToggleForm action={setVariantActive} id={v.id} active={v.isActive} what={`le parfum « ${v.name} »`} />
                 </div>
                 <div className="mt-2">
                   <VariantImage variantId={v.id} hasImage={!!v.imageSecureUrl} uploadAction={setVariantImage} removeAction={removeVariantImage} />

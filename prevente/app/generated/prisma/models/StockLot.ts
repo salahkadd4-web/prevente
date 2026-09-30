@@ -256,6 +256,8 @@ export type StockLotWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   variant?: Prisma.XOR<Prisma.ProductVariantScalarRelationFilter, Prisma.ProductVariantWhereInput>
+  adjustments?: Prisma.StockAdjustmentListRelationFilter
+  allocations?: Prisma.OrderItemAllocationListRelationFilter
 }
 
 export type StockLotOrderByWithRelationInput = {
@@ -269,6 +271,8 @@ export type StockLotOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   variant?: Prisma.ProductVariantOrderByWithRelationInput
+  adjustments?: Prisma.StockAdjustmentOrderByRelationAggregateInput
+  allocations?: Prisma.OrderItemAllocationOrderByRelationAggregateInput
 }
 
 export type StockLotWhereUniqueInput = Prisma.AtLeast<{
@@ -286,6 +290,8 @@ export type StockLotWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
   variant?: Prisma.XOR<Prisma.ProductVariantScalarRelationFilter, Prisma.ProductVariantWhereInput>
+  adjustments?: Prisma.StockAdjustmentListRelationFilter
+  allocations?: Prisma.OrderItemAllocationListRelationFilter
 }, "id" | "variantId_lotNumber">
 
 export type StockLotOrderByWithAggregationInput = {
@@ -330,6 +336,8 @@ export type StockLotCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   variant: Prisma.ProductVariantCreateNestedOneWithoutStockLotsInput
+  adjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutLotInput
+  allocations?: Prisma.OrderItemAllocationCreateNestedManyWithoutLotInput
 }
 
 export type StockLotUncheckedCreateInput = {
@@ -342,6 +350,8 @@ export type StockLotUncheckedCreateInput = {
   receivedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  adjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutLotInput
+  allocations?: Prisma.OrderItemAllocationUncheckedCreateNestedManyWithoutLotInput
 }
 
 export type StockLotUpdateInput = {
@@ -354,6 +364,8 @@ export type StockLotUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   variant?: Prisma.ProductVariantUpdateOneRequiredWithoutStockLotsNestedInput
+  adjustments?: Prisma.StockAdjustmentUpdateManyWithoutLotNestedInput
+  allocations?: Prisma.OrderItemAllocationUpdateManyWithoutLotNestedInput
 }
 
 export type StockLotUncheckedUpdateInput = {
@@ -366,6 +378,8 @@ export type StockLotUncheckedUpdateInput = {
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutLotNestedInput
+  allocations?: Prisma.OrderItemAllocationUncheckedUpdateManyWithoutLotNestedInput
 }
 
 export type StockLotCreateManyInput = {
@@ -464,6 +478,11 @@ export type StockLotSumOrderByAggregateInput = {
   availableQuantity?: Prisma.SortOrder
 }
 
+export type StockLotScalarRelationFilter = {
+  is?: Prisma.StockLotWhereInput
+  isNot?: Prisma.StockLotWhereInput
+}
+
 export type StockLotCreateNestedManyWithoutVariantInput = {
   create?: Prisma.XOR<Prisma.StockLotCreateWithoutVariantInput, Prisma.StockLotUncheckedCreateWithoutVariantInput> | Prisma.StockLotCreateWithoutVariantInput[] | Prisma.StockLotUncheckedCreateWithoutVariantInput[]
   connectOrCreate?: Prisma.StockLotCreateOrConnectWithoutVariantInput | Prisma.StockLotCreateOrConnectWithoutVariantInput[]
@@ -518,6 +537,34 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
+export type StockLotCreateNestedOneWithoutAdjustmentsInput = {
+  create?: Prisma.XOR<Prisma.StockLotCreateWithoutAdjustmentsInput, Prisma.StockLotUncheckedCreateWithoutAdjustmentsInput>
+  connectOrCreate?: Prisma.StockLotCreateOrConnectWithoutAdjustmentsInput
+  connect?: Prisma.StockLotWhereUniqueInput
+}
+
+export type StockLotUpdateOneRequiredWithoutAdjustmentsNestedInput = {
+  create?: Prisma.XOR<Prisma.StockLotCreateWithoutAdjustmentsInput, Prisma.StockLotUncheckedCreateWithoutAdjustmentsInput>
+  connectOrCreate?: Prisma.StockLotCreateOrConnectWithoutAdjustmentsInput
+  upsert?: Prisma.StockLotUpsertWithoutAdjustmentsInput
+  connect?: Prisma.StockLotWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StockLotUpdateToOneWithWhereWithoutAdjustmentsInput, Prisma.StockLotUpdateWithoutAdjustmentsInput>, Prisma.StockLotUncheckedUpdateWithoutAdjustmentsInput>
+}
+
+export type StockLotCreateNestedOneWithoutAllocationsInput = {
+  create?: Prisma.XOR<Prisma.StockLotCreateWithoutAllocationsInput, Prisma.StockLotUncheckedCreateWithoutAllocationsInput>
+  connectOrCreate?: Prisma.StockLotCreateOrConnectWithoutAllocationsInput
+  connect?: Prisma.StockLotWhereUniqueInput
+}
+
+export type StockLotUpdateOneRequiredWithoutAllocationsNestedInput = {
+  create?: Prisma.XOR<Prisma.StockLotCreateWithoutAllocationsInput, Prisma.StockLotUncheckedCreateWithoutAllocationsInput>
+  connectOrCreate?: Prisma.StockLotCreateOrConnectWithoutAllocationsInput
+  upsert?: Prisma.StockLotUpsertWithoutAllocationsInput
+  connect?: Prisma.StockLotWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StockLotUpdateToOneWithWhereWithoutAllocationsInput, Prisma.StockLotUpdateWithoutAllocationsInput>, Prisma.StockLotUncheckedUpdateWithoutAllocationsInput>
+}
+
 export type StockLotCreateWithoutVariantInput = {
   id?: string
   lotNumber?: string | null
@@ -527,6 +574,8 @@ export type StockLotCreateWithoutVariantInput = {
   receivedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  adjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutLotInput
+  allocations?: Prisma.OrderItemAllocationCreateNestedManyWithoutLotInput
 }
 
 export type StockLotUncheckedCreateWithoutVariantInput = {
@@ -538,6 +587,8 @@ export type StockLotUncheckedCreateWithoutVariantInput = {
   receivedAt?: Date | string
   createdAt?: Date | string
   updatedAt?: Date | string
+  adjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutLotInput
+  allocations?: Prisma.OrderItemAllocationUncheckedCreateNestedManyWithoutLotInput
 }
 
 export type StockLotCreateOrConnectWithoutVariantInput = {
@@ -581,6 +632,142 @@ export type StockLotScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"StockLot"> | Date | string
 }
 
+export type StockLotCreateWithoutAdjustmentsInput = {
+  id?: string
+  lotNumber?: string | null
+  initialQuantity: number
+  availableQuantity: number
+  expiresAt?: Date | string | null
+  receivedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  variant: Prisma.ProductVariantCreateNestedOneWithoutStockLotsInput
+  allocations?: Prisma.OrderItemAllocationCreateNestedManyWithoutLotInput
+}
+
+export type StockLotUncheckedCreateWithoutAdjustmentsInput = {
+  id?: string
+  variantId: string
+  lotNumber?: string | null
+  initialQuantity: number
+  availableQuantity: number
+  expiresAt?: Date | string | null
+  receivedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allocations?: Prisma.OrderItemAllocationUncheckedCreateNestedManyWithoutLotInput
+}
+
+export type StockLotCreateOrConnectWithoutAdjustmentsInput = {
+  where: Prisma.StockLotWhereUniqueInput
+  create: Prisma.XOR<Prisma.StockLotCreateWithoutAdjustmentsInput, Prisma.StockLotUncheckedCreateWithoutAdjustmentsInput>
+}
+
+export type StockLotUpsertWithoutAdjustmentsInput = {
+  update: Prisma.XOR<Prisma.StockLotUpdateWithoutAdjustmentsInput, Prisma.StockLotUncheckedUpdateWithoutAdjustmentsInput>
+  create: Prisma.XOR<Prisma.StockLotCreateWithoutAdjustmentsInput, Prisma.StockLotUncheckedCreateWithoutAdjustmentsInput>
+  where?: Prisma.StockLotWhereInput
+}
+
+export type StockLotUpdateToOneWithWhereWithoutAdjustmentsInput = {
+  where?: Prisma.StockLotWhereInput
+  data: Prisma.XOR<Prisma.StockLotUpdateWithoutAdjustmentsInput, Prisma.StockLotUncheckedUpdateWithoutAdjustmentsInput>
+}
+
+export type StockLotUpdateWithoutAdjustmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lotNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  initialQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  variant?: Prisma.ProductVariantUpdateOneRequiredWithoutStockLotsNestedInput
+  allocations?: Prisma.OrderItemAllocationUpdateManyWithoutLotNestedInput
+}
+
+export type StockLotUncheckedUpdateWithoutAdjustmentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  lotNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  initialQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allocations?: Prisma.OrderItemAllocationUncheckedUpdateManyWithoutLotNestedInput
+}
+
+export type StockLotCreateWithoutAllocationsInput = {
+  id?: string
+  lotNumber?: string | null
+  initialQuantity: number
+  availableQuantity: number
+  expiresAt?: Date | string | null
+  receivedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  variant: Prisma.ProductVariantCreateNestedOneWithoutStockLotsInput
+  adjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutLotInput
+}
+
+export type StockLotUncheckedCreateWithoutAllocationsInput = {
+  id?: string
+  variantId: string
+  lotNumber?: string | null
+  initialQuantity: number
+  availableQuantity: number
+  expiresAt?: Date | string | null
+  receivedAt?: Date | string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  adjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutLotInput
+}
+
+export type StockLotCreateOrConnectWithoutAllocationsInput = {
+  where: Prisma.StockLotWhereUniqueInput
+  create: Prisma.XOR<Prisma.StockLotCreateWithoutAllocationsInput, Prisma.StockLotUncheckedCreateWithoutAllocationsInput>
+}
+
+export type StockLotUpsertWithoutAllocationsInput = {
+  update: Prisma.XOR<Prisma.StockLotUpdateWithoutAllocationsInput, Prisma.StockLotUncheckedUpdateWithoutAllocationsInput>
+  create: Prisma.XOR<Prisma.StockLotCreateWithoutAllocationsInput, Prisma.StockLotUncheckedCreateWithoutAllocationsInput>
+  where?: Prisma.StockLotWhereInput
+}
+
+export type StockLotUpdateToOneWithWhereWithoutAllocationsInput = {
+  where?: Prisma.StockLotWhereInput
+  data: Prisma.XOR<Prisma.StockLotUpdateWithoutAllocationsInput, Prisma.StockLotUncheckedUpdateWithoutAllocationsInput>
+}
+
+export type StockLotUpdateWithoutAllocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  lotNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  initialQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  variant?: Prisma.ProductVariantUpdateOneRequiredWithoutStockLotsNestedInput
+  adjustments?: Prisma.StockAdjustmentUpdateManyWithoutLotNestedInput
+}
+
+export type StockLotUncheckedUpdateWithoutAllocationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  variantId?: Prisma.StringFieldUpdateOperationsInput | string
+  lotNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  initialQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  availableQuantity?: Prisma.IntFieldUpdateOperationsInput | number
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutLotNestedInput
+}
+
 export type StockLotCreateManyVariantInput = {
   id?: string
   lotNumber?: string | null
@@ -601,6 +788,8 @@ export type StockLotUpdateWithoutVariantInput = {
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adjustments?: Prisma.StockAdjustmentUpdateManyWithoutLotNestedInput
+  allocations?: Prisma.OrderItemAllocationUpdateManyWithoutLotNestedInput
 }
 
 export type StockLotUncheckedUpdateWithoutVariantInput = {
@@ -612,6 +801,8 @@ export type StockLotUncheckedUpdateWithoutVariantInput = {
   receivedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  adjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutLotNestedInput
+  allocations?: Prisma.OrderItemAllocationUncheckedUpdateManyWithoutLotNestedInput
 }
 
 export type StockLotUncheckedUpdateManyWithoutVariantInput = {
@@ -626,6 +817,44 @@ export type StockLotUncheckedUpdateManyWithoutVariantInput = {
 }
 
 
+/**
+ * Count Type StockLotCountOutputType
+ */
+
+export type StockLotCountOutputType = {
+  adjustments: number
+  allocations: number
+}
+
+export type StockLotCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  adjustments?: boolean | StockLotCountOutputTypeCountAdjustmentsArgs
+  allocations?: boolean | StockLotCountOutputTypeCountAllocationsArgs
+}
+
+/**
+ * StockLotCountOutputType without action
+ */
+export type StockLotCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockLotCountOutputType
+   */
+  select?: Prisma.StockLotCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StockLotCountOutputType without action
+ */
+export type StockLotCountOutputTypeCountAdjustmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StockAdjustmentWhereInput
+}
+
+/**
+ * StockLotCountOutputType without action
+ */
+export type StockLotCountOutputTypeCountAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderItemAllocationWhereInput
+}
+
 
 export type StockLotSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -638,6 +867,9 @@ export type StockLotSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   createdAt?: boolean
   updatedAt?: boolean
   variant?: boolean | Prisma.ProductVariantDefaultArgs<ExtArgs>
+  adjustments?: boolean | Prisma.StockLot$adjustmentsArgs<ExtArgs>
+  allocations?: boolean | Prisma.StockLot$allocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.StockLotCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["stockLot"]>
 
 export type StockLotSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -681,6 +913,9 @@ export type StockLotSelectScalar = {
 export type StockLotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "variantId" | "lotNumber" | "initialQuantity" | "availableQuantity" | "expiresAt" | "receivedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["stockLot"]>
 export type StockLotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   variant?: boolean | Prisma.ProductVariantDefaultArgs<ExtArgs>
+  adjustments?: boolean | Prisma.StockLot$adjustmentsArgs<ExtArgs>
+  allocations?: boolean | Prisma.StockLot$allocationsArgs<ExtArgs>
+  _count?: boolean | Prisma.StockLotCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StockLotIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   variant?: boolean | Prisma.ProductVariantDefaultArgs<ExtArgs>
@@ -693,6 +928,8 @@ export type $StockLotPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   name: "StockLot"
   objects: {
     variant: Prisma.$ProductVariantPayload<ExtArgs>
+    adjustments: Prisma.$StockAdjustmentPayload<ExtArgs>[]
+    allocations: Prisma.$OrderItemAllocationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1099,6 +1336,8 @@ readonly fields: StockLotFieldRefs;
 export interface Prisma__StockLotClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   variant<T extends Prisma.ProductVariantDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProductVariantDefaultArgs<ExtArgs>>): Prisma.Prisma__ProductVariantClient<runtime.Types.Result.GetResult<Prisma.$ProductVariantPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  adjustments<T extends Prisma.StockLot$adjustmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StockLot$adjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StockAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  allocations<T extends Prisma.StockLot$allocationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StockLot$allocationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderItemAllocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1535,6 +1774,54 @@ export type StockLotDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Limit how many StockLots to delete.
    */
   limit?: number
+}
+
+/**
+ * StockLot.adjustments
+ */
+export type StockLot$adjustmentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StockAdjustment
+   */
+  select?: Prisma.StockAdjustmentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StockAdjustment
+   */
+  omit?: Prisma.StockAdjustmentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StockAdjustmentInclude<ExtArgs> | null
+  where?: Prisma.StockAdjustmentWhereInput
+  orderBy?: Prisma.StockAdjustmentOrderByWithRelationInput | Prisma.StockAdjustmentOrderByWithRelationInput[]
+  cursor?: Prisma.StockAdjustmentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StockAdjustmentScalarFieldEnum | Prisma.StockAdjustmentScalarFieldEnum[]
+}
+
+/**
+ * StockLot.allocations
+ */
+export type StockLot$allocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the OrderItemAllocation
+   */
+  select?: Prisma.OrderItemAllocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the OrderItemAllocation
+   */
+  omit?: Prisma.OrderItemAllocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderItemAllocationInclude<ExtArgs> | null
+  where?: Prisma.OrderItemAllocationWhereInput
+  orderBy?: Prisma.OrderItemAllocationOrderByWithRelationInput | Prisma.OrderItemAllocationOrderByWithRelationInput[]
+  cursor?: Prisma.OrderItemAllocationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderItemAllocationScalarFieldEnum | Prisma.OrderItemAllocationScalarFieldEnum[]
 }
 
 /**

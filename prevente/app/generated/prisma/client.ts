@@ -108,3 +108,15 @@ export type OrderStatusHistory = Prisma.OrderStatusHistoryModel
  * nouvelle, dans une même transaction.
  */
 export type OrderAssignment = Prisma.OrderAssignmentModel
+/**
+ * Model StockAdjustment
+ * Journal append-only des corrections manuelles d'inventaire d'un lot.
+ */
+export type StockAdjustment = Prisma.StockAdjustmentModel
+/**
+ * Model OrderItemAllocation
+ * Quantité prélevée dans un lot pour une ligne de commande (FEFO). Sert à
+ * restituer le stock à l'annulation : releasedAt non nul = déjà restitué, ce
+ * qui empêche toute double restitution.
+ */
+export type OrderItemAllocation = Prisma.OrderItemAllocationModel
