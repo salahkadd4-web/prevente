@@ -91,3 +91,16 @@ export async function requireAdminAction(): Promise<Profile> {
   }
   return state.profile;
 }
+
+/**
+ * À appeler en tête de CHAQUE Server Action du module pré-vendeur. Le rôle est relu côté serveur
+ * depuis le profil authentifié (jamais depuis le navigateur). Lève une erreur si l'appelant n'est
+ * pas un pré-vendeur actif.
+ */
+export async function requireVendeurAction(): Promise<Profile> {
+  const state = await getSessionState();
+  if (state.status !== "ok" || state.profile.role !== "vendeur") {
+    throw new Error("Accès refusé");
+  }
+  return state.profile;
+}

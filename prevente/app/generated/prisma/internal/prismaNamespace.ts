@@ -409,7 +409,11 @@ export const ModelName = {
   OrderStatusHistory: 'OrderStatusHistory',
   OrderAssignment: 'OrderAssignment',
   StockAdjustment: 'StockAdjustment',
-  OrderItemAllocation: 'OrderItemAllocation'
+  OrderItemAllocation: 'OrderItemAllocation',
+  CustomerSchedule: 'CustomerSchedule',
+  WorkDay: 'WorkDay',
+  WorkDayCustomer: 'WorkDayCustomer',
+  Visit: 'Visit'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -425,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "profile" | "category" | "product" | "productVariant" | "stockLot" | "customer" | "customerPhoto" | "order" | "orderItem" | "orderStatusHistory" | "orderAssignment" | "stockAdjustment" | "orderItemAllocation"
+    modelProps: "profile" | "category" | "product" | "productVariant" | "stockLot" | "customer" | "customerPhoto" | "order" | "orderItem" | "orderStatusHistory" | "orderAssignment" | "stockAdjustment" | "orderItemAllocation" | "customerSchedule" | "workDay" | "workDayCustomer" | "visit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1391,6 +1395,302 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CustomerSchedule: {
+      payload: Prisma.$CustomerSchedulePayload<ExtArgs>
+      fields: Prisma.CustomerScheduleFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CustomerScheduleFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CustomerScheduleFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>
+        }
+        findFirst: {
+          args: Prisma.CustomerScheduleFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CustomerScheduleFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>
+        }
+        findMany: {
+          args: Prisma.CustomerScheduleFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>[]
+        }
+        create: {
+          args: Prisma.CustomerScheduleCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>
+        }
+        createMany: {
+          args: Prisma.CustomerScheduleCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CustomerScheduleCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>[]
+        }
+        delete: {
+          args: Prisma.CustomerScheduleDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>
+        }
+        update: {
+          args: Prisma.CustomerScheduleUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>
+        }
+        deleteMany: {
+          args: Prisma.CustomerScheduleDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CustomerScheduleUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CustomerScheduleUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>[]
+        }
+        upsert: {
+          args: Prisma.CustomerScheduleUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CustomerSchedulePayload>
+        }
+        aggregate: {
+          args: Prisma.CustomerScheduleAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCustomerSchedule>
+        }
+        groupBy: {
+          args: Prisma.CustomerScheduleGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomerScheduleGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CustomerScheduleCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CustomerScheduleCountAggregateOutputType> | number
+        }
+      }
+    }
+    WorkDay: {
+      payload: Prisma.$WorkDayPayload<ExtArgs>
+      fields: Prisma.WorkDayFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkDayFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkDayFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkDayFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkDayFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>
+        }
+        findMany: {
+          args: Prisma.WorkDayFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>[]
+        }
+        create: {
+          args: Prisma.WorkDayCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>
+        }
+        createMany: {
+          args: Prisma.WorkDayCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorkDayCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>[]
+        }
+        delete: {
+          args: Prisma.WorkDayDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>
+        }
+        update: {
+          args: Prisma.WorkDayUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkDayDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkDayUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorkDayUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>[]
+        }
+        upsert: {
+          args: Prisma.WorkDayUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkDayAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkDay>
+        }
+        groupBy: {
+          args: Prisma.WorkDayGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkDayGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkDayCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkDayCountAggregateOutputType> | number
+        }
+      }
+    }
+    WorkDayCustomer: {
+      payload: Prisma.$WorkDayCustomerPayload<ExtArgs>
+      fields: Prisma.WorkDayCustomerFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorkDayCustomerFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorkDayCustomerFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>
+        }
+        findFirst: {
+          args: Prisma.WorkDayCustomerFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorkDayCustomerFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>
+        }
+        findMany: {
+          args: Prisma.WorkDayCustomerFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>[]
+        }
+        create: {
+          args: Prisma.WorkDayCustomerCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>
+        }
+        createMany: {
+          args: Prisma.WorkDayCustomerCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WorkDayCustomerCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>[]
+        }
+        delete: {
+          args: Prisma.WorkDayCustomerDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>
+        }
+        update: {
+          args: Prisma.WorkDayCustomerUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>
+        }
+        deleteMany: {
+          args: Prisma.WorkDayCustomerDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WorkDayCustomerUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WorkDayCustomerUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>[]
+        }
+        upsert: {
+          args: Prisma.WorkDayCustomerUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorkDayCustomerPayload>
+        }
+        aggregate: {
+          args: Prisma.WorkDayCustomerAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorkDayCustomer>
+        }
+        groupBy: {
+          args: Prisma.WorkDayCustomerGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkDayCustomerGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorkDayCustomerCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorkDayCustomerCountAggregateOutputType> | number
+        }
+      }
+    }
+    Visit: {
+      payload: Prisma.$VisitPayload<ExtArgs>
+      fields: Prisma.VisitFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.VisitFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.VisitFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>
+        }
+        findFirst: {
+          args: Prisma.VisitFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.VisitFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>
+        }
+        findMany: {
+          args: Prisma.VisitFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>[]
+        }
+        create: {
+          args: Prisma.VisitCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>
+        }
+        createMany: {
+          args: Prisma.VisitCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.VisitCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>[]
+        }
+        delete: {
+          args: Prisma.VisitDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>
+        }
+        update: {
+          args: Prisma.VisitUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>
+        }
+        deleteMany: {
+          args: Prisma.VisitDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.VisitUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.VisitUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>[]
+        }
+        upsert: {
+          args: Prisma.VisitUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$VisitPayload>
+        }
+        aggregate: {
+          args: Prisma.VisitAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateVisit>
+        }
+        groupBy: {
+          args: Prisma.VisitGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VisitGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.VisitCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.VisitCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1539,6 +1839,9 @@ export const OrderScalarFieldEnum = {
   createdById: 'createdById',
   status: 'status',
   notes: 'notes',
+  workDayId: 'workDayId',
+  visitId: 'visitId',
+  confirmedAt: 'confirmedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1610,6 +1913,59 @@ export const OrderItemAllocationScalarFieldEnum = {
 } as const
 
 export type OrderItemAllocationScalarFieldEnum = (typeof OrderItemAllocationScalarFieldEnum)[keyof typeof OrderItemAllocationScalarFieldEnum]
+
+
+export const CustomerScheduleScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  vendeurId: 'vendeurId',
+  weekday: 'weekday',
+  createdAt: 'createdAt'
+} as const
+
+export type CustomerScheduleScalarFieldEnum = (typeof CustomerScheduleScalarFieldEnum)[keyof typeof CustomerScheduleScalarFieldEnum]
+
+
+export const WorkDayScalarFieldEnum = {
+  id: 'id',
+  vendeurId: 'vendeurId',
+  workDate: 'workDate',
+  status: 'status',
+  startedAt: 'startedAt',
+  closedAt: 'closedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkDayScalarFieldEnum = (typeof WorkDayScalarFieldEnum)[keyof typeof WorkDayScalarFieldEnum]
+
+
+export const WorkDayCustomerScalarFieldEnum = {
+  id: 'id',
+  workDayId: 'workDayId',
+  customerId: 'customerId',
+  source: 'source',
+  addedAt: 'addedAt',
+  removedAt: 'removedAt'
+} as const
+
+export type WorkDayCustomerScalarFieldEnum = (typeof WorkDayCustomerScalarFieldEnum)[keyof typeof WorkDayCustomerScalarFieldEnum]
+
+
+export const VisitScalarFieldEnum = {
+  id: 'id',
+  workDayId: 'workDayId',
+  customerId: 'customerId',
+  vendeurId: 'vendeurId',
+  status: 'status',
+  noOrderReason: 'noOrderReason',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VisitScalarFieldEnum = (typeof VisitScalarFieldEnum)[keyof typeof VisitScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1730,6 +2086,62 @@ export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'OrderStatus[]'
  */
 export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'WorkDayStatus'
+ */
+export type EnumWorkDayStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkDayStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'WorkDayStatus[]'
+ */
+export type ListEnumWorkDayStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkDayStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'WorkDayCustomerSource'
+ */
+export type EnumWorkDayCustomerSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkDayCustomerSource'>
+    
+
+
+/**
+ * Reference to a field of type 'WorkDayCustomerSource[]'
+ */
+export type ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorkDayCustomerSource[]'>
+    
+
+
+/**
+ * Reference to a field of type 'VisitStatus'
+ */
+export type EnumVisitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VisitStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'VisitStatus[]'
+ */
+export type ListEnumVisitStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'VisitStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'NoOrderReason'
+ */
+export type EnumNoOrderReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoOrderReason'>
+    
+
+
+/**
+ * Reference to a field of type 'NoOrderReason[]'
+ */
+export type ListEnumNoOrderReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NoOrderReason[]'>
     
 
 
@@ -1910,6 +2322,10 @@ export type GlobalOmitConfig = {
   orderAssignment?: Prisma.OrderAssignmentOmit
   stockAdjustment?: Prisma.StockAdjustmentOmit
   orderItemAllocation?: Prisma.OrderItemAllocationOmit
+  customerSchedule?: Prisma.CustomerScheduleOmit
+  workDay?: Prisma.WorkDayOmit
+  workDayCustomer?: Prisma.WorkDayCustomerOmit
+  visit?: Prisma.VisitOmit
 }
 
 /* Types for Logging */

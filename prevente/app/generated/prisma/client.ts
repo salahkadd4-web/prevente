@@ -120,3 +120,24 @@ export type StockAdjustment = Prisma.StockAdjustmentModel
  * qui empêche toute double restitution.
  */
 export type OrderItemAllocation = Prisma.OrderItemAllocationModel
+/**
+ * Model CustomerSchedule
+ * Planning hebdomadaire : jour ISO (1 = lundi … 7 = dimanche). Le vendredi (5) est interdit
+ * par un CHECK SQL : aucun client n'y est planifié automatiquement. Aucun planning par défaut.
+ */
+export type CustomerSchedule = Prisma.CustomerScheduleModel
+/**
+ * Model WorkDay
+ * Journée de travail : une seule par pré-vendeur et par date (date d'Algérie).
+ */
+export type WorkDay = Prisma.WorkDayModel
+/**
+ * Model WorkDayCustomer
+ * Clients de la journée. Retrait = removedAt (historique conservé), jamais de suppression.
+ */
+export type WorkDayCustomer = Prisma.WorkDayCustomerModel
+/**
+ * Model Visit
+ * 
+ */
+export type Visit = Prisma.VisitModel

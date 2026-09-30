@@ -2,44 +2,43 @@ import Link from "next/link";
 import { logout } from "@/lib/auth/actions";
 import { btnGhost } from "@/components/ui";
 
-const NAV = [
-  { href: "/admin/dashboard", label: "Dashboard", key: "dashboard" },
-  { href: "/admin/orders", label: "Commandes", key: "orders" },
-  { href: "/admin/customers", label: "Clients", key: "customers" },
-  { href: "/admin/planning", label: "Planning", key: "planning" },
-  { href: "/admin/workdays", label: "Journées", key: "workdays" },
-  { href: "/admin/products", label: "Produits", key: "products" },
-  { href: "/admin/stock", label: "Stock", key: "stock" },
-  { href: "/admin/users", label: "Utilisateurs", key: "users" },
-] as const;
+export type VendeurSection = "dashboard" | "clients" | "orders";
 
-export type AdminSection = (typeof NAV)[number]["key"];
-
-export default function AdminShell({
+export default function VendeurShell({
   current,
   title,
+  dayId,
   children,
 }: {
-  current: AdminSection;
+  current: VendeurSection;
   title: string;
+  /** Journée affichée : active les onglets Clients / Commandes du jour. */
+  dayId?: string;
   children: React.ReactNode;
 }) {
+  const nav = [
+    { href: "/vendeur/dashboard", label: "Tableau de bord", key: "dashboard" as const },
+    ...(dayId
+      ? [
+          { href: `/vendeur/jour/${dayId}/clients`, label: "Clients du jour", key: "clients" as const },
+          { href: `/vendeur/jour/${dayId}/commandes`, label: "Commandes du jour", key: "orders" as const },
+        ]
+      : []),
+  ];
   return (
     <div className="min-h-dvh bg-slate-50">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
-            <div aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-700 text-lg font-bold text-white">
-              G
-            </div>
+            <div aria-hidden="true" className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-700 text-lg font-bold text-white">G</div>
             <span className="text-base font-semibold text-slate-900">Grossiste Pro</span>
           </div>
           <form action={logout}>
             <button type="submit" className={btnGhost}>Se déconnecter</button>
           </form>
         </div>
-        <nav aria-label="Administration" className="mx-auto flex max-w-6xl gap-1 overflow-x-auto px-4 pb-2">
-          {NAV.map((item) => (
+        <nav aria-label="Espace pré-vendeur" className="mx-auto flex max-w-5xl gap-1 overflow-x-auto px-4 pb-2">
+          {nav.map((item) => (
             <Link
               key={item.key}
               href={item.href}
@@ -53,7 +52,7 @@ export default function AdminShell({
           ))}
         </nav>
       </header>
-      <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
+      <main className="mx-auto max-w-5xl px-4 py-6 sm:py-8">
         <h1 className="mb-5 text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
         <div className="space-y-5">{children}</div>
       </main>

@@ -334,6 +334,74 @@ export type EnumOrderStatusNullableWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumOrderStatusNullableFilter<$PrismaModel>
 }
 
+export type EnumWorkDayStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayStatus | Prisma.EnumWorkDayStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayStatusFilter<$PrismaModel> | $Enums.WorkDayStatus
+}
+
+export type EnumWorkDayStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayStatus | Prisma.EnumWorkDayStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkDayStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkDayStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkDayStatusFilter<$PrismaModel>
+}
+
+export type EnumWorkDayCustomerSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayCustomerSource | Prisma.EnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayCustomerSourceFilter<$PrismaModel> | $Enums.WorkDayCustomerSource
+}
+
+export type EnumWorkDayCustomerSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayCustomerSource | Prisma.EnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayCustomerSourceWithAggregatesFilter<$PrismaModel> | $Enums.WorkDayCustomerSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkDayCustomerSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkDayCustomerSourceFilter<$PrismaModel>
+}
+
+export type EnumVisitStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.VisitStatus | Prisma.EnumVisitStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVisitStatusFilter<$PrismaModel> | $Enums.VisitStatus
+}
+
+export type EnumNoOrderReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.NoOrderReason | Prisma.EnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumNoOrderReasonNullableFilter<$PrismaModel> | $Enums.NoOrderReason | null
+}
+
+export type EnumVisitStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VisitStatus | Prisma.EnumVisitStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVisitStatusWithAggregatesFilter<$PrismaModel> | $Enums.VisitStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVisitStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVisitStatusFilter<$PrismaModel>
+}
+
+export type EnumNoOrderReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NoOrderReason | Prisma.EnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumNoOrderReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.NoOrderReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNoOrderReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNoOrderReasonNullableFilter<$PrismaModel>
+}
+
 export type NestedUuidFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -661,6 +729,74 @@ export type NestedEnumOrderStatusNullableWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOrderStatusNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOrderStatusNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumWorkDayStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayStatus | Prisma.EnumWorkDayStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayStatusFilter<$PrismaModel> | $Enums.WorkDayStatus
+}
+
+export type NestedEnumWorkDayStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayStatus | Prisma.EnumWorkDayStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayStatusWithAggregatesFilter<$PrismaModel> | $Enums.WorkDayStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkDayStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkDayStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumWorkDayCustomerSourceFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayCustomerSource | Prisma.EnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayCustomerSourceFilter<$PrismaModel> | $Enums.WorkDayCustomerSource
+}
+
+export type NestedEnumWorkDayCustomerSourceWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WorkDayCustomerSource | Prisma.EnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  in?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  notIn?: $Enums.WorkDayCustomerSource[] | Prisma.ListEnumWorkDayCustomerSourceFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumWorkDayCustomerSourceWithAggregatesFilter<$PrismaModel> | $Enums.WorkDayCustomerSource
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWorkDayCustomerSourceFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWorkDayCustomerSourceFilter<$PrismaModel>
+}
+
+export type NestedEnumVisitStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.VisitStatus | Prisma.EnumVisitStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVisitStatusFilter<$PrismaModel> | $Enums.VisitStatus
+}
+
+export type NestedEnumNoOrderReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.NoOrderReason | Prisma.EnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumNoOrderReasonNullableFilter<$PrismaModel> | $Enums.NoOrderReason | null
+}
+
+export type NestedEnumVisitStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.VisitStatus | Prisma.EnumVisitStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.VisitStatus[] | Prisma.ListEnumVisitStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumVisitStatusWithAggregatesFilter<$PrismaModel> | $Enums.VisitStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumVisitStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumVisitStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumNoOrderReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.NoOrderReason | Prisma.EnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.NoOrderReason[] | Prisma.ListEnumNoOrderReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumNoOrderReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.NoOrderReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumNoOrderReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumNoOrderReasonNullableFilter<$PrismaModel>
 }
 
 

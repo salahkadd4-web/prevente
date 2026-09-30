@@ -63,7 +63,11 @@ export const ModelName = {
   OrderStatusHistory: 'OrderStatusHistory',
   OrderAssignment: 'OrderAssignment',
   StockAdjustment: 'StockAdjustment',
-  OrderItemAllocation: 'OrderItemAllocation'
+  OrderItemAllocation: 'OrderItemAllocation',
+  CustomerSchedule: 'CustomerSchedule',
+  WorkDay: 'WorkDay',
+  WorkDayCustomer: 'WorkDayCustomer',
+  Visit: 'Visit'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -191,6 +195,9 @@ export const OrderScalarFieldEnum = {
   createdById: 'createdById',
   status: 'status',
   notes: 'notes',
+  workDayId: 'workDayId',
+  visitId: 'visitId',
+  confirmedAt: 'confirmedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -262,6 +269,59 @@ export const OrderItemAllocationScalarFieldEnum = {
 } as const
 
 export type OrderItemAllocationScalarFieldEnum = (typeof OrderItemAllocationScalarFieldEnum)[keyof typeof OrderItemAllocationScalarFieldEnum]
+
+
+export const CustomerScheduleScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  vendeurId: 'vendeurId',
+  weekday: 'weekday',
+  createdAt: 'createdAt'
+} as const
+
+export type CustomerScheduleScalarFieldEnum = (typeof CustomerScheduleScalarFieldEnum)[keyof typeof CustomerScheduleScalarFieldEnum]
+
+
+export const WorkDayScalarFieldEnum = {
+  id: 'id',
+  vendeurId: 'vendeurId',
+  workDate: 'workDate',
+  status: 'status',
+  startedAt: 'startedAt',
+  closedAt: 'closedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WorkDayScalarFieldEnum = (typeof WorkDayScalarFieldEnum)[keyof typeof WorkDayScalarFieldEnum]
+
+
+export const WorkDayCustomerScalarFieldEnum = {
+  id: 'id',
+  workDayId: 'workDayId',
+  customerId: 'customerId',
+  source: 'source',
+  addedAt: 'addedAt',
+  removedAt: 'removedAt'
+} as const
+
+export type WorkDayCustomerScalarFieldEnum = (typeof WorkDayCustomerScalarFieldEnum)[keyof typeof WorkDayCustomerScalarFieldEnum]
+
+
+export const VisitScalarFieldEnum = {
+  id: 'id',
+  workDayId: 'workDayId',
+  customerId: 'customerId',
+  vendeurId: 'vendeurId',
+  status: 'status',
+  noOrderReason: 'noOrderReason',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type VisitScalarFieldEnum = (typeof VisitScalarFieldEnum)[keyof typeof VisitScalarFieldEnum]
 
 
 export const SortOrder = {

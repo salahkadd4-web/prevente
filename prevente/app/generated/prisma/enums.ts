@@ -32,3 +32,38 @@ export const OrderStatus = {
 } as const
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
+
+export const WorkDayStatus = {
+  ouverte: 'ouverte',
+  cloturee: 'cloturee'
+} as const
+
+export type WorkDayStatus = (typeof WorkDayStatus)[keyof typeof WorkDayStatus]
+
+
+export const WorkDayCustomerSource = {
+  planning: 'planning',
+  manuel: 'manuel'
+} as const
+
+export type WorkDayCustomerSource = (typeof WorkDayCustomerSource)[keyof typeof WorkDayCustomerSource]
+
+
+export const VisitStatus = {
+  en_cours: 'en_cours',
+  commandee: 'commandee',
+  sans_commande: 'sans_commande',
+  annulee: 'annulee'
+} as const
+
+export type VisitStatus = (typeof VisitStatus)[keyof typeof VisitStatus]
+
+
+export const NoOrderReason = {
+  client_absent: 'client_absent',
+  pas_de_besoin: 'pas_de_besoin',
+  produit_indisponible: 'produit_indisponible'
+} as const
+
+export type NoOrderReason = (typeof NoOrderReason)[keyof typeof NoOrderReason]

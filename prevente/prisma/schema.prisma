@@ -54,6 +54,43 @@ enum OrderStatus {
   @@schema("public")
 }
 
+/// Journée de travail d'un pré-vendeur (migration 006).
+enum WorkDayStatus {
+  ouverte
+  cloturee
+
+  @@map("work_day_status")
+  @@schema("public")
+}
+
+enum WorkDayCustomerSource {
+  planning
+  manuel
+
+  @@map("work_day_customer_source")
+  @@schema("public")
+}
+
+/// « À faire » n'est pas stocké : c'est l'absence de visite pour ce client dans la journée.
+enum VisitStatus {
+  en_cours
+  commandee
+  sans_commande
+  annulee
+
+  @@map("visit_status")
+  @@schema("public")
+}
+
+enum NoOrderReason {
+  client_absent
+  pas_de_besoin
+  produit_indisponible
+
+  @@map("no_order_reason")
+  @@schema("public")
+}
+
 // -----------------------------------------------------------------------------
 // Utilisateurs (Supabase Auth reste la source d'authentification)
 // -----------------------------------------------------------------------------
@@ -76,6 +113,9 @@ model Profile {
   assignmentsMade     OrderAssignment[]    @relation("AssignmentAssignedBy")
   statusChanges       OrderStatusHistory[]
   stockAdjustments    StockAdjustment[]
+  workDays            WorkDay[]
+  visits              Visit[]
+  customerSchedules   CustomerSchedule[]
 
   @@map("profiles")
   @@schema("public")
@@ -202,6 +242,9 @@ model Customer {
   createdBy Profile         @relation(fields: [createdById], references: [id], onDelete: Restrict, onUpdate: NoAction)
   photos    CustomerPhoto[]
   orders    Order[]
+  schedules CustomerSchedule[]
+  workDayEntries WorkDayCustomer[]
+  visits    Visit[]
 
   @@index([createdById])
   @@index([businessName])
@@ -243,9 +286,16 @@ model Order {
   createdById String      @map("created_by_id") @db.Uuid
   status      OrderStatus @default(brouillon)
   notes       String?
+  /// Journée / visite d'origine (migration 006). NULL = commande créée hors module pré-vendeur.
+  workDayId   String?     @map("work_day_id") @db.Uuid
+  visitId     String?     @map("visit_id") @db.Uuid
+  /// Validation par le pré-vendeur. NULL = brouillon de saisie (hors chiffre d'affaires et compteurs).
+  confirmedAt DateTime?   @map("confirmed_at") @db.Timestamptz(6)
   createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
 
+  workDay       WorkDay?             @relation(fields: [workDayId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  visit         Visit?               @relation(fields: [visitId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   customer      Customer             @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   createdBy     Profile              @relation("OrderCreatedBy", fields: [createdById], references: [id], onDelete: Restrict, onUpdate: NoAction)
   items         OrderItem[]
@@ -256,6 +306,8 @@ model Order {
   @@index([customerId])
   @@index([createdById])
   @@index([createdAt])
+  @@index([workDayId])
+  @@unique([visitId], map: "orders_one_active_per_visit_key", where: raw("(visit_id IS NOT NULL AND status <> 'annulee')"))
   @@map("orders")
   @@schema("public")
 }
@@ -366,5 +418,93 @@ model OrderItemAllocation {
   @@index([orderItemId])
   @@index([lotId])
   @@map("order_item_allocations")
+  @@schema("public")
+}
+
+// -----------------------------------------------------------------------------
+// Module pré-vendeur (migration 006)
+// -----------------------------------------------------------------------------
+
+/// Planning hebdomadaire : jour ISO (1 = lundi … 7 = dimanche). Le vendredi (5) est interdit
+/// par un CHECK SQL : aucun client n'y est planifié automatiquement. Aucun planning par défaut.
+model CustomerSchedule {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  customerId String   @map("customer_id") @db.Uuid
+  vendeurId  String   @map("vendeur_id") @db.Uuid
+  weekday    Int      @db.SmallInt
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  vendeur  Profile  @relation(fields: [vendeurId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([customerId, vendeurId, weekday], map: "customer_schedules_unique")
+  @@index([vendeurId, weekday])
+  @@map("customer_schedules")
+  @@schema("public")
+}
+
+/// Journée de travail : une seule par pré-vendeur et par date (date d'Algérie).
+model WorkDay {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  vendeurId String        @map("vendeur_id") @db.Uuid
+  workDate  DateTime      @map("work_date") @db.Date
+  status    WorkDayStatus @default(ouverte)
+  startedAt DateTime      @default(now()) @map("started_at") @db.Timestamptz(6)
+  closedAt  DateTime?     @map("closed_at") @db.Timestamptz(6)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  vendeur   Profile           @relation(fields: [vendeurId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  customers WorkDayCustomer[]
+  visits    Visit[]
+  orders    Order[]
+
+  @@unique([vendeurId, workDate], map: "work_days_vendeur_date_key")
+  @@index([workDate])
+  @@map("work_days")
+  @@schema("public")
+}
+
+/// Clients de la journée. Retrait = removedAt (historique conservé), jamais de suppression.
+model WorkDayCustomer {
+  id         String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workDayId  String                @map("work_day_id") @db.Uuid
+  customerId String                @map("customer_id") @db.Uuid
+  source     WorkDayCustomerSource
+  addedAt    DateTime              @default(now()) @map("added_at") @db.Timestamptz(6)
+  removedAt  DateTime?             @map("removed_at") @db.Timestamptz(6)
+
+  workDay  WorkDay  @relation(fields: [workDayId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([workDayId, customerId], map: "work_day_customers_unique")
+  @@index([customerId])
+  @@map("work_day_customers")
+  @@schema("public")
+}
+
+model Visit {
+  id            String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  workDayId     String         @map("work_day_id") @db.Uuid
+  customerId    String         @map("customer_id") @db.Uuid
+  vendeurId     String         @map("vendeur_id") @db.Uuid
+  status        VisitStatus    @default(en_cours)
+  /// Renseigné si et seulement si status = sans_commande (CHECK SQL).
+  noOrderReason NoOrderReason? @map("no_order_reason")
+  startedAt     DateTime       @default(now()) @map("started_at") @db.Timestamptz(6)
+  endedAt       DateTime?      @map("ended_at") @db.Timestamptz(6)
+  createdAt     DateTime       @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime       @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  workDay  WorkDay  @relation(fields: [workDayId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  vendeur  Profile  @relation(fields: [vendeurId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  orders   Order[]
+
+  @@unique([workDayId, customerId], map: "visits_work_day_customer_key")
+  @@index([vendeurId])
+  @@index([customerId])
+  @@index([workDayId, status])
+  @@map("visits")
   @@schema("public")
 }
