@@ -22,7 +22,9 @@ export default async function Page({ params, searchParams }: PageProps<"/vendeur
   const day = await getOwnDay(profile.id, dayId);
   if (!day) notFound();
 
-  const { q, page: rawPage, vue } = parseListParams(await searchParams);
+  const sp = await searchParams;
+  const { q, page: rawPage, vue } = parseListParams(sp);
+  const justCreated = sp.nouveau === "1";
   const editable = day.status === "ouverte";
   const base = `/vendeur/jour/${dayId}/clients`;
 
@@ -126,6 +128,16 @@ export default async function Page({ params, searchParams }: PageProps<"/vendeur
             {editable ? "Afficher tous les clients / Ajouter un client" : "Afficher tous les clients"}
           </Link>
         </div>
+        {justCreated && (
+          <p role="status" className="mb-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800 ring-1 ring-inset ring-emerald-200">
+            Client enregistré et ajouté à la journée.
+          </p>
+        )}
+        {editable && (
+          <div className="mb-3">
+            <Link href={`${base}/nouveau`} className={`${btnGhost} inline-flex h-12 items-center`}>+ Nouveau client (recensement)</Link>
+          </div>
+        )}
         <div className="mb-3">
           <LiveSearch id="c-q" label="Rechercher un client" placeholder="Rechercher : nom, téléphone ou adresse" />
         </div>

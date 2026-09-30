@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import { requireVendeurAction } from "@/lib/auth/session";
 import { InsufficientStockError, reserveStockForOrder } from "@/lib/admin/order-stock";
 import { itemLabel } from "@/lib/catalog";
+import { parseCustomerForm } from "@/lib/customers";
 import { isUniqueViolation, isUuid, text, type ActionResult } from "@/lib/form";
 import { effectiveSalePrice } from "@/lib/pricing";
 import { toCents } from "@/lib/presale/money";
@@ -255,6 +256,54 @@ export async function addCustomerToDay(_: ActionResult, formData: FormData): Pro
   }
   refresh(p.dayId);
   return { ok: "Client ajouté à la journée." };
+}
+
+/**
+ * Recensement terrain : le pré-vendeur crée un nouveau client (createdById = lui) et l'ajoute à sa
+ * journée en cours dans la même transaction. Mêmes validations que l'admin (parseCustomerForm).
+ * Refuse un doublon probable (même nom + même téléphone, ou même nom + même adresse) pour qu'il
+ * réutilise le client existant au lieu d'en créer un second. Journée ouverte obligatoire.
+ */
+export async function createCustomerForDay(_: ActionResult, formData: FormData): Promise<ActionResult> {
+  const vendeur = await requireVendeurAction();
+  const dayId = text(formData, "dayId");
+  if (!isUuid(dayId)) return { error: "Journée invalide." };
+  const parsed = parseCustomerForm(formData);
+  if ("error" in parsed) return { error: parsed.error };
+  const data = parsed.data;
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      await lockOpenDay(tx, dayId, vendeur.id);
+
+      const same = { businessName: { equals: data.businessName, mode: "insensitive" as const } };
+      const dup = await tx.customer.findFirst({
+        where: {
+          OR: [
+            ...(data.phone ? [{ ...same, phone: data.phone }] : []),
+            { ...same, address: { equals: data.address, mode: "insensitive" as const } },
+          ],
+        },
+        select: { businessName: true, isActive: true },
+      });
+      if (dup) {
+        throw new Refusal(
+          dup.isActive
+            ? `« ${dup.businessName} » existe déjà : retrouvez-le dans « Afficher tous les clients » et ajoutez-le à la journée.`
+            : `« ${dup.businessName} » existe déjà mais est désactivé : contactez l'administrateur.`,
+        );
+      }
+
+      const customer = await tx.customer.create({ data: { ...data, createdById: vendeur.id } });
+      await tx.workDayCustomer.create({ data: { workDayId: dayId, customerId: customer.id, source: "manuel" } });
+    }, TX);
+  } catch (e) {
+    return fail(e, "createCustomerForDay");
+  }
+
+  refresh(dayId);
+  revalidatePath("/admin/customers");
+  redirect(`${dayPath(dayId)}/clients?nouveau=1`);
 }
 
 /**
