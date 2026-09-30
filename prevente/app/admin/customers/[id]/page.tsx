@@ -5,7 +5,7 @@ import CustomerPhotos from "@/components/customer-photos";
 import AdminShell from "@/components/admin-shell";
 import CustomerFields from "@/components/customer-fields";
 import Link from "next/link";
-import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls } from "@/components/ui";
+import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, linkCls, summaryCls } from "@/components/ui";
 import { requireRole } from "@/lib/auth/session";
 import { isUuid } from "@/lib/form";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_TONE, formatDateTime, formatMoney } from "@/lib/orders";
@@ -54,7 +54,7 @@ export default async function Page({ params }: PageProps<"/admin/customers/[id]"
   ];
 
   return (
-    <AdminShell current="customers" title={customer.businessName}>
+    <AdminShell current="customers" title={customer.businessName} back={{ href: "/admin/customers", label: "Retour aux clients" }}>
       <section className={cardCls}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1 text-sm text-slate-700">
@@ -83,7 +83,7 @@ export default async function Page({ params }: PageProps<"/admin/customers/[id]"
         </div>
 
         <details className="mt-4">
-          <summary className="cursor-pointer text-sm font-medium text-emerald-800">Modifier le client</summary>
+          <summary className={summaryCls}>Modifier le client</summary>
           <ActionForm action={updateCustomer} className="mt-3 grid gap-4 sm:grid-cols-2">
             <input type="hidden" name="id" value={customer.id} />
             <CustomerFields prefix="edit" v={customer} />
@@ -110,7 +110,7 @@ export default async function Page({ params }: PageProps<"/admin/customers/[id]"
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-lg font-semibold text-slate-900">Historique des commandes</h2>
           {orders.length > 0 && (
-            <Link href={`/admin/orders?customer=${customer.id}`} className="text-sm font-medium text-emerald-800 underline">Ouvrir dans Commandes →</Link>
+            <Link href={`/admin/orders?customer=${customer.id}`} className={`${linkCls} text-sm`}>Ouvrir dans Commandes →</Link>
           )}
         </div>
         <p className="mt-1 text-sm text-slate-600">{orders.length} commande{orders.length > 1 ? "s" : ""} au total</p>
@@ -131,7 +131,7 @@ export default async function Page({ params }: PageProps<"/admin/customers/[id]"
             <li key={o.id} className="rounded-xl border border-slate-200 p-3">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
-                  <p className="font-medium text-slate-900"><Link href={`/admin/orders/${o.id}`} className="text-emerald-800 underline">Commande n° {o.number}</Link></p>
+                  <p className="font-medium text-slate-900"><Link href={`/admin/orders/${o.id}`} className={linkCls}>Commande n° {o.number}</Link></p>
                   <p className="text-xs text-slate-500">
                     {formatDateTime(o.createdAt)} · vendeur {o.createdBy.fullName}
                     {o.assignments[0] && ` · livreur ${o.assignments[0].driver.fullName}`}

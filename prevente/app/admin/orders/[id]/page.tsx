@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
 import ConfirmButton from "@/components/confirm-button";
-import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
+import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls, linkCls } from "@/components/ui";
 import { requireRole } from "@/lib/auth/session";
 import { SALE_UNIT_LABEL, itemLabel } from "@/lib/catalog";
 import { isUuid } from "@/lib/form";
@@ -48,17 +48,14 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/o
   const backQuery = rawBack && SAFE_BACK.test(rawBack) ? rawBack : "";
 
   return (
-    <AdminShell current="orders" title={`Commande n° ${order.number}`}>
-      <p>
-        <Link href={`/admin/orders${backQuery}`} className="text-sm font-medium text-emerald-800 underline">← Retour aux commandes</Link>
-      </p>
+    <AdminShell current="orders" title={`Commande n° ${order.number}`} back={{ href: `/admin/orders${backQuery}`, label: "Retour aux commandes" }}>
 
       <section className={cardCls}>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1 text-sm text-slate-700">
             <p>
               Client :{" "}
-              <Link href={`/admin/customers/${order.customer.id}`} className="font-medium text-emerald-800 underline">{order.customer.businessName}</Link>
+              <Link href={`/admin/customers/${order.customer.id}`} className={linkCls}>{order.customer.businessName}</Link>
             </p>
             <p>{order.customer.address}</p>
             {order.customer.phone && <p>Tél. : <a className="font-medium text-emerald-800" href={`tel:${order.customer.phone}`}>{order.customer.phone}</a></p>}
@@ -68,7 +65,7 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/o
           </div>
           <div className="text-right">
             <span className={`${badgeCls} ${badgeTone[ORDER_STATUS_TONE[order.status]]}`}>{ORDER_STATUS_LABEL[order.status]}</span>
-            <p className="mt-2 text-2xl font-semibold text-slate-900">{formatMoney(total)}</p>
+            <p className="mt-2 text-2xl font-semibold tabular-nums text-slate-900">{formatMoney(total)}</p>
           </div>
         </div>
       </section>
@@ -132,7 +129,7 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/o
                     {drivers.map((d) => <option key={d.id} value={d.id} disabled={d.id === current?.driverId}>{d.fullName}{d.id === current?.driverId ? " (actuel)" : ""}</option>)}
                   </select>
                 </div>
-                <ConfirmButton message={current ? "Réaffecter cette commande à un autre livreur ?" : "Affecter cette commande à ce livreur ?"} className={btnPrimary}>
+                <ConfirmButton message={current ? "Réaffecter cette commande à un autre livreur ?" : "Affecter cette commande à ce livreur ?"} className={`${btnPrimary} w-full sm:w-auto`}>
                   {current ? "Réaffecter" : "Affecter"}
                 </ConfirmButton>
               </ActionForm>
@@ -156,7 +153,7 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/o
                 <label htmlFor="s-note" className={labelCls}>Note (facultatif)</label>
                 <input id="s-note" name="note" maxLength={300} className={inputCls} />
               </div>
-              <ConfirmButton message="Confirmer le changement de statut ? Une annulation restitue le stock réservé et est définitive." className={btnGhost + " h-12"}>
+              <ConfirmButton message="Confirmer le changement de statut ? Une annulation restitue le stock réservé et est définitive." className={btnGhost + " h-12 w-full sm:w-auto"}>
                 Valider
               </ConfirmButton>
             </ActionForm>
@@ -172,9 +169,9 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/o
         {order.statusHistory.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">Aucun changement enregistré.</p>
         ) : (
-          <ol className="mt-3 space-y-2">
+          <ol className="mt-3 space-y-3 border-l-2 border-slate-200 pl-4">
             {order.statusHistory.map((h) => (
-              <li key={h.id} className="rounded-lg border border-slate-200 p-3 text-sm">
+              <li key={h.id} className="relative text-sm before:absolute before:-left-[1.3rem] before:top-1.5 before:h-2.5 before:w-2.5 before:rounded-full before:bg-emerald-600">
                 <p className="text-slate-900">
                   {h.fromStatus ? `${ORDER_STATUS_LABEL[h.fromStatus]} → ` : ""}<strong>{ORDER_STATUS_LABEL[h.toStatus]}</strong>
                 </p>

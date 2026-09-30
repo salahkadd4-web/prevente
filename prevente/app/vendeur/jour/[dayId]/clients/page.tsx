@@ -4,7 +4,7 @@ import VendeurShell from "@/components/vendeur/vendeur-shell";
 import Pager from "@/components/vendeur/pager";
 import LiveSearch from "@/components/live-search";
 import { AddCustomerForm, RemoveCustomerForm } from "@/components/vendeur/day-actions";
-import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls } from "@/components/ui";
+import { alertCls, badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, chipCls } from "@/components/ui";
 import { startVisit } from "@/app/vendeur/actions";
 import { requireRole } from "@/lib/auth/session";
 import { isUuid } from "@/lib/form";
@@ -66,7 +66,7 @@ export default async function Page({ params, searchParams }: PageProps<"/vendeur
     const { rows } = page === rawPage ? probe : await listDayCustomers(dayId, q, page);
     content = rows.length === 0 ? (
       <p className="text-sm text-slate-500">
-        {q ? "Aucun client de la journée ne correspond à cette recherche." : "Aucun client dans la journée. Utilisez « Afficher tous les clients » pour en ajouter."}
+        {q ? "Aucun client de la journée ne correspond à cette recherche." : "Aucun client dans la journée. Ouvrez « Tous les clients » pour en ajouter à la journée."}
       </p>
     ) : (
       <ul className="divide-y divide-slate-100">
@@ -111,8 +111,7 @@ export default async function Page({ params, searchParams }: PageProps<"/vendeur
   }
 
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  const tab = (active: boolean) =>
-    `inline-flex h-10 items-center rounded-lg px-4 text-sm font-medium ${active ? "bg-emerald-700 text-white" : "border border-slate-300 bg-white text-slate-800 hover:bg-slate-100"}`;
+  const tab = chipCls;
 
   return (
     <VendeurShell current="clients" title="Clients du jour" dayId={dayId}>
@@ -123,13 +122,13 @@ export default async function Page({ params, searchParams }: PageProps<"/vendeur
 
       <section className={cardCls}>
         <div className="mb-3 flex flex-wrap gap-2">
-          <Link href={base} className={tab(vue === "jour")}>Clients de la journée</Link>
-          <Link href={`${base}?vue=tous`} className={tab(vue === "tous")}>
-            {editable ? "Afficher tous les clients / Ajouter un client" : "Afficher tous les clients"}
+          <Link href={base} aria-current={vue === "jour" ? "page" : undefined} className={tab(vue === "jour")}>De la journée</Link>
+          <Link href={`${base}?vue=tous`} aria-current={vue === "tous" ? "page" : undefined} className={tab(vue === "tous")}>
+            Tous les clients
           </Link>
         </div>
         {justCreated && (
-          <p role="status" className="mb-3 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800 ring-1 ring-inset ring-emerald-200">
+          <p role="status" className={`mb-3 ${alertCls.info}`}>
             Client enregistré et ajouté à la journée.
           </p>
         )}

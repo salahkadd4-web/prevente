@@ -15,8 +15,12 @@ function Days({ selected, idPrefix }: { selected: number[]; idPrefix: string }) 
   return (
     <div className="flex flex-wrap gap-2">
       {PLANNABLE_WEEKDAYS.map((d) => (
-        <label key={d} htmlFor={`${idPrefix}-${d}`} className="flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
-          <input id={`${idPrefix}-${d}`} type="checkbox" name="weekday" value={d} defaultChecked={selected.includes(d)} />
+        <label
+          key={d}
+          htmlFor={`${idPrefix}-${d}`}
+          className="flex min-h-11 cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 text-sm font-medium text-slate-700 has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50 has-[:checked]:text-emerald-900 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-emerald-600/40"
+        >
+          <input id={`${idPrefix}-${d}`} type="checkbox" name="weekday" value={d} defaultChecked={selected.includes(d)} className="h-4 w-4 accent-emerald-700" />
           {WEEKDAY_LABEL[d]}
         </label>
       ))}
@@ -88,12 +92,13 @@ export default async function Page({ searchParams }: PageProps<"/admin/planning"
               </div>
               <Days selected={[]} idPrefix="new" />
               <p className="text-xs text-slate-500">Les jours cochés remplacent ceux déjà enregistrés pour ce client.</p>
-              <SubmitButton pendingLabel="Enregistrement…" className={btnPrimary}>Enregistrer</SubmitButton>
+              <SubmitButton pendingLabel="Enregistrement…" className={`${btnPrimary} w-full sm:w-auto`}>Enregistrer</SubmitButton>
             </ActionForm>
           </section>
 
           <section className={cardCls}>
-            <h2 className="mb-3 text-lg font-semibold text-slate-900">Clients planifiés ({rows.length})</h2>
+            <h2 className="text-lg font-semibold text-slate-900">Clients planifiés ({rows.length})</h2>
+            <p className="mb-3 mt-1 text-xs text-slate-500">Décochez tous les jours d&apos;un client puis enregistrez pour le retirer du planning.</p>
             {rows.length === 0 ? (
               <p className="text-sm text-slate-500">Aucun client planifié pour ce pré-vendeur.</p>
             ) : (
@@ -105,7 +110,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/planning"
                       <input type="hidden" name="customerId" value={customerId} />
                       <p className="font-medium text-slate-900">{e.name}</p>
                       <Days selected={e.days} idPrefix={customerId} />
-                      <SubmitButton pendingLabel="…" className={btnGhost}>Mettre à jour (aucun jour coché = retirer)</SubmitButton>
+                      <SubmitButton pendingLabel="Enregistrement…" className={btnGhost}>Enregistrer</SubmitButton>
                     </ActionForm>
                   </li>
                 ))}

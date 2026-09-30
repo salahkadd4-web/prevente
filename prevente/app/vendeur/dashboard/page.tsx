@@ -1,7 +1,7 @@
 import Link from "next/link";
 import VendeurShell from "@/components/vendeur/vendeur-shell";
 import { CloseDayForm, StartDayForm, SyncForm } from "@/components/vendeur/day-actions";
-import { badgeCls, badgeTone, btnPrimary, cardCls } from "@/components/ui";
+import { alertCls, badgeCls, badgeTone, btnPrimary, cardCls } from "@/components/ui";
 import { requireRole } from "@/lib/auth/session";
 import { formatMoney } from "@/lib/orders";
 import { formatWorkDate, isFriday, todayAlgiers, workDateValue } from "@/lib/presale/dates";
@@ -14,7 +14,7 @@ function Stat({ label, value, hint }: { label: string; value: string; hint?: str
   return (
     <div className={cardCls}>
       <p className="text-sm text-slate-500">{label}</p>
-      <p className="mt-1 text-2xl font-semibold text-slate-900">{value}</p>
+      <p className="mt-1 text-2xl font-semibold tabular-nums text-slate-900">{value}</p>
       {hint && <p className="mt-1 text-xs text-slate-500">{hint}</p>}
     </div>
   );
@@ -42,7 +42,7 @@ export default async function Page() {
       </p>
 
       {stale.length > 0 && (
-        <div role="alert" className="rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-inset ring-amber-300">
+        <div role="alert" className={alertCls.warn}>
           <p className="font-medium">Journée{stale.length > 1 ? "s" : ""} précédente{stale.length > 1 ? "s" : ""} non clôturée{stale.length > 1 ? "s" : ""} :</p>
           <ul className="mt-1 list-disc pl-5">
             {stale.map((d) => (
@@ -79,9 +79,27 @@ export default async function Page() {
             <span className={`${badgeCls} ${open ? badgeTone.soon : badgeTone.ok}`}>{open ? "Ouverte" : "Clôturée"}</span>
           </section>
 
+          {counters && counters.plannedCustomers > 0 && (
+            <section className={cardCls} aria-label="Avancement de la tournée">
+              <div className="flex items-baseline justify-between gap-2">
+                <p className="text-sm font-medium text-slate-800">Avancement de la tournée</p>
+                <p className="text-sm tabular-nums text-slate-600">{counters.visitedCustomers} / {counters.plannedCustomers} clients</p>
+              </div>
+              <div
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={counters.plannedCustomers}
+                aria-valuenow={Math.min(counters.visitedCustomers, counters.plannedCustomers)}
+                aria-label="Clients visités"
+                className="mt-2 h-2.5 overflow-hidden rounded-full bg-slate-200"
+              >
+                <div className="h-full rounded-full bg-emerald-600" style={{ width: `${Math.min(100, Math.round((counters.visitedCustomers / counters.plannedCustomers) * 100))}%` }} />
+              </div>
+            </section>
+          )}
+
           {counters && (
-            <section aria-label="Indicateurs du jour" className="grid gap-3 sm:grid-cols-3">
-              <Stat label="Clients visités" value={`${counters.visitedCustomers} / ${counters.plannedCustomers}`} />
+            <section aria-label="Indicateurs du jour" className="grid gap-3 sm:grid-cols-2">
               <Stat label="Commandes réalisées" value={String(counters.confirmedOrders)} hint="Confirmées et non annulées" />
               <Stat label="Chiffre d'affaires du jour" value={formatMoney(Number(counters.revenue))} hint="Commandes confirmées, hors annulées" />
             </section>

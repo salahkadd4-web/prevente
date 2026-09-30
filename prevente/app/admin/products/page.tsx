@@ -20,26 +20,55 @@ import {
 
 export const metadata = { title: "Produits · Grossiste Pro" };
 
-function ToggleForm({ action, id, active, what }: { action: typeof setProductActive; id: string; active: boolean; what: string }) {
+function ToggleForm({ action, id, active, what, menu = false }: { action: typeof setProductActive; id: string; active: boolean; what: string; menu?: boolean }) {
   return (
     <ActionForm action={action}>
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="active" value={String(!active)} />
       {active ? (
-        <ConfirmButton message={`Désactiver ${what} ? Il n'apparaîtra plus pour de nouvelles commandes ni de nouveaux lots ; l'historique est conservé.`} className={btnGhost}>
+        <ConfirmButton
+          message={`Désactiver ${what} ? Il n'apparaîtra plus pour de nouvelles commandes ni de nouveaux lots ; l'historique est conservé.`}
+          className={menu ? "block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-red-700 hover:bg-red-50" : btnGhost}
+        >
           Désactiver
         </ConfirmButton>
       ) : (
-        <button type="submit" className={btnGhost}>Réactiver</button>
+        <button type="submit" className={menu ? "block w-full rounded-lg px-3 py-2 text-left text-sm font-medium text-slate-800 hover:bg-slate-100" : btnGhost}>Réactiver</button>
       )}
     </ActionForm>
   );
 }
 
+/** Menu « ⋯ » sans JavaScript (details/summary) : regroupe les actions rares et sensibles. */
+function MoreMenu({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <details className="relative">
+      <summary
+        aria-label={label}
+        className="flex h-10 w-10 cursor-pointer list-none items-center justify-center rounded-lg border border-slate-300 bg-white text-lg font-bold leading-none text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 [&::-webkit-details-marker]:hidden"
+      >
+        ⋯
+      </summary>
+      <div className="absolute right-0 z-10 mt-1 w-44 rounded-xl border border-slate-200 bg-white p-1 shadow-lg">{children}</div>
+    </details>
+  );
+}
+
+function Thumb({ url, alt, size }: { url: string | null; alt: string; size: 10 | 12 }) {
+  const cls = size === 12 ? "h-12 w-12" : "h-10 w-10";
+  return url ? (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={thumbUrl(url)} alt={alt} width={size * 4} height={size * 4} className={`${cls} shrink-0 rounded-lg object-cover ring-1 ring-slate-200`} />
+  ) : (
+    <div aria-hidden="true" className={`${cls} shrink-0 rounded-lg bg-slate-100 ring-1 ring-slate-200`} />
+  );
+}
+
+const plural = (n: number, word: string) => `${n} ${word}${n > 1 ? "s" : ""}`;
+const priceInputProps = { type: "text", inputMode: "decimal", pattern: "[0-9]+([.,][0-9]{1,2})?", title: "Nombre positif, 2 décimales maximum" } as const;
+
 const PRODUCT_LIMIT = 100;
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v)?.trim() ?? "";
-
-const money = (v: { toString(): string } | null) => (v === null ? null : formatMoney(Number(v.toString())));
 
 export default async function Page({ searchParams }: PageProps<"/admin/products">) {
   await requireRole("admin");
@@ -127,161 +156,194 @@ export default async function Page({ searchParams }: PageProps<"/admin/products"
 
         <ul className="mt-2 divide-y divide-slate-100">
           {products.map((p) => {
-            const stockQty = p.variants.reduce((n, v) => n + qtyOfVariant(v.id), 0);
             const unit = SALE_UNIT_LABEL[p.saleUnit].toLowerCase();
-            const priceLabel = money(p.salePrice);
+            const stockQty = p.variants.reduce((n, v) => n + qtyOfVariant(v.id), 0);
+            const flavors = p.variants.filter((v) => v.name !== DEFAULT_FLAVOR_NAME);
+            const activeVariants = p.variants.filter((v) => v.isActive);
+            const priceMissing = activeVariants.length > 0
+              ? activeVariants.some((v) => effectiveSalePrice(v, p) === null)
+              : p.salePrice === null;
+            const productLots = p.variants.flatMap((v) => lotsByVariant.get(v.id) ?? []);
+            const expiryAlerts = productLots.filter((l) => ["expired", "soon"].includes(expiryInfo(l.expiresAt).tone)).length;
+            const photo = p.imageSecureUrl ?? p.variants.find((v) => v.imageSecureUrl)?.imageSecureUrl ?? null;
+            const showOutOfStock = p.isActive && p.variants.length > 0 && stockQty === 0;
+
             return (
               <li key={p.id} className={p.isActive ? "" : "opacity-70"}>
                 <ExpandableRow
                   label={p.name}
                   summary={
-                    <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                      <span className="min-w-40 flex-1">
-                        <span className="block font-medium text-slate-900">{p.name}</span>
-                        <span className="block text-xs text-slate-500">{p.category?.name ?? "Sans catégorie"}</span>
+                    <span className="flex items-center gap-3">
+                      <Thumb url={photo} alt="" size={12} />
+                      <span className="min-w-0 flex-1">
+                        <span className="block truncate font-medium text-slate-900">{p.name}</span>
+                        <span className="block truncate text-xs text-slate-500">
+                          {[p.category?.name, p.description].filter(Boolean).join(" · ") || SALE_UNIT_LABEL[p.saleUnit]}
+                        </span>
                       </span>
-                      <span className="text-sm text-slate-700">
-                        <span className="text-xs text-slate-500">Vente </span>
-                        {priceLabel ?? <span className="text-slate-500">non défini</span>}
+                      <span className="hidden shrink-0 text-right text-sm text-slate-700 sm:block">
+                        <span className="block">{stockQty > 0 ? plural(stockQty, unit) : "0 en stock"}</span>
+                        <span className="block text-xs text-slate-500">{flavors.length > 0 ? plural(flavors.length, "parfum") : "Sans parfum"}</span>
                       </span>
-                      <span className="text-sm text-slate-700">
-                        <span className="text-xs text-slate-500">Stock </span>
-                        {stockQty > 0 ? `${stockQty} ${unit}` : <span className={`${badgeCls} ${badgeTone.expired}`}>Rupture</span>}
+                      <span className="flex shrink-0 flex-wrap justify-end gap-1">
+                        {!p.isActive && <span className={`${badgeCls} ${badgeTone.none}`}>Désactivé</span>}
+                        {p.isActive && priceMissing && <span className={`${badgeCls} ${badgeTone.soon}`}>Prix à définir</span>}
+                        {showOutOfStock && <span className={`${badgeCls} ${badgeTone.expired}`}>Rupture</span>}
+                        {p.isActive && expiryAlerts > 0 && <span className={`${badgeCls} ${badgeTone.soon}`}>Expire bientôt</span>}
                       </span>
-                      {!p.isActive && <span className={`${badgeCls} ${badgeTone.expired}`}>Désactivé</span>}
                     </span>
                   }
-                  actions={<ToggleForm action={setProductActive} id={p.id} active={p.isActive} what={`le produit « ${p.name} »`} />}
+                  actions={
+                    p.isActive ? (
+                      <MoreMenu label={`Actions pour ${p.name}`}>
+                        <ToggleForm action={setProductActive} id={p.id} active={p.isActive} what={`le produit « ${p.name} »`} menu />
+                      </MoreMenu>
+                    ) : (
+                      <ToggleForm action={setProductActive} id={p.id} active={p.isActive} what={`le produit « ${p.name} »`} />
+                    )
+                  }
                 >
                   <div className="space-y-4 border-l-2 border-slate-100 pl-3">
-                    <div className="flex items-start gap-3">
-                      {p.imageSecureUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={thumbUrl(p.imageSecureUrl)} alt={p.name} width={64} height={64} className="h-16 w-16 shrink-0 rounded-lg object-cover ring-1 ring-slate-200" />
-                      ) : (
-                        <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400" aria-hidden>Photo</div>
+                    {/* Niveau 2 : une ligne par parfum */}
+                    <ul className="divide-y divide-slate-100 rounded-xl border border-slate-200">
+                      {p.variants.length === 0 && (
+                        <li className="px-3 py-3 text-sm text-slate-500">Aucun parfum : réceptionnez du stock dans la page Stock ou ajoutez un parfum.</li>
                       )}
-                      <dl className="grid flex-1 gap-x-6 gap-y-1 text-sm sm:grid-cols-2">
-                        <div><dt className="inline text-slate-500">Catégorie : </dt><dd className="inline text-slate-900">{p.category?.name ?? "—"}</dd></div>
-                        <div><dt className="inline text-slate-500">Unité de vente : </dt><dd className="inline text-slate-900">{SALE_UNIT_LABEL[p.saleUnit]}</dd></div>
-                        <div><dt className="inline text-slate-500">Prix de vente : </dt><dd className="inline text-slate-900">{priceLabel ?? "non défini"}</dd></div>
-                        {p.description && <div className="sm:col-span-2"><dt className="inline text-slate-500">Description : </dt><dd className="inline text-slate-900">{p.description}</dd></div>}
-                      </dl>
-                    </div>
+                      {p.variants.map((v) => {
+                        const vLots = lotsByVariant.get(v.id) ?? [];
+                        const qty = qtyOfVariant(v.id);
+                        const eff = effectiveSalePrice(v, p);
+                        const worst = vLots.map((l) => expiryInfo(l.expiresAt)).find((i) => i.tone === "expired") ?? vLots.map((l) => expiryInfo(l.expiresAt)).find((i) => i.tone === "soon");
+                        const status = !v.isActive
+                          ? { tone: "none" as const, label: "Désactivé" }
+                          : qty === 0
+                            ? { tone: "expired" as const, label: "Rupture" }
+                            : worst ?? { tone: "ok" as const, label: "OK" };
+                        const vName = v.name === DEFAULT_FLAVOR_NAME ? "Sans parfum" : v.name;
+                        return (
+                          <li key={v.id} className={v.isActive ? "" : "opacity-60"}>
+                            <details className="group">
+                              <summary className="flex cursor-pointer list-none items-center gap-3 px-3 py-2 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 [&::-webkit-details-marker]:hidden">
+                                <Thumb url={v.imageSecureUrl} alt="" size={10} />
+                                <span className="min-w-0 flex-1 truncate font-medium text-slate-900">{vName}</span>
+                                <span className={`shrink-0 text-sm ${eff === null ? "font-medium text-amber-800" : "text-slate-800"}`}>
+                                  {eff === null ? "Prix à définir" : formatMoney(Number(eff))}
+                                </span>
+                                <span className="hidden w-24 shrink-0 text-right text-sm text-slate-700 sm:block">{qty > 0 ? plural(qty, unit) : "0"}</span>
+                                <span className={`${badgeCls} ${badgeTone[status.tone]} shrink-0`}>{status.label}</span>
+                                <span className="shrink-0 text-sm font-semibold text-emerald-800 group-open:hidden" aria-hidden="true">Modifier</span>
+                                <span className="hidden shrink-0 text-sm font-semibold text-slate-500 group-open:inline" aria-hidden="true">Fermer</span>
+                                <span className="sr-only">Modifier le parfum {vName}</span>
+                              </summary>
 
-                    <div>
-                      <h3 className="text-sm font-semibold text-slate-800">Parfums, stock et prix d&apos;achat</h3>
-                      <ul className="mt-2 divide-y divide-slate-100">
-                        {p.variants.length === 0 && <li className="py-2 text-sm text-slate-500">Produit sans parfum : réceptionnez directement du stock dans la page Stock (ou ajoutez un parfum).</li>}
-                        {p.variants.map((v) => {
-                          const vLots = lotsByVariant.get(v.id) ?? [];
-                          const eff = effectiveSalePrice(v, p);
-                          return (
-                            <li key={v.id} className={`py-3 ${v.isActive ? "" : "opacity-60"}`}>
-                              <div className="flex flex-wrap items-center justify-between gap-2">
-                                <div className="flex items-center gap-3">
-                                  {v.imageSecureUrl ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img src={thumbUrl(v.imageSecureUrl)} alt={`${p.name} ${v.name}`} width={56} height={56} className="h-14 w-14 rounded-lg object-cover ring-1 ring-slate-200" />
-                                  ) : (
-                                    <div aria-hidden="true" className="flex h-14 w-14 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400">Photo</div>
-                                  )}
-                                  <div>
-                                    <span className="font-medium text-slate-900">{v.name === DEFAULT_FLAVOR_NAME ? `${v.name} (parfum technique)` : v.name}</span>
-                                    {v.sku && <span className="ml-2 text-xs text-slate-500">réf. {v.sku}</span>}
-                                    {!v.isActive && <span className={`${badgeCls} ${badgeTone.expired} ml-2`}>Désactivé</span>}
-                                    <p className="text-xs text-slate-600">
-                                      Vente : {eff === null ? "non défini" : formatMoney(Number(eff))}{v.salePrice !== null && " (prix propre au parfum)"} · En stock : {qtyOfVariant(v.id)} {unit}
-                                    </p>
-                                  </div>
-                                </div>
-                                <ToggleForm action={setVariantActive} id={v.id} active={v.isActive} what={`le parfum « ${v.name} »`} />
-                              </div>
-
-                              {vLots.length > 0 && (
-                                <div className="mt-2 overflow-x-auto">
-                                  <table className="w-full min-w-[440px] text-left text-xs">
-                                    <thead className="text-slate-500">
-                                      <tr>
-                                        <th scope="col" className="py-1 pr-2 font-medium">Lot</th>
-                                        <th scope="col" className="px-2 py-1 text-right font-medium">Dispo.</th>
-                                        <th scope="col" className="px-2 py-1 text-right font-medium">Prix d&apos;achat</th>
-                                        <th scope="col" className="py-1 pl-2 font-medium">Expiration</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-slate-100">
-                                      {vLots.map((l) => {
-                                        const info = expiryInfo(l.expiresAt);
-                                        return (
-                                          <tr key={l.id}>
-                                            <td className="py-1 pr-2 text-slate-800">{l.lotNumber ?? "—"}</td>
-                                            <td className="px-2 py-1 text-right text-slate-800">{l.availableQuantity}</td>
-                                            <td className="px-2 py-1 text-right text-slate-800">{money(l.unitCost) ?? <span className="text-slate-500">inconnu</span>}</td>
-                                            <td className="py-1 pl-2 text-slate-800">
-                                              {formatDate(l.expiresAt)} <span className={`${badgeCls} ${badgeTone[info.tone]} ml-1`}>{info.label}</span>
-                                            </td>
-                                          </tr>
-                                        );
-                                      })}
-                                    </tbody>
-                                  </table>
-                                </div>
-                              )}
-
-                              <div className="mt-2">
-                                <VariantImage variantId={v.id} hasImage={!!v.imageSecureUrl} uploadAction={setVariantImage} removeAction={removeVariantImage} />
-                              </div>
-                              <details className="mt-1">
-                                <summary className="cursor-pointer text-xs font-medium text-emerald-800">Modifier le parfum</summary>
-                                <ActionForm action={updateVariant} className="mt-2 grid gap-3 sm:grid-cols-2">
+                              <div className="space-y-4 border-t border-slate-100 bg-slate-50/60 px-3 py-4">
+                                <ActionForm action={updateVariant} className="grid gap-3 sm:grid-cols-2">
                                   <input type="hidden" name="id" value={v.id} />
-                                  <input name="name" required maxLength={80} defaultValue={v.name} aria-label="Parfum" className={inputCls} />
-                                  <input name="sku" defaultValue={v.sku ?? ""} placeholder="Référence (facultatif)" aria-label="Référence" className={inputCls} />
-                                  <input name="salePrice" type="text" inputMode="decimal" pattern="[0-9]+([.,][0-9]{1,2})?" title="Nombre positif, 2 décimales maximum" defaultValue={moneyInputValue(v.salePrice)} placeholder="Prix de vente du parfum (vide = prix du produit)" aria-label="Prix de vente du parfum" className={inputCls} />
-                                  <button type="submit" className={btnGhost}>Enregistrer</button>
+                                  <label className="block"><span className={labelCls}>Parfum</span><input name="name" required maxLength={80} defaultValue={v.name} className={inputCls} /></label>
+                                  <label className="block"><span className={labelCls}>Prix de vente {v.salePrice === null && <span className="font-normal text-slate-500">(vide = prix du produit)</span>}</span><input name="salePrice" {...priceInputProps} defaultValue={moneyInputValue(v.salePrice)} className={inputCls} /></label>
+                                  <label className="block"><span className={labelCls}>Référence <span className="font-normal text-slate-500">(facultatif)</span></span><input name="sku" defaultValue={v.sku ?? ""} className={inputCls} /></label>
+                                  <div className="flex items-end">
+                                    <button type="submit" className={`${btnPrimary} w-full`}>Enregistrer</button>
+                                  </div>
                                 </ActionForm>
-                              </details>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                      <p className="mt-1 text-xs text-slate-500">Le prix d&apos;achat est propre à chaque lot : il se saisit à la réception dans la page Stock.</p>
 
+                                <div>
+                                  <p className="mb-2 text-sm font-medium text-slate-800">Photo</p>
+                                  <VariantImage variantId={v.id} hasImage={!!v.imageSecureUrl} uploadAction={setVariantImage} removeAction={removeVariantImage} />
+                                </div>
+
+                                {vLots.length > 0 && (
+                                  <div>
+                                    <p className="mb-1 text-sm font-medium text-slate-800">Lots en stock</p>
+                                    <div className="overflow-x-auto">
+                                      <table className="w-full min-w-[320px] text-left text-xs">
+                                        <thead className="text-slate-500">
+                                          <tr>
+                                            <th scope="col" className="py-1 pr-2 font-medium">Lot</th>
+                                            <th scope="col" className="px-2 py-1 text-right font-medium">Dispo.</th>
+                                            <th scope="col" className="py-1 pl-2 font-medium">Expiration</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-200">
+                                          {vLots.map((l) => {
+                                            const info = expiryInfo(l.expiresAt);
+                                            return (
+                                              <tr key={l.id}>
+                                                <td className="py-1 pr-2 text-slate-800">{l.lotNumber ?? "—"}</td>
+                                                <td className="px-2 py-1 text-right text-slate-800">{l.availableQuantity}</td>
+                                                <td className="py-1 pl-2 text-slate-800">
+                                                  {formatDate(l.expiresAt)} <span className={`${badgeCls} ${badgeTone[info.tone]} ml-1`}>{info.label}</span>
+                                                </td>
+                                              </tr>
+                                            );
+                                          })}
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                    <p className="mt-1 text-xs text-slate-500">Prix d&apos;achat et réception : page Stock.</p>
+                                  </div>
+                                )}
+
+                                <div className="flex justify-end border-t border-slate-200 pt-3">
+                                  <ToggleForm action={setVariantActive} id={v.id} active={v.isActive} what={`le parfum « ${v.name} »`} />
+                                </div>
+                              </div>
+                            </details>
+                          </li>
+                        );
+                      })}
+                    </ul>
+
+                    {/* Ajout d'un parfum : nom + prix, le reste est replié */}
+                    <details className="group">
+                      <summary className="inline-flex cursor-pointer list-none items-center gap-1 rounded-lg px-1 py-1 text-sm font-semibold text-emerald-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 [&::-webkit-details-marker]:hidden">
+                        <span aria-hidden="true">+</span> Ajouter un parfum
+                      </summary>
                       <ActionForm action={createVariant} className="mt-3 grid gap-3 sm:grid-cols-2">
                         <input type="hidden" name="productId" value={p.id} />
-                        <input name="name" required maxLength={80} placeholder="Nouveau parfum (ex. Chocolat)" aria-label="Nouveau parfum" className={inputCls} />
-                        <input name="sku" placeholder="Référence (facultatif)" aria-label="Référence" className={inputCls} />
-                        <input name="salePrice" type="text" inputMode="decimal" pattern="[0-9]+([.,][0-9]{1,2})?" title="Nombre positif, 2 décimales maximum" placeholder="Prix de vente (vide = prix du produit)" aria-label="Prix de vente du parfum" className={inputCls} />
-                        <button type="submit" className={btnPrimary}>Ajouter</button>
-                      </ActionForm>
-                    </div>
-
-                    <details>
-                      <summary className="cursor-pointer text-sm font-medium text-emerald-800">Modifier le produit</summary>
-                      <ActionForm action={updateProduct} className="mt-3 grid gap-3 sm:grid-cols-2">
-                        <input type="hidden" name="id" value={p.id} />
-                        <input name="name" required maxLength={120} defaultValue={p.name} aria-label="Nom" className={inputCls} />
-                        <input name="salePrice" type="text" inputMode="decimal" pattern="[0-9]+([.,][0-9]{1,2})?" title="Nombre positif, 2 décimales maximum" defaultValue={moneyInputValue(p.salePrice)} placeholder="Prix de vente" aria-label="Prix de vente" className={inputCls} />
-                        <input name="description" defaultValue={p.description ?? ""} placeholder="Description" aria-label="Description" className={`${inputCls} sm:col-span-2`} />
-                        <p className="text-xs text-slate-500 sm:col-span-2">
-                          L&apos;unité ne peut pas être modifiée (le stock en dépend). Changer le prix de vente ne modifie pas les commandes déjà passées : leur prix est figé.
-                        </p>
-                        <button type="submit" className={btnGhost}>Enregistrer</button>
+                        <input name="name" required maxLength={80} placeholder="Nom du parfum (ex. Chocolat)" aria-label="Nom du parfum" className={inputCls} />
+                        <input name="salePrice" {...priceInputProps} placeholder="Prix (vide = prix du produit)" aria-label="Prix de vente du parfum" className={inputCls} />
+                        <details className="sm:col-span-2">
+                          <summary className="cursor-pointer text-xs font-medium text-slate-600">Options avancées</summary>
+                          <input name="sku" placeholder="Référence (facultatif)" aria-label="Référence" className={`${inputCls} mt-2`} />
+                        </details>
+                        <button type="submit" className={`${btnPrimary} sm:col-span-2`}>Ajouter le parfum</button>
                       </ActionForm>
                     </details>
 
-                    <div>
-                      <h3 className="text-sm font-semibold text-slate-800">Photo du produit</h3>
-                      <p className="mb-2 text-xs text-slate-500">Pour un produit sans parfum, ou comme photo générale du produit.</p>
-                      <VariantImage
-                        variantId={p.id}
-                        idField="productId"
-                        hasImage={!!p.imageSecureUrl}
-                        uploadAction={setProductImage}
-                        removeAction={removeProductImage}
-                        removeConfirm="Retirer la photo de ce produit ?"
-                      />
-                    </div>
+                    {/* Niveau 3 : édition du produit, repliée */}
+                    <details className="group border-t border-slate-100 pt-3">
+                      <summary className="cursor-pointer list-none text-sm font-semibold text-emerald-800 [&::-webkit-details-marker]:hidden">
+                        Modifier le produit <span className="font-normal text-slate-500">· {SALE_UNIT_LABEL[p.saleUnit]}</span>
+                      </summary>
+                      <div className="mt-3 space-y-4">
+                        <ActionForm action={updateProduct} className="grid gap-3 sm:grid-cols-2">
+                          <input type="hidden" name="id" value={p.id} />
+                          <label className="block"><span className={labelCls}>Nom</span><input name="name" required maxLength={120} defaultValue={p.name} className={inputCls} /></label>
+                          <label className="block"><span className={labelCls}>Prix de vente</span><input name="salePrice" {...priceInputProps} defaultValue={moneyInputValue(p.salePrice)} className={inputCls} /></label>
+                          <div className="sm:col-span-2">
+                            <label className="block"><span className={labelCls}>Description <span className="font-normal text-slate-500">(facultatif)</span></span>
+                            <input name="description" defaultValue={p.description ?? ""} className={inputCls} /></label>
+                          </div>
+                          <p className="text-xs text-slate-500 sm:col-span-2">
+                            L&apos;unité ne peut pas être modifiée (le stock en dépend). Changer le prix ne modifie pas les commandes déjà passées.
+                          </p>
+                          <button type="submit" className={`${btnPrimary} sm:col-span-2`}>Enregistrer le produit</button>
+                        </ActionForm>
+                        <div>
+                          <p className="text-sm font-medium text-slate-800">Photo du produit</p>
+                          <p className="mb-2 text-xs text-slate-500">Photo générale, utilisée si un parfum n&apos;a pas la sienne.</p>
+                          <VariantImage
+                            variantId={p.id}
+                            idField="productId"
+                            hasImage={!!p.imageSecureUrl}
+                            uploadAction={setProductImage}
+                            removeAction={removeProductImage}
+                            removeConfirm="Retirer la photo de ce produit ?"
+                          />
+                        </div>
+                      </div>
+                    </details>
                   </div>
                 </ExpandableRow>
               </li>

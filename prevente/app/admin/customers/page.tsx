@@ -2,9 +2,11 @@ import Link from "next/link";
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
 import CollapsibleSection from "@/components/collapsible-section";
+import EmptyState from "@/components/empty-state";
+import FilterChips from "@/components/filter-chips";
 import CustomerFields from "@/components/customer-fields";
 import LiveSearch from "@/components/live-search";
-import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls } from "@/components/ui";
+import { badgeCls, badgeTone, btnPrimary, cardCls } from "@/components/ui";
 import { requireRole } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 import { createCustomer } from "./actions";
@@ -48,21 +50,27 @@ export default async function Page({ searchParams }: PageProps<"/admin/customers
         <div className="mb-3">
           <LiveSearch id="c-search" label="Rechercher un client" placeholder="Rechercher : boutique, téléphone, adresse" />
         </div>
-        <form method="get" className="flex flex-wrap gap-2">
-          <input type="hidden" name="q" value={q} />
-          <select name="status" defaultValue={status} aria-label="Statut" className={`${inputCls} w-auto`}>
-            <option value="all">Tous</option>
-            <option value="active">Actifs</option>
-            <option value="inactive">Désactivés</option>
-          </select>
-          <button type="submit" className={btnGhost}>Filtrer</button>
-        </form>
+        <FilterChips
+          label="Filtrer par statut"
+          basePath="/admin/customers"
+          param="status"
+          current={status === "all" ? "" : status}
+          params={{ q: q || undefined, status: status === "all" ? undefined : status }}
+          options={[{ value: "", label: "Tous" }, { value: "active", label: "Actifs" }, { value: "inactive", label: "Désactivés" }]}
+        />
+        <p className="mt-3 text-sm text-slate-600" aria-live="polite">{customers.length} client{customers.length > 1 ? "s" : ""}{customers.length === 300 ? " (300 premiers : affinez la recherche)" : ""}</p>
 
-        {customers.length === 0 && <p className="mt-4 text-sm text-slate-500">{q || status !== "all" ? "Aucun client trouvé." : "Aucun client pour le moment."}</p>}
+        {customers.length === 0 && (
+          <EmptyState
+            title={q || status !== "all" ? "Aucun client trouvé." : "Aucun client pour le moment."}
+            hint={q || status !== "all" ? "Modifiez la recherche ou le filtre." : "Ajoutez votre premier client avec « Ajouter un client » ci-dessus."}
+            action={q || status !== "all" ? { href: "/admin/customers", label: "Réinitialiser" } : undefined}
+          />
+        )}
         <ul className="mt-2 divide-y divide-slate-100">
           {customers.map((c) => (
             <li key={c.id} className={`py-3 ${c.isActive ? "" : "opacity-60"}`}>
-              <Link href={`/admin/customers/${c.id}`} className="block">
+              <Link href={`/admin/customers/${c.id}`} className="-mx-2 block rounded-xl px-2 py-1 hover:bg-slate-50">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
                     <p className="font-medium text-slate-900">{c.businessName}</p>

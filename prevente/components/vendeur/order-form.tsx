@@ -72,6 +72,11 @@ export default function OrderForm({
   const selected = Object.entries(qty)
     .map(([variantId, raw]) => ({ variantId, quantity: /^\d+$/.test(raw) ? Number(raw) : 0 }))
     .filter((l) => l.quantity > 0);
+  // Total estimé : uniquement si le prix de chaque ligne sélectionnée est connu (les articles masqués par une recherche n'ont pas de prix ici).
+  const priceOf = new Map(products.flatMap((p) => p.variants.map((v) => [v.id, v.price === null ? null : Number(v.price)] as const)));
+  const knownTotal = selected.every((l) => priceOf.get(l.variantId) != null)
+    ? selected.reduce((sum, l) => sum + (priceOf.get(l.variantId) ?? 0) * l.quantity, 0)
+    : null;
   const hasInvalid = Object.values(qty).some((raw) => raw.trim() !== "" && !/^\d+$/.test(raw.trim()));
 
   return (
@@ -93,9 +98,9 @@ export default function OrderForm({
               const single = p.variants.length === 1 && p.variants[0].isDefault;
               return (
                 <li key={p.id} className={cardCls}>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
                     <Thumb url={p.imageUrl ?? (single ? p.variants[0].imageUrl : null)} />
-                    <div className="min-w-0 flex-1">
+                    <div className="min-w-0 flex-1 basis-32">
                       <p className="truncate font-medium text-slate-900">{p.name}</p>
                       <p className="text-xs text-slate-500">{p.unitLabel}</p>
                     </div>
@@ -104,9 +109,9 @@ export default function OrderForm({
                   {!single && (
                     <ul className="mt-3 divide-y divide-slate-100 border-t border-slate-100">
                       {p.variants.map((v) => (
-                        <li key={v.id} className="flex items-center gap-3 py-2">
+                        <li key={v.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 py-2">
                           <Thumb url={v.imageUrl ?? p.imageUrl} size={40} />
-                          <span className="min-w-0 flex-1 truncate text-sm text-slate-800">{v.name}</span>
+                          <span className="min-w-0 flex-1 basis-24 truncate text-sm font-medium text-slate-800">{v.name}</span>
                           <VariantInput v={v} unit={p.unitLabel} qty={qty} setQty={setQty} readOnly={readOnly} compact />
                         </li>
                       ))}
@@ -131,6 +136,7 @@ export default function OrderForm({
             <div className="mx-auto flex max-w-5xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-700" aria-live="polite">
                 {selected.length} ligne{selected.length > 1 ? "s" : ""} sélectionnée{selected.length > 1 ? "s" : ""}
+                {selected.length > 0 && knownTotal !== null && <span className="ml-2 font-semibold tabular-nums text-slate-900">· ≈ {formatMoney(knownTotal)}</span>}
                 {hasInvalid && <span className="ml-2 text-red-700">· une quantité est invalide</span>}
               </p>
               <SubmitButton pendingLabel="Enregistrement…" className={`${btnPrimary} w-full sm:w-auto`}>Vérifier la commande</SubmitButton>
@@ -160,24 +166,44 @@ function VariantInput({
   const disabled = readOnly || noPrice || soldOut;
 
   return (
-    <div className="flex shrink-0 flex-col items-end gap-1">
+    <div className="ml-auto flex shrink-0 flex-col items-end gap-1">
       <div className="flex items-center gap-2">
         <div className="text-right text-xs leading-tight text-slate-600">
           {v.price !== null ? <span className="font-medium text-slate-900">{formatMoney(Number(v.price))}</span> : <span>—</span>}
           <span className="block">/ {unit.toLowerCase()}</span>
         </div>
-        <input
-          type="number"
-          inputMode="numeric"
-          min={0}
-          step={1}
-          aria-label={`Quantité — ${v.name}`}
-          value={value}
-          disabled={disabled}
-          placeholder="0"
-          onChange={(e) => setQty((prev) => ({ ...prev, [v.id]: e.target.value }))}
-          className="block h-12 w-20 rounded-xl border border-slate-300 bg-white px-2 text-center text-base text-slate-900 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/25 disabled:bg-slate-100"
-        />
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            aria-label={`Retirer une unité — ${v.name}`}
+            disabled={disabled || n <= 0}
+            onClick={() => setQty((prev) => ({ ...prev, [v.id]: n - 1 <= 0 ? "" : String(n - 1) }))}
+            className="flex h-12 w-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-xl font-semibold text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 disabled:opacity-40"
+          >
+            −
+          </button>
+          <input
+            type="number"
+            inputMode="numeric"
+            min={0}
+            step={1}
+            aria-label={`Quantité — ${v.name}`}
+            value={value}
+            disabled={disabled}
+            placeholder="0"
+            onChange={(e) => setQty((prev) => ({ ...prev, [v.id]: e.target.value }))}
+            className="block h-12 w-16 rounded-xl border border-slate-300 bg-white px-1 text-center text-base tabular-nums text-slate-900 [appearance:textfield] focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/25 disabled:bg-slate-100 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          />
+          <button
+            type="button"
+            aria-label={`Ajouter une unité — ${v.name}`}
+            disabled={disabled}
+            onClick={() => setQty((prev) => ({ ...prev, [v.id]: String(n + 1) }))}
+            className="flex h-12 w-11 items-center justify-center rounded-xl border border-emerald-700 bg-emerald-700 text-xl font-semibold text-white hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 disabled:opacity-40"
+          >
+            +
+          </button>
+        </div>
       </div>
       {noPrice ? (
         <span className={`${badgeCls} ${badgeTone.expired}`}>Prix non défini</span>

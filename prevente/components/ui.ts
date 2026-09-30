@@ -13,3 +13,20 @@ export const badgeTone = {
   expired: "bg-red-50 text-red-800 ring-red-200",
   none: "bg-slate-100 text-slate-600 ring-slate-200",
 } as const;
+
+/** Lien textuel cohérent dans toute l'application. */
+export const linkCls = "font-medium text-emerald-800 underline underline-offset-2 hover:text-emerald-900";
+/** Résumé cliquable d'un <details> : zone tactile d'au moins 40 px (l'ancien « text-xs » était trop petit au doigt). */
+export const summaryCls =
+  "inline-flex min-h-10 cursor-pointer list-none items-center gap-1 rounded-lg px-1 text-sm font-semibold text-emerald-800 hover:bg-slate-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 [&::-webkit-details-marker]:hidden";
+/** Bandeaux de message. */
+export const alertCls = {
+  warn: "rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-900 ring-1 ring-inset ring-amber-300",
+  error: "rounded-xl bg-red-50 px-4 py-3 text-sm text-red-800 ring-1 ring-inset ring-red-200",
+  info: "rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800 ring-1 ring-inset ring-emerald-200",
+} as const;
+/** Pastille de filtre / onglet (active = remplie). */
+export const chipCls = (active: boolean) =>
+  `inline-flex h-10 items-center whitespace-nowrap rounded-full px-4 text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 ${
+    active ? "bg-emerald-700 text-white" : "border border-slate-300 bg-white text-slate-700 hover:bg-slate-100"
+  }`;

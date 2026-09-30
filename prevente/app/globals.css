@@ -18,3 +18,26 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 8rem; /* l'en-tête collant ne masque pas la cible d'une ancre ou du focus */
+}
+
+button,
+a,
+summary,
+select {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation; /* pas de zoom au double toucher sur les boutons */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

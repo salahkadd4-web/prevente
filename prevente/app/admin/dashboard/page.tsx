@@ -1,11 +1,11 @@
 import Link from "next/link";
 import AdminShell from "@/components/admin-shell";
-import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
+import { alertCls, badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, chipCls, inputCls, labelCls, summaryCls } from "@/components/ui";
 import { OrderStatus } from "@/app/generated/prisma/enums";
 import { getActiveCounts, getMarginSummary, getOrderCountsByStatus, getStockStats, getVendorRevenue } from "@/lib/admin/dashboard";
 import { requireRole } from "@/lib/auth/session";
 import { ORDER_STATUS_LABEL, ORDER_STATUS_TONE, formatMoney } from "@/lib/orders";
-import { PERIODS, PERIOD_LABEL, resolvePeriod } from "@/lib/period";
+import { PERIOD_LABEL, resolvePeriod, type PeriodKey } from "@/lib/period";
 
 export const metadata = {
   title: "Administration · Grossiste Pro",
@@ -33,65 +33,67 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
   return (
     <AdminShell current="dashboard" title={`Bonjour ${profile.full_name}`}>
       {alerts > 0 && (
-        <Link
-          href="/admin/stock"
-          className="block rounded-2xl bg-amber-50 p-4 text-amber-900 ring-1 ring-inset ring-amber-300"
-        >
-          {stock.expired > 0 && (
-            <>
-              <strong>{stock.expired}</strong> lot{stock.expired > 1 ? "s" : ""} expiré{stock.expired > 1 ? "s" : ""} encore en stock.{" "}
-            </>
-          )}
-          {stock.expiringSoon > 0 && (
-            <>
-              <strong>{stock.expiringSoon}</strong> lot{stock.expiringSoon > 1 ? "s" : ""} expire{stock.expiringSoon > 1 ? "nt" : ""} dans moins de 3 mois.{" "}
-            </>
-          )}
-          Voir le stock →
+        <Link href="/admin/stock?filter=soon" className={`${alertCls.warn} flex items-center gap-3`}>
+          <span aria-hidden="true" className="text-xl">⚠</span>
+          <span className="flex-1">
+            {stock.expired > 0 && (
+              <>
+                <strong>{stock.expired}</strong> lot{stock.expired > 1 ? "s" : ""} expiré{stock.expired > 1 ? "s" : ""} encore en stock.{" "}
+              </>
+            )}
+            {stock.expiringSoon > 0 && (
+              <>
+                <strong>{stock.expiringSoon}</strong> lot{stock.expiringSoon > 1 ? "s" : ""} expire{stock.expiringSoon > 1 ? "nt" : ""} dans moins de 3 mois.
+              </>
+            )}
+          </span>
+          <span className="shrink-0 font-semibold">Voir →</span>
         </Link>
       )}
 
-      <section className={cardCls}>
-        <form method="get" className="grid gap-3 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end">
-          <div>
-            <label htmlFor="d-period" className={labelCls}>Période</label>
-            <select id="d-period" name="period" defaultValue={period.key} className={inputCls}>
-              {PERIODS.map((k) => (
-                <option key={k} value={k}>{PERIOD_LABEL[k]}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="d-from" className={labelCls}>Du (période personnalisée)</label>
-            <input id="d-from" name="from" type="date" defaultValue={period.fromDay} className={inputCls} />
-          </div>
-          <div>
-            <label htmlFor="d-to" className={labelCls}>Au (inclus)</label>
-            <input id="d-to" name="to" type="date" defaultValue={period.toDay} className={inputCls} />
-          </div>
-          <button type="submit" className={btnPrimary}>Afficher</button>
-        </form>
-        <p className="mt-3 text-xs text-slate-500">
-          Affichage : {period.label} (heure d&apos;Algérie). Les dates « Du / Au » ne sont utilisées que pour la période personnalisée.
-        </p>
+      <section className={cardCls} aria-label="Période">
+        <div className="flex flex-wrap items-center gap-2">
+          {(["today", "7d", "month"] as PeriodKey[]).map((k) => (
+            <Link key={k} href={`/admin/dashboard?period=${k}`} aria-current={period.key === k ? "page" : undefined} className={chipCls(period.key === k)}>
+              {PERIOD_LABEL[k]}
+            </Link>
+          ))}
+        </div>
+        <details className="mt-2" open={period.key === "custom" || Boolean(period.error)}>
+          <summary className={summaryCls}>{PERIOD_LABEL.custom}</summary>
+          <form method="get" className="mt-2 grid gap-3 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
+            <input type="hidden" name="period" value="custom" />
+            <div>
+              <label htmlFor="d-from" className={labelCls}>Du</label>
+              <input id="d-from" name="from" type="date" defaultValue={period.fromDay} className={inputCls} />
+            </div>
+            <div>
+              <label htmlFor="d-to" className={labelCls}>Au (inclus)</label>
+              <input id="d-to" name="to" type="date" defaultValue={period.toDay} className={inputCls} />
+            </div>
+            <button type="submit" className={btnPrimary}>Afficher</button>
+          </form>
+        </details>
+        <p className="mt-2 text-xs text-slate-500">Affichage : {period.label} (heure d&apos;Algérie).</p>
         {period.error && (
-          <p role="alert" className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800 ring-1 ring-inset ring-red-200">
-            {period.error}
-          </p>
+          <p role="alert" className={`mt-3 ${alertCls.error}`}>{period.error}</p>
         )}
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <section className={cardCls} aria-labelledby="kpi-revenue">
           <p id="kpi-revenue" className="text-sm text-slate-600">Chiffre d&apos;affaires — {period.label}</p>
-          <p className="mt-1 text-3xl font-semibold text-slate-900">{formatMoney(totalRevenue)}</p>
+          <p className="mt-1 text-3xl font-semibold tabular-nums text-slate-900">{formatMoney(totalRevenue)}</p>
           <p className="mt-1 text-sm text-slate-600">
             {totalDelivered} commande{totalDelivered > 1 ? "s" : ""} livrée{totalDelivered > 1 ? "s" : ""}
           </p>
-          <p className="mt-2 text-xs text-slate-500">
-            Règle : somme des lignes (prix × quantité enregistrés sur la commande) des commandes livrées durant la période.
-            Les brouillons, commandes en cours et annulées sont exclus.
-          </p>
+          <details className="mt-2">
+            <summary className={summaryCls}>Comment c&apos;est calculé ?</summary>
+            <p className="text-xs text-slate-500">
+              Somme des lignes (prix × quantité enregistrés sur la commande) des commandes livrées durant la période.
+              Les brouillons, commandes en cours et annulées sont exclus.
+            </p>
+          </details>
         </section>
 
         <section className={cardCls} aria-labelledby="kpi-margin">
@@ -123,10 +125,13 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
               exclue{margin.uncostedLines > 1 ? "s" : ""} faute de prix d&apos;achat connu. Renseignez-le dans la page Stock.
             </p>
           )}
-          <p className="mt-2 text-xs text-slate-500">
-            Coût réel des lots prélevés (FEFO) pour chaque ligne. Il s&apos;agit d&apos;une marge brute, pas d&apos;un bénéfice net :
-            aucun frais, remise ou remboursement n&apos;est enregistré.
-          </p>
+          <details className="mt-2">
+            <summary className={summaryCls}>Comment c&apos;est calculé ?</summary>
+            <p className="text-xs text-slate-500">
+              Coût réel des lots prélevés (FEFO) pour chaque ligne. Il s&apos;agit d&apos;une marge brute, pas d&apos;un bénéfice net :
+              aucun frais, remise ou remboursement n&apos;est enregistré.
+            </p>
+          </details>
         </section>
       </div>
 
@@ -136,11 +141,11 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
           <p className="mt-3 text-sm text-slate-500">Aucun pré-vendeur.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[420px] text-left text-sm">
+            <table className="w-full text-left text-sm">
               <thead className="text-xs uppercase tracking-wide text-slate-500">
                 <tr>
                   <th scope="col" className="py-2 pr-3 font-medium">Pré-vendeur</th>
-                  <th scope="col" className="px-3 py-2 text-right font-medium">Commandes livrées</th>
+                  <th scope="col" className="px-3 py-2 text-right font-medium">Livrées</th>
                   <th scope="col" className="py-2 pl-3 text-right font-medium">CA</th>
                 </tr>
               </thead>
@@ -179,7 +184,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
             <li key={s}>
               <Link
                 href={`/admin/orders?status=${s}`}
-                className="block rounded-xl border border-slate-200 p-3 hover:bg-slate-50"
+                className={`block rounded-xl border border-slate-200 p-3 hover:bg-slate-50 ${statusCounts[s] === 0 ? "opacity-60" : ""}`}
               >
                 <p className="text-2xl font-semibold text-slate-900">{statusCounts[s]}</p>
                 <span className={`${badgeCls} ${badgeTone[ORDER_STATUS_TONE[s]]}`}>{ORDER_STATUS_LABEL[s]}</span>
@@ -189,26 +194,29 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
         </ul>
       </section>
 
-      <div className="grid gap-4 sm:grid-cols-2">
-        <Link href="/admin/customers" className={cardCls}>
-          <p className="text-3xl font-semibold text-slate-900">{counts.customers}</p>
-          <p className="mt-1 text-sm text-slate-600">clients actifs — fiches et historique</p>
+      <section aria-label="Raccourcis" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        <Link href="/admin/customers" className={`${cardCls} hover:bg-slate-50`}>
+          <p className="text-3xl font-semibold tabular-nums text-slate-900">{counts.customers}</p>
+          <p className="mt-1 text-sm text-slate-600">clients actifs</p>
         </Link>
-        <Link href="/admin/products" className={cardCls}>
-          <p className="text-3xl font-semibold text-slate-900">{counts.products}</p>
-          <p className="mt-1 text-sm text-slate-600">produits actifs — gérer le catalogue</p>
+        <Link href="/admin/products" className={`${cardCls} hover:bg-slate-50`}>
+          <p className="text-3xl font-semibold tabular-nums text-slate-900">{counts.products}</p>
+          <p className="mt-1 text-sm text-slate-600">produits actifs</p>
         </Link>
-        <Link href="/admin/users" className={cardCls}>
-          <p className="text-3xl font-semibold text-slate-900">{counts.users}</p>
-          <p className="mt-1 text-sm text-slate-600">vendeurs et livreurs actifs — gérer les comptes</p>
+        <Link href="/admin/users" className={`${cardCls} hover:bg-slate-50`}>
+          <p className="text-3xl font-semibold tabular-nums text-slate-900">{counts.users}</p>
+          <p className="mt-1 text-sm text-slate-600">vendeurs et livreurs actifs</p>
         </Link>
-        <Link href="/admin/stock" className={cardCls}>
-          <p className="text-3xl font-semibold text-slate-900">{stock.inStock}</p>
-          <p className="mt-1 text-sm text-slate-600">
-            parfums en stock · {stock.outOfStock} en rupture · {stock.expiringSoon} lot{stock.expiringSoon > 1 ? "s" : ""} bientôt expiré{stock.expiringSoon > 1 ? "s" : ""} · {stock.expired} expiré{stock.expired > 1 ? "s" : ""}
+        <Link href="/admin/stock" className={`${cardCls} hover:bg-slate-50`}>
+          <p className="text-3xl font-semibold tabular-nums text-slate-900">{stock.inStock}</p>
+          <p className="mt-1 text-sm text-slate-600">parfums en stock</p>
+          <p className="mt-2 flex flex-wrap gap-1">
+            {stock.outOfStock > 0 && <span className={`${badgeCls} ${badgeTone.expired}`}>{stock.outOfStock} en rupture</span>}
+            {stock.expiringSoon > 0 && <span className={`${badgeCls} ${badgeTone.soon}`}>{stock.expiringSoon} bientôt expiré{stock.expiringSoon > 1 ? "s" : ""}</span>}
+            {stock.expired > 0 && <span className={`${badgeCls} ${badgeTone.expired}`}>{stock.expired} expiré{stock.expired > 1 ? "s" : ""}</span>}
           </p>
         </Link>
-      </div>
+      </section>
     </AdminShell>
   );
 }

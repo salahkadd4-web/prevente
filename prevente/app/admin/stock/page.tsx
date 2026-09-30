@@ -1,9 +1,10 @@
-import Link from "next/link";
 import ActionForm from "@/components/action-form";
 import AdminShell from "@/components/admin-shell";
 import CollapsibleSection from "@/components/collapsible-section";
 import ConfirmButton from "@/components/confirm-button";
-import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
+import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls, summaryCls } from "@/components/ui";
+import FilterChips from "@/components/filter-chips";
+import EmptyState from "@/components/empty-state";
 import type { Prisma } from "@/app/generated/prisma/client";
 import { requireRole } from "@/lib/auth/session";
 import { SALE_UNIT_LABEL, itemLabel } from "@/lib/catalog";
@@ -167,13 +168,13 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
           <p className="mt-3 text-sm text-slate-500">Aucun produit actif.</p>
         ) : (
           <div className="mt-3 overflow-x-auto">
-            <table className="w-full min-w-[520px] text-left text-sm">
+            <table className="w-full text-left text-sm">
               <thead className="text-xs uppercase tracking-wide text-slate-500">
                 <tr>
                   <th scope="col" className="py-2 pr-3 font-medium">Produit — parfum</th>
                   <th scope="col" className="px-3 py-2 text-right font-medium">Disponible</th>
-                  <th scope="col" className="px-3 py-2 text-right font-medium">Lots</th>
-                  <th scope="col" className="py-2 pl-3 font-medium">Prochaine expiration</th>
+                  <th scope="col" className="hidden px-3 py-2 text-right font-medium sm:table-cell">Lots</th>
+                  <th scope="col" className="py-2 pl-3 font-medium">Expiration</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -181,7 +182,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
                   <tr key={p.id}>
                     <td className="py-2 pr-3 text-slate-900">{p.name} <span className="text-slate-500">(sans parfum)</span></td>
                     <td className="px-3 py-2 text-right"><span className={`${badgeCls} ${badgeTone.expired}`}>Rupture</span></td>
-                    <td className="px-3 py-2 text-right text-slate-700">0</td>
+                    <td className="hidden px-3 py-2 text-right text-slate-700 sm:table-cell">0</td>
                     <td className="py-2 pl-3 text-slate-700">—</td>
                   </tr>
                 ))}
@@ -195,7 +196,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
                       <td className="px-3 py-2 text-right font-medium text-slate-900">
                         {qty === 0 ? <span className={`${badgeCls} ${badgeTone.expired}`}>Rupture</span> : `${qty} ${SALE_UNIT_LABEL[v.product.saleUnit].toLowerCase()}`}
                       </td>
-                      <td className="px-3 py-2 text-right text-slate-700">{s?._count._all ?? 0}</td>
+                      <td className="hidden px-3 py-2 text-right text-slate-700 sm:table-cell">{s?._count._all ?? 0}</td>
                       <td className="py-2 pl-3 text-slate-700">
                         {s ? <>{formatDate(s._min.expiresAt)} {info && <span className={`${badgeCls} ${badgeTone[info.tone]} ml-1`}>{info.label}</span>}</> : "—"}
                       </td>
@@ -214,23 +215,27 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
           Classés par expiration la plus proche, puis réception la plus ancienne (FEFO). Signalement à partir de 3 mois avant la date.
         </p>
 
-        <nav aria-label="Filtrer les lots" className="mt-3 flex flex-wrap gap-2">
-          {FILTERS.map((f) => (
-            <Link
-              key={f.key}
-              href={`/admin/stock?filter=${f.key}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
-              aria-current={f.key === filter ? "page" : undefined}
-              className={`rounded-lg px-3 py-2 text-sm font-medium ${f.key === filter ? "bg-emerald-700 text-white" : "border border-slate-300 text-slate-700 hover:bg-slate-100"}`}
-            >
-              {f.label}
-            </Link>
-          ))}
-        </nav>
+        <div className="mt-3">
+          <FilterChips
+            label="Filtrer les lots"
+            basePath="/admin/stock"
+            param="filter"
+            current={filter}
+            params={{ q: q || undefined, filter }}
+            options={FILTERS.map((f) => ({ value: f.key, label: f.label }))}
+          />
+        </div>
         <div className="mt-3">
           <LiveSearch id="s-search" label="Rechercher un lot" placeholder="Produit, parfum, référence ou n° de lot" />
         </div>
 
-        {lots.length === 0 && <p className="mt-4 text-sm text-slate-500">{filter === "all" && !q ? "Aucun lot pour le moment." : "Aucun lot ne correspond."}</p>}
+        {lots.length === 0 && (
+          <EmptyState
+            title={filter === "all" && !q ? "Aucun lot pour le moment." : "Aucun lot ne correspond."}
+            hint={filter === "all" && !q ? "Enregistrez une réception avec « Réception d'un lot » en haut de page." : "Changez de filtre ou modifiez la recherche."}
+            action={filter === "all" && !q ? undefined : { href: "/admin/stock", label: "Réinitialiser" }}
+          />
+        )}
         {lotCount > LOT_LIMIT && (
           <p className="mt-3 text-xs text-slate-500">{LOT_LIMIT} premiers lots affichés sur {lotCount} : affinez avec un filtre ou une recherche.</p>
         )}
@@ -250,7 +255,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
                       {lot.lotNumber && ` · lot ${lot.lotNumber}`} · reçu le {formatDate(lot.receivedAt)}
                     </p>
                     <p className="text-sm text-slate-600">
-                      Prix d&apos;achat : {lot.unitCost === null ? <span className="text-amber-900">inconnu</span> : formatMoney(Number(lot.unitCost.toString()))}
+                      Prix d&apos;achat : {lot.unitCost === null ? <span className="font-medium text-amber-900">inconnu</span> : formatMoney(Number(lot.unitCost.toString()))}
                     </p>
                   </div>
                   <div className="text-right">
@@ -260,7 +265,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
                   </div>
                 </div>
                 <details className="mt-1">
-                  <summary className="cursor-pointer text-xs font-medium text-emerald-800">{lot.unitCost === null ? "Renseigner le prix d'achat" : "Modifier le prix d'achat"}</summary>
+                  <summary className={summaryCls}>{lot.unitCost === null ? "Renseigner le prix d'achat" : "Modifier le prix d'achat"}</summary>
                   <ActionForm action={setLotCost} className="mt-2 grid gap-2 sm:grid-cols-[12rem_auto] sm:items-end">
                     <input type="hidden" name="id" value={lot.id} />
                     <div>
@@ -273,7 +278,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/stock">) 
                   </ActionForm>
                 </details>
                 <details className="mt-1">
-                  <summary className="cursor-pointer text-xs font-medium text-emerald-800">Corriger la quantité (inventaire)</summary>
+                  <summary className={summaryCls}>Corriger la quantité (inventaire)</summary>
                   <ActionForm action={correctLotQuantity} className="mt-2 grid gap-2 sm:grid-cols-[10rem_1fr_auto] sm:items-end">
                     <input type="hidden" name="id" value={lot.id} />
                     <div>

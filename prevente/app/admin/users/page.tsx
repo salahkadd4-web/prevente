@@ -3,7 +3,9 @@ import AdminShell from "@/components/admin-shell";
 import CollapsibleSection from "@/components/collapsible-section";
 import ConfirmButton from "@/components/confirm-button";
 import LiveSearch from "@/components/live-search";
-import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls } from "@/components/ui";
+import { badgeCls, badgeTone, btnGhost, btnPrimary, cardCls, inputCls, labelCls, summaryCls } from "@/components/ui";
+import EmptyState from "@/components/empty-state";
+import FilterChips from "@/components/filter-chips";
 import { ROLES, ROLE_LABEL, isRole } from "@/lib/auth/roles";
 import { requireRole } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
@@ -94,27 +96,33 @@ export default async function Page({ searchParams }: PageProps<"/admin/users">) 
         <div className="mt-3">
           <LiveSearch id="f-q" label="Rechercher un compte" placeholder="Rechercher : nom, email ou rôle" />
         </div>
-        <form method="get" className="mt-3 grid gap-2 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
-          <input type="hidden" name="q" value={q} />
-          <div>
-            <label htmlFor="f-role" className={labelCls}>Rôle</label>
-            <select id="f-role" name="role" defaultValue={role} className={inputCls}>
-              <option value="">Tous</option>
-              {ROLES.map((r) => <option key={r} value={r}>{ROLE_LABEL[r]}</option>)}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="f-status" className={labelCls}>Statut</label>
-            <select id="f-status" name="status" defaultValue={status} className={inputCls}>
-              <option value="">Tous</option>
-              <option value="active">Actifs</option>
-              <option value="inactive">Désactivés</option>
-            </select>
-          </div>
-          <button type="submit" className={btnGhost + " h-12"}>Filtrer</button>
-        </form>
+        <div className="mt-3 space-y-2">
+          <FilterChips
+            label="Filtrer par rôle"
+            basePath="/admin/users"
+            param="role"
+            current={role}
+            params={{ q: q || undefined, role: role || undefined, status: status || undefined }}
+            options={[{ value: "", label: "Tous les rôles" }, ...ROLES.map((r) => ({ value: r as string, label: ROLE_LABEL[r] }))]}
+          />
+          <FilterChips
+            label="Filtrer par statut"
+            basePath="/admin/users"
+            param="status"
+            current={status}
+            params={{ q: q || undefined, role: role || undefined, status: status || undefined }}
+            options={[{ value: "", label: "Tous les statuts" }, { value: "active", label: "Actifs" }, { value: "inactive", label: "Désactivés" }]}
+          />
+        </div>
+        <p className="mt-3 text-sm text-slate-600" aria-live="polite">{rows.length} compte{rows.length > 1 ? "s" : ""}</p>
 
-        {rows.length === 0 && <p className="mt-4 text-sm text-slate-500">{filtered ? "Aucun compte ne correspond." : "Aucun compte."}</p>}
+        {rows.length === 0 && (
+          <EmptyState
+            title={filtered ? "Aucun compte ne correspond." : "Aucun compte."}
+            hint={filtered ? "Modifiez la recherche ou les filtres." : "Créez un compte avec « Ajouter un compte » ci-dessus."}
+            action={filtered ? { href: "/admin/users", label: "Réinitialiser" } : undefined}
+          />
+        )}
         <ul className="mt-2 divide-y divide-slate-100">
           {rows.map((p) => {
             const manageable = p.role !== "admin" && p.id !== me.id;
@@ -144,9 +152,9 @@ export default async function Page({ searchParams }: PageProps<"/admin/users">) 
                   )}
                 </div>
                 {manageable && (
-                  <div className="mt-1 flex flex-wrap gap-x-6">
+                  <div className="mt-1 flex flex-wrap gap-x-4">
                     <details>
-                      <summary className="cursor-pointer text-xs font-medium text-emerald-800">Modifier nom / rôle</summary>
+                      <summary className={summaryCls}>Modifier nom / rôle</summary>
                       <ActionForm action={updateUser} className="mt-2 grid gap-2 sm:grid-cols-[2fr_1fr_auto] sm:items-end">
                         <input type="hidden" name="id" value={p.id} />
                         <input name="fullName" required maxLength={100} defaultValue={p.fullName} aria-label="Nom complet" className={inputCls} />
@@ -158,8 +166,8 @@ export default async function Page({ searchParams }: PageProps<"/admin/users">) 
                       </ActionForm>
                     </details>
                     <details>
-                      <summary className="cursor-pointer text-xs font-medium text-emerald-800">Réinitialiser le mot de passe</summary>
-                      <ActionForm action={resetUserPassword} className="mt-2 flex gap-2">
+                      <summary className={summaryCls}>Réinitialiser le mot de passe</summary>
+                      <ActionForm action={resetUserPassword} className="mt-2 flex flex-col gap-2 sm:flex-row">
                         <input type="hidden" name="id" value={p.id} />
                         <input name="password" type="text" required minLength={8} autoComplete="off" placeholder="Nouveau mot de passe" aria-label="Nouveau mot de passe" className={inputCls} />
                         <ConfirmButton message={`Remplacer le mot de passe de ${p.fullName} ?`} className={btnGhost}>Valider</ConfirmButton>

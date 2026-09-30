@@ -1,4 +1,4 @@
-import { logout } from "@/lib/auth/actions";
+import AppHeader from "@/components/app-header";
 import { ROLE_LABEL } from "@/lib/auth/roles";
 import type { Profile } from "@/lib/auth/session";
 
@@ -11,33 +11,10 @@ export default function DashboardShell({
 }) {
   return (
     <div className="min-h-dvh bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <div
-              aria-hidden="true"
-              className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-700 text-lg font-bold text-white"
-            >
-              G
-            </div>
-            <span className="text-base font-semibold text-slate-900">Grossiste Pro</span>
-          </div>
-
-          <form action={logout}>
-            <button
-              type="submit"
-              className="h-11 rounded-xl border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40"
-            >
-              Se déconnecter
-            </button>
-          </form>
-        </div>
-      </header>
+      <AppHeader space={ROLE_LABEL[profile.role]} />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
-          {title}
-        </h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
 
         <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <dl className="grid gap-4 sm:grid-cols-2">
@@ -57,7 +34,7 @@ export default function DashboardShell({
         </section>
 
         <p className="mt-6 text-sm text-slate-500">
-          Les fonctionnalités métier seront ajoutées prochainement.
+          Les fonctionnalités de livraison seront ajoutées prochainement.
         </p>
       </main>
     </div>
