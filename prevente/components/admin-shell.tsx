@@ -31,11 +31,11 @@ export default function AdminShell({
       <AppHeader space="Administration" nav={[...NAV]} navLabel="Administration" current={current} wide />
       <main className="mx-auto max-w-6xl px-4 py-6 sm:py-8">
         {back && (
-          <Link href={back.href} className="mb-2 inline-flex min-h-10 items-center text-sm font-medium text-emerald-800 hover:underline">
+          <Link href={back.href} className="mb-1 inline-flex min-h-10 items-center text-sm font-semibold text-emerald-800 hover:underline">
             ← {back.label}
           </Link>
         )}
-        <h1 className="mb-5 text-2xl font-semibold tracking-tight text-slate-900">{title}</h1>
+        <h1 className="font-display mb-5 text-[1.75rem] leading-tight text-slate-900 sm:text-3xl">{title}</h1>
         <div className="space-y-5">{children}</div>
       </main>
     </div>

@@ -68,7 +68,7 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/o
           </div>
           <div className="text-right">
             <span className={`${badgeCls} ${badgeTone[ORDER_STATUS_TONE[order.status]]}`}>{ORDER_STATUS_LABEL[order.status]}</span>
-            <p className="mt-2 text-2xl font-semibold tabular-nums text-slate-900">{formatMoney(total)}</p>
+            <p className="mt-2 font-display text-2xl text-slate-900">{formatMoney(total)}</p>
           </div>
         </div>
       </section>

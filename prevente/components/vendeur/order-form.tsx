@@ -125,18 +125,18 @@ export default function OrderForm({
 
         {moreHref && (
           <div className="text-center">
-            <Link href={moreHref} scroll={false} className="inline-flex h-10 items-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-100">
+            <Link href={moreHref} scroll={false} className="inline-flex h-10 items-center rounded-[10px] border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-100">
               Afficher plus de produits ({total - products.length} restants)
             </Link>
           </div>
         )}
 
         {!readOnly && (
-          <div className="sticky bottom-0 -mx-4 border-t border-slate-200 bg-white/95 px-4 py-3 backdrop-blur">
+          <div className="sticky bottom-(--bottom-nav) z-20 -mx-4 border-t border-slate-200 bg-white px-4 py-3">
             <div className="mx-auto flex max-w-5xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-slate-700" aria-live="polite">
                 {selected.length} ligne{selected.length > 1 ? "s" : ""} sélectionnée{selected.length > 1 ? "s" : ""}
-                {selected.length > 0 && knownTotal !== null && <span className="ml-2 font-semibold tabular-nums text-slate-900">· ≈ {formatMoney(knownTotal)}</span>}
+                {selected.length > 0 && knownTotal !== null && <span className="font-display ml-2 text-base text-slate-900">≈ {formatMoney(knownTotal)}</span>}
                 {hasInvalid && <span className="ml-2 text-red-700">· une quantité est invalide</span>}
               </p>
               <SubmitButton pendingLabel="Enregistrement…" className={`${btnPrimary} w-full sm:w-auto`}>Vérifier la commande</SubmitButton>
@@ -178,7 +178,7 @@ function VariantInput({
             aria-label={`Retirer une unité — ${v.name}`}
             disabled={disabled || n <= 0}
             onClick={() => setQty((prev) => ({ ...prev, [v.id]: n - 1 <= 0 ? "" : String(n - 1) }))}
-            className="flex h-12 w-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-xl font-semibold text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 disabled:opacity-40"
+            className="flex h-12 w-11 items-center justify-center rounded-[10px] border border-slate-300 bg-white text-xl font-semibold text-slate-700 hover:bg-slate-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 disabled:opacity-40"
           >
             −
           </button>
@@ -192,14 +192,14 @@ function VariantInput({
             disabled={disabled}
             placeholder="0"
             onChange={(e) => setQty((prev) => ({ ...prev, [v.id]: e.target.value }))}
-            className="block h-12 w-16 rounded-xl border border-slate-300 bg-white px-1 text-center text-base tabular-nums text-slate-900 [appearance:textfield] focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/25 disabled:bg-slate-100 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+            className="block h-12 w-16 rounded-[10px] border border-slate-300 bg-white px-1 text-center text-base font-semibold tabular-nums text-slate-900 [appearance:textfield] focus:border-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-700/20 disabled:bg-slate-100 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           />
           <button
             type="button"
             aria-label={`Ajouter une unité — ${v.name}`}
             disabled={disabled}
             onClick={() => setQty((prev) => ({ ...prev, [v.id]: String(n + 1) }))}
-            className="flex h-12 w-11 items-center justify-center rounded-xl border border-emerald-700 bg-emerald-700 text-xl font-semibold text-white hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 disabled:opacity-40"
+            className="flex h-12 w-11 items-center justify-center rounded-[10px] border border-emerald-700 bg-emerald-700 text-xl font-semibold text-white hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40 disabled:opacity-40"
           >
             +
           </button>

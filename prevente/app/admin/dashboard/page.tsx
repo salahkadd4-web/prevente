@@ -83,7 +83,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
       <div className="grid gap-4 lg:grid-cols-2">
         <section className={cardCls} aria-labelledby="kpi-revenue">
           <p id="kpi-revenue" className="text-sm text-slate-600">Chiffre d&apos;affaires — {period.label}</p>
-          <p className="mt-1 text-3xl font-semibold tabular-nums text-slate-900">{formatMoney(totalRevenue)}</p>
+          <p className="mt-1 font-display text-3xl text-slate-900">{formatMoney(totalRevenue)}</p>
           <p className="mt-1 text-sm text-slate-600">
             {totalDelivered} commande{totalDelivered > 1 ? "s" : ""} livrée{totalDelivered > 1 ? "s" : ""}
           </p>
@@ -196,19 +196,19 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
 
       <section aria-label="Raccourcis" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Link href="/admin/customers" className={`${cardCls} hover:bg-slate-50`}>
-          <p className="text-3xl font-semibold tabular-nums text-slate-900">{counts.customers}</p>
+          <p className="font-display text-3xl text-slate-900">{counts.customers}</p>
           <p className="mt-1 text-sm text-slate-600">clients actifs</p>
         </Link>
         <Link href="/admin/products" className={`${cardCls} hover:bg-slate-50`}>
-          <p className="text-3xl font-semibold tabular-nums text-slate-900">{counts.products}</p>
+          <p className="font-display text-3xl text-slate-900">{counts.products}</p>
           <p className="mt-1 text-sm text-slate-600">produits actifs</p>
         </Link>
         <Link href="/admin/users" className={`${cardCls} hover:bg-slate-50`}>
-          <p className="text-3xl font-semibold tabular-nums text-slate-900">{counts.users}</p>
+          <p className="font-display text-3xl text-slate-900">{counts.users}</p>
           <p className="mt-1 text-sm text-slate-600">vendeurs et livreurs actifs</p>
         </Link>
         <Link href="/admin/stock" className={`${cardCls} hover:bg-slate-50`}>
-          <p className="text-3xl font-semibold tabular-nums text-slate-900">{stock.inStock}</p>
+          <p className="font-display text-3xl text-slate-900">{stock.inStock}</p>
           <p className="mt-1 text-sm text-slate-600">parfums en stock</p>
           <p className="mt-2 flex flex-wrap gap-1">
             {stock.outOfStock > 0 && <span className={`${badgeCls} ${badgeTone.expired}`}>{stock.outOfStock} en rupture</span>}

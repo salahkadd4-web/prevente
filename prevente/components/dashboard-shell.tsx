@@ -14,7 +14,7 @@ export default function DashboardShell({
       <AppHeader space={ROLE_LABEL[profile.role]} />
 
       <main className="mx-auto max-w-5xl px-4 py-8">
-        <h1 className="text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">{title}</h1>
+        <h1 className="font-display text-[1.75rem] leading-tight text-slate-900 sm:text-3xl">{title}</h1>
 
         <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <dl className="grid gap-4 sm:grid-cols-2">

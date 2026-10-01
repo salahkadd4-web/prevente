@@ -8,9 +8,15 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma skills sync || exit 0",
-    "test": "vitest run"
+    "test": "vitest run",
+    "icons": "node scripts/generate-app-icons.mjs && capacitor-assets generate --android",
+    "cap:sync": "cap sync android",
+    "apk": "cap sync android && cd android && .\\gradlew.bat assembleDebug"
   },
   "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.2",
     "@prisma/adapter-pg": "^7.10.0",
     "@prisma/client": "^7.10.0",
     "@supabase/ssr": "^0.12.7",
@@ -23,6 +29,8 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^8.5.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/pg": "^8.23.1",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { alertCls, btnPrimary, inputCls, labelCls } from "@/components/ui";
 import { login, type LoginState } from "@/lib/auth/actions";
 
 const initialState: LoginState = {};
@@ -40,7 +41,7 @@ export default function LoginForm() {
   return (
     <form action={formAction} className="space-y-5" noValidate>
       <div>
-        <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-slate-800">
+        <label htmlFor="email" className={labelCls}>
           Adresse email
         </label>
         <input
@@ -59,12 +60,12 @@ export default function LoginForm() {
           aria-invalid={state.error ? true : undefined}
           aria-describedby={state.error ? "login-error" : undefined}
           placeholder="nom@exemple.com"
-          className="block h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-base text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/25 disabled:bg-slate-100"
+          className={inputCls}
         />
       </div>
 
       <div>
-        <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-slate-800">
+        <label htmlFor="password" className={labelCls}>
           Mot de passe
         </label>
         <div className="relative">
@@ -78,14 +79,14 @@ export default function LoginForm() {
             aria-invalid={state.error ? true : undefined}
             aria-describedby={state.error ? "login-error" : undefined}
             placeholder="••••••••"
-            className="block h-12 w-full rounded-xl border border-slate-300 bg-white pl-4 pr-14 text-base text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-600/25 disabled:bg-slate-100"
+            className={`${inputCls} pr-14`}
           />
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
             aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
             aria-pressed={showPassword}
-            className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-slate-500 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/40"
+            className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-[10px] text-slate-500 hover:text-slate-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-700/40"
           >
             <EyeIcon hidden={showPassword} />
           </button>
@@ -96,7 +97,7 @@ export default function LoginForm() {
         <p
           id="login-error"
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          className={alertCls.error}
         >
           {state.error}
         </p>
@@ -105,7 +106,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 text-base font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600/50 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-emerald-700/70"
+        className={`${btnPrimary} flex w-full items-center justify-center gap-2 disabled:cursor-not-allowed`}
       >
         {pending && (
           <svg aria-hidden="true" viewBox="0 0 24 24" className="h-5 w-5 animate-spin" fill="none">

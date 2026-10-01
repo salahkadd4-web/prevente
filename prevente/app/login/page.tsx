@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getSessionState } from "@/lib/auth/session";
 import { isLoginNoticeKey, LOGIN_NOTICES, ROLE_HOME } from "@/lib/auth/roles";
+import { alertCls } from "@/components/ui";
 import LoginForm from "./login-form";
 
 export const metadata = {
@@ -22,40 +23,30 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const noticeIsInfo = key === "deconnecte";
 
   return (
-    <main className="flex min-h-dvh items-center justify-center bg-slate-50 px-4 py-10">
-      <div className="w-full max-w-md">
-        <div className="mb-8 flex flex-col items-center text-center">
-          <div
-            aria-hidden="true"
-            className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-700 text-2xl font-bold text-white shadow-sm"
-          >
+    <main className="flex min-h-dvh flex-col bg-slate-50">
+      {/* Bande vert camion : le seul grand moment visuel de l'application. */}
+      <div className="bg-emerald-900 px-4 pb-20 pt-14 text-white sm:pt-20">
+        <div className="mx-auto flex w-full max-w-md flex-col items-start">
+          <div aria-hidden="true" className="font-display flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-4xl text-emerald-800">
             G
           </div>
-          <h1 className="text-2xl font-semibold tracking-tight text-slate-900">
-            Grossiste Pro
-          </h1>
-          <p className="mt-1 text-sm text-slate-600">
-            Connectez-vous pour accéder à votre espace
-          </p>
+          <h1 className="font-display mt-6 text-[2.5rem] leading-none sm:text-5xl">Grossiste Pro</h1>
+          <p className="mt-3 text-base text-emerald-100/85">Commandes, tournées et livraisons</p>
         </div>
+      </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+      <div className="mx-auto -mt-12 w-full max-w-md px-4 pb-10">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-8">
+          <h2 className="font-display mb-5 text-xl text-slate-900">Connexion</h2>
           {notice && (
-            <p
-              role="status"
-              className={`mb-5 rounded-lg border px-4 py-3 text-sm ${
-                noticeIsInfo
-                  ? "border-emerald-200 bg-emerald-50 text-emerald-800"
-                  : "border-amber-200 bg-amber-50 text-amber-900"
-              }`}
-            >
+            <p role="status" className={`mb-5 ${noticeIsInfo ? alertCls.info : alertCls.warn}`}>
               {notice}
             </p>
           )}
           <LoginForm />
         </div>
 
-        <p className="mt-6 text-center text-xs text-slate-500">
+        <p className="mt-6 text-sm text-slate-500">
           Accès réservé. Les comptes sont créés par l&apos;administrateur.
         </p>
       </div>

@@ -1,0 +1,11 @@
+# Projet natif Capacitor et sources des icônes : inutiles au site.
+android
+resources
+# Ancien dossier de build imbriqué.
+prevente
+.next
+node_modules
+*.tsbuildinfo
+# Les secrets sont fournis par les variables d'environnement Vercel.
+.env
+.env.*

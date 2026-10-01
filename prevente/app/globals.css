@@ -2,15 +2,61 @@
 
 :root {
   color-scheme: light;
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #eef1ec;
+  --foreground: #152019;
+  /* Hauteur de la barre d'onglets du bas (téléphone, espaces pré-vendeur et livreur). */
+  --bottom-nav: 0px;
 }
 
+/*
+ * Identité « livrée du camion » : bandes vert camion, surface béton clair, jaune étiquette pour
+ * repérer l'endroit où l'on est. Les palettes slate et amber utilisées par toutes les pages sont
+ * redéfinies ici : les neutres tirent vers le vert, l'ambre devient le jaune des étiquettes de prix.
+ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-archivo);
+
+  --color-slate-50: #eef1ec;
+  --color-slate-100: #e3e8e1;
+  --color-slate-200: #d3dad0;
+  --color-slate-300: #b6c0b3;
+  --color-slate-400: #8a9787;
+  --color-slate-500: #5c6a5a;
+  --color-slate-600: #475446;
+  --color-slate-700: #354034;
+  --color-slate-800: #242d24;
+  --color-slate-900: #152019;
+  --color-slate-950: #0c140f;
+
+  --color-amber-50: #fff8db;
+  --color-amber-100: #ffefad;
+  --color-amber-200: #ffe17a;
+  --color-amber-300: #f7cd3b;
+  --color-amber-400: #f2b705;
+  --color-amber-500: #d49c00;
+  --color-amber-600: #a87b00;
+  --color-amber-700: #835f00;
+  --color-amber-800: #664a00;
+  --color-amber-900: #523b00;
+  --color-amber-950: #2e2100;
+
+  --color-label: #f2b705; /* jaune étiquette */
+
+  /* Rayons hiérarchisés : contrôles 10 px (lg et xl confondus), cartes 16 px (2xl). */
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.625rem;
+  /* Cartes à plat sur le fond béton : la bordure suffit. Les menus flottants gardent shadow-lg. */
+  --shadow-sm: 0 0 #0000;
+}
+
+/* Titres et chiffres : Archivo élargi, comme un panneau. */
+@utility font-display {
+  font-stretch: 118%;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
 }
 
 body {

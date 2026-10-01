@@ -45,7 +45,7 @@ export default function OrderCards({ rows, back }: { rows: OrderRow[]; back?: st
               {time && <p className="text-xs font-medium text-slate-600">{time}</p>}
             </div>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <p className="text-lg font-semibold tabular-nums text-slate-900">{formatMoney(Number(o.total))}</p>
+              <p className="font-display text-lg text-slate-900">{formatMoney(Number(o.total))}</p>
               <div className="flex flex-wrap items-center gap-2">
                 <Link href={href} className="inline-flex h-12 items-center justify-center rounded-lg border border-slate-300 bg-white px-4 text-sm font-semibold text-slate-800 hover:bg-slate-100 sm:h-10">
                   {o.status === "en_livraison" ? "Reprendre / terminer" : "Voir le détail"}
