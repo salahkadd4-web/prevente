@@ -28,7 +28,7 @@ export function formatDateTime(date: Date): string {
 
 /**
  * Transitions de statut autorisées (source de vérité côté serveur).
- *  - « assignee » n'est atteint que par l'affectation d'un livreur ;
+ *  - « assignee » n'est atteint que par l'affectation d'un livreur, ou par une livraison non effectuée ;
  *  - « en_livraison » et « livree » exigent un livreur affecté ;
  *  - « livree » et « annulee » sont définitifs (pas de retour arrière) ;
  *  - une commande livrée ne peut pas être annulée (aucun flux de retour en stock).
@@ -39,7 +39,9 @@ export const ORDER_TRANSITIONS: Record<OrderStatus, readonly OrderStatus[]> = {
   brouillon: ["en_attente", "annulee"],
   en_attente: ["assignee", "annulee"],
   assignee: ["en_livraison", "annulee"],
-  en_livraison: ["livree", "annulee"],
+  // « assignee » : livraison non effectuée (module livreur) — la commande reste affectée au même
+  // livreur pour une nouvelle tentative. L'admin ne peut pas choisir ce passage (voir changeOrderStatus).
+  en_livraison: ["livree", "annulee", "assignee"],
   livree: [],
   annulee: [],
 };

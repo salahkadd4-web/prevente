@@ -334,6 +334,40 @@ export type EnumOrderStatusNullableWithAggregatesFilter<$PrismaModel = never> = 
   _max?: Prisma.NestedEnumOrderStatusNullableFilter<$PrismaModel>
 }
 
+export type EnumDeliveryAttemptResultFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryAttemptResult | Prisma.EnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryAttemptResultFilter<$PrismaModel> | $Enums.DeliveryAttemptResult
+}
+
+export type EnumDeliveryFailureReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryFailureReason | Prisma.EnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumDeliveryFailureReasonNullableFilter<$PrismaModel> | $Enums.DeliveryFailureReason | null
+}
+
+export type EnumDeliveryAttemptResultWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryAttemptResult | Prisma.EnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryAttemptResultWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryAttemptResult
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryAttemptResultFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryAttemptResultFilter<$PrismaModel>
+}
+
+export type EnumDeliveryFailureReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryFailureReason | Prisma.EnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumDeliveryFailureReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryFailureReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryFailureReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryFailureReasonNullableFilter<$PrismaModel>
+}
+
 export type EnumWorkDayStatusFilter<$PrismaModel = never> = {
   equals?: $Enums.WorkDayStatus | Prisma.EnumWorkDayStatusFieldRefInput<$PrismaModel>
   in?: $Enums.WorkDayStatus[] | Prisma.ListEnumWorkDayStatusFieldRefInput<$PrismaModel>
@@ -729,6 +763,40 @@ export type NestedEnumOrderStatusNullableWithAggregatesFilter<$PrismaModel = nev
   _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOrderStatusNullableFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOrderStatusNullableFilter<$PrismaModel>
+}
+
+export type NestedEnumDeliveryAttemptResultFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryAttemptResult | Prisma.EnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryAttemptResultFilter<$PrismaModel> | $Enums.DeliveryAttemptResult
+}
+
+export type NestedEnumDeliveryFailureReasonNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryFailureReason | Prisma.EnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumDeliveryFailureReasonNullableFilter<$PrismaModel> | $Enums.DeliveryFailureReason | null
+}
+
+export type NestedEnumDeliveryAttemptResultWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryAttemptResult | Prisma.EnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  in?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DeliveryAttemptResult[] | Prisma.ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDeliveryAttemptResultWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryAttemptResult
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryAttemptResultFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryAttemptResultFilter<$PrismaModel>
+}
+
+export type NestedEnumDeliveryFailureReasonNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DeliveryFailureReason | Prisma.EnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  in?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.DeliveryFailureReason[] | Prisma.ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumDeliveryFailureReasonNullableWithAggregatesFilter<$PrismaModel> | $Enums.DeliveryFailureReason | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDeliveryFailureReasonNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDeliveryFailureReasonNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumWorkDayStatusFilter<$PrismaModel = never> = {

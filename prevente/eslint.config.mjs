@@ -9,6 +9,7 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    "**/.next/**", // dossier de build imbriqué (prevente/prevente/.next) versionné par erreur
     "out/**",
     "build/**",
     "next-env.d.ts",

@@ -62,6 +62,7 @@ export const ModelName = {
   OrderItem: 'OrderItem',
   OrderStatusHistory: 'OrderStatusHistory',
   OrderAssignment: 'OrderAssignment',
+  DeliveryAttempt: 'DeliveryAttempt',
   StockAdjustment: 'StockAdjustment',
   OrderItemAllocation: 'OrderItemAllocation',
   CustomerSchedule: 'CustomerSchedule',
@@ -244,6 +245,21 @@ export const OrderAssignmentScalarFieldEnum = {
 } as const
 
 export type OrderAssignmentScalarFieldEnum = (typeof OrderAssignmentScalarFieldEnum)[keyof typeof OrderAssignmentScalarFieldEnum]
+
+
+export const DeliveryAttemptScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  driverId: 'driverId',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  result: 'result',
+  failureReason: 'failureReason',
+  comment: 'comment',
+  createdAt: 'createdAt'
+} as const
+
+export type DeliveryAttemptScalarFieldEnum = (typeof DeliveryAttemptScalarFieldEnum)[keyof typeof DeliveryAttemptScalarFieldEnum]
 
 
 export const StockAdjustmentScalarFieldEnum = {

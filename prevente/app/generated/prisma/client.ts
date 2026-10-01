@@ -109,6 +109,17 @@ export type OrderStatusHistory = Prisma.OrderStatusHistoryModel
  */
 export type OrderAssignment = Prisma.OrderAssignmentModel
 /**
+ * Model DeliveryAttempt
+ * Tentatives de livraison (migration 007), append-only : une ligne par tentative, jamais écrasée.
+ * - « Commencer la livraison » crée une ligne `en_cours` (au plus une par commande, index partiel) ;
+ * - « Confirmer » la passe à `livree` (au plus une par commande, index partiel : pas de double
+ * comptage du chiffre d'affaires livré) ;
+ * - « Livraison non effectuée » la passe à `echec` avec un motif (comment obligatoire si « autre »).
+ * Le chiffre d'affaires livré d'un livreur = Σ des lignes des commandes ayant une tentative `livree`
+ * de ce livreur sur la période (ended_at) : jamais depuis un statut envoyé par le navigateur.
+ */
+export type DeliveryAttempt = Prisma.DeliveryAttemptModel
+/**
  * Model StockAdjustment
  * Journal append-only des corrections manuelles d'inventaire d'un lot.
  */

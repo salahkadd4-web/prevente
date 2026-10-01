@@ -67,3 +67,24 @@ export const NoOrderReason = {
 } as const
 
 export type NoOrderReason = (typeof NoOrderReason)[keyof typeof NoOrderReason]
+
+
+export const DeliveryAttemptResult = {
+  en_cours: 'en_cours',
+  livree: 'livree',
+  echec: 'echec',
+  interrompue: 'interrompue'
+} as const
+
+export type DeliveryAttemptResult = (typeof DeliveryAttemptResult)[keyof typeof DeliveryAttemptResult]
+
+
+export const DeliveryFailureReason = {
+  client_absent: 'client_absent',
+  client_refuse: 'client_refuse',
+  adresse_introuvable: 'adresse_introuvable',
+  client_injoignable: 'client_injoignable',
+  autre: 'autre'
+} as const
+
+export type DeliveryFailureReason = (typeof DeliveryFailureReason)[keyof typeof DeliveryFailureReason]

@@ -43,7 +43,10 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/o
     : [];
   const current = order.assignments.find((a) => a.unassignedAt === null);
   // « Assignée » ne se choisit pas ici : elle résulte de l'affectation d'un livreur.
-  const nextStatuses = ORDER_TRANSITIONS[order.status].filter((s) => s !== "assignee");
+  // Commande d'une journée de pré-vendeur : « En attente » ne s'obtient que par la clôture de la journée.
+  const nextStatuses = ORDER_TRANSITIONS[order.status].filter(
+    (s) => s !== "assignee" && !(order.workDayId && order.status === "brouillon" && s === "en_attente"),
+  );
   const total = orderTotal(order.items);
   const backQuery = rawBack && SAFE_BACK.test(rawBack) ? rawBack : "";
 

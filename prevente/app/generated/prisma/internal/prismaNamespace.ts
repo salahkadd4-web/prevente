@@ -408,6 +408,7 @@ export const ModelName = {
   OrderItem: 'OrderItem',
   OrderStatusHistory: 'OrderStatusHistory',
   OrderAssignment: 'OrderAssignment',
+  DeliveryAttempt: 'DeliveryAttempt',
   StockAdjustment: 'StockAdjustment',
   OrderItemAllocation: 'OrderItemAllocation',
   CustomerSchedule: 'CustomerSchedule',
@@ -429,7 +430,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "profile" | "category" | "product" | "productVariant" | "stockLot" | "customer" | "customerPhoto" | "order" | "orderItem" | "orderStatusHistory" | "orderAssignment" | "stockAdjustment" | "orderItemAllocation" | "customerSchedule" | "workDay" | "workDayCustomer" | "visit"
+    modelProps: "profile" | "category" | "product" | "productVariant" | "stockLot" | "customer" | "customerPhoto" | "order" | "orderItem" | "orderStatusHistory" | "orderAssignment" | "deliveryAttempt" | "stockAdjustment" | "orderItemAllocation" | "customerSchedule" | "workDay" | "workDayCustomer" | "visit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1247,6 +1248,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DeliveryAttempt: {
+      payload: Prisma.$DeliveryAttemptPayload<ExtArgs>
+      fields: Prisma.DeliveryAttemptFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeliveryAttemptFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeliveryAttemptFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>
+        }
+        findFirst: {
+          args: Prisma.DeliveryAttemptFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeliveryAttemptFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>
+        }
+        findMany: {
+          args: Prisma.DeliveryAttemptFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>[]
+        }
+        create: {
+          args: Prisma.DeliveryAttemptCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>
+        }
+        createMany: {
+          args: Prisma.DeliveryAttemptCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeliveryAttemptCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>[]
+        }
+        delete: {
+          args: Prisma.DeliveryAttemptDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>
+        }
+        update: {
+          args: Prisma.DeliveryAttemptUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeliveryAttemptDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeliveryAttemptUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeliveryAttemptUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeliveryAttemptUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeliveryAttemptPayload>
+        }
+        aggregate: {
+          args: Prisma.DeliveryAttemptAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeliveryAttempt>
+        }
+        groupBy: {
+          args: Prisma.DeliveryAttemptGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryAttemptGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeliveryAttemptCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeliveryAttemptCountAggregateOutputType> | number
+        }
+      }
+    }
     StockAdjustment: {
       payload: Prisma.$StockAdjustmentPayload<ExtArgs>
       fields: Prisma.StockAdjustmentFieldRefs
@@ -1890,6 +1965,21 @@ export const OrderAssignmentScalarFieldEnum = {
 export type OrderAssignmentScalarFieldEnum = (typeof OrderAssignmentScalarFieldEnum)[keyof typeof OrderAssignmentScalarFieldEnum]
 
 
+export const DeliveryAttemptScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  driverId: 'driverId',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  result: 'result',
+  failureReason: 'failureReason',
+  comment: 'comment',
+  createdAt: 'createdAt'
+} as const
+
+export type DeliveryAttemptScalarFieldEnum = (typeof DeliveryAttemptScalarFieldEnum)[keyof typeof DeliveryAttemptScalarFieldEnum]
+
+
 export const StockAdjustmentScalarFieldEnum = {
   id: 'id',
   lotId: 'lotId',
@@ -2086,6 +2176,34 @@ export type EnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Pris
  * Reference to a field of type 'OrderStatus[]'
  */
 export type ListEnumOrderStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'OrderStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryAttemptResult'
+ */
+export type EnumDeliveryAttemptResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryAttemptResult'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryAttemptResult[]'
+ */
+export type ListEnumDeliveryAttemptResultFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryAttemptResult[]'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryFailureReason'
+ */
+export type EnumDeliveryFailureReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryFailureReason'>
+    
+
+
+/**
+ * Reference to a field of type 'DeliveryFailureReason[]'
+ */
+export type ListEnumDeliveryFailureReasonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DeliveryFailureReason[]'>
     
 
 
@@ -2320,6 +2438,7 @@ export type GlobalOmitConfig = {
   orderItem?: Prisma.OrderItemOmit
   orderStatusHistory?: Prisma.OrderStatusHistoryOmit
   orderAssignment?: Prisma.OrderAssignmentOmit
+  deliveryAttempt?: Prisma.DeliveryAttemptOmit
   stockAdjustment?: Prisma.StockAdjustmentOmit
   orderItemAllocation?: Prisma.OrderItemAllocationOmit
   customerSchedule?: Prisma.CustomerScheduleOmit

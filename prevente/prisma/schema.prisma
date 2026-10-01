@@ -91,6 +91,30 @@ enum NoOrderReason {
   @@schema("public")
 }
 
+/// Module livreur (migration 007). « en_cours » = livraison démarrée, pas encore terminée.
+/// « interrompue » = tentative laissée ouverte puis reprise par un autre livreur après réaffectation
+/// par l'admin (ni livrée ni échec du livreur : exclue des compteurs d'échecs).
+enum DeliveryAttemptResult {
+  en_cours
+  livree
+  echec
+  interrompue
+
+  @@map("delivery_attempt_result")
+  @@schema("public")
+}
+
+enum DeliveryFailureReason {
+  client_absent
+  client_refuse
+  adresse_introuvable
+  client_injoignable
+  autre
+
+  @@map("delivery_failure_reason")
+  @@schema("public")
+}
+
 // -----------------------------------------------------------------------------
 // Utilisateurs (Supabase Auth reste la source d'authentification)
 // -----------------------------------------------------------------------------
@@ -116,6 +140,7 @@ model Profile {
   workDays            WorkDay[]
   visits              Visit[]
   customerSchedules   CustomerSchedule[]
+  deliveryAttempts    DeliveryAttempt[]
 
   @@map("profiles")
   @@schema("public")
@@ -139,20 +164,20 @@ model Category {
 }
 
 model Product {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String
-  description String?
-  categoryId  String?  @map("category_id") @db.Uuid
-  saleUnit    SaleUnit @map("sale_unit")
-  isActive    Boolean  @default(true) @map("is_active")
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name           String
+  description    String?
+  categoryId     String?  @map("category_id") @db.Uuid
+  saleUnit       SaleUnit @map("sale_unit")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
   /// Photo du produit lui-même (migration 004) — utile pour un produit sans parfum.
-  imagePublicId   String? @map("image_public_id")
-  imageSecureUrl  String? @map("image_secure_url")
+  imagePublicId  String?  @map("image_public_id")
+  imageSecureUrl String?  @map("image_secure_url")
   /// Prix de vente catalogue par unité de vente (migration 005). NULL = non défini.
   /// Défaut du produit ; un parfum peut définir le sien (ProductVariant.salePrice).
-  salePrice       Decimal? @map("sale_price") @db.Decimal(12, 2)
+  salePrice      Decimal? @map("sale_price") @db.Decimal(12, 2)
 
   category Category?        @relation(fields: [categoryId], references: [id], onDelete: Restrict, onUpdate: NoAction)
   variants ProductVariant[]
@@ -239,12 +264,12 @@ model Customer {
   createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  createdBy Profile         @relation(fields: [createdById], references: [id], onDelete: Restrict, onUpdate: NoAction)
-  photos    CustomerPhoto[]
-  orders    Order[]
-  schedules CustomerSchedule[]
+  createdBy      Profile            @relation(fields: [createdById], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  photos         CustomerPhoto[]
+  orders         Order[]
+  schedules      CustomerSchedule[]
   workDayEntries WorkDayCustomer[]
-  visits    Visit[]
+  visits         Visit[]
 
   @@index([createdById])
   @@index([businessName])
@@ -294,20 +319,21 @@ model Order {
   createdAt   DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt   DateTime    @updatedAt @map("updated_at") @db.Timestamptz(6)
 
-  workDay       WorkDay?             @relation(fields: [workDayId], references: [id], onDelete: Restrict, onUpdate: NoAction)
-  visit         Visit?               @relation(fields: [visitId], references: [id], onDelete: Restrict, onUpdate: NoAction)
-  customer      Customer             @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
-  createdBy     Profile              @relation("OrderCreatedBy", fields: [createdById], references: [id], onDelete: Restrict, onUpdate: NoAction)
-  items         OrderItem[]
-  statusHistory OrderStatusHistory[]
-  assignments   OrderAssignment[]
+  workDay          WorkDay?             @relation(fields: [workDayId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  visit            Visit?               @relation(fields: [visitId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  customer         Customer             @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  createdBy        Profile              @relation("OrderCreatedBy", fields: [createdById], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  items            OrderItem[]
+  statusHistory    OrderStatusHistory[]
+  assignments      OrderAssignment[]
+  deliveryAttempts DeliveryAttempt[]
 
+  @@unique([visitId], map: "orders_one_active_per_visit_key", where: raw("(visit_id IS NOT NULL AND status <> 'annulee')"))
   @@index([status])
   @@index([customerId])
   @@index([createdById])
   @@index([createdAt])
   @@index([workDayId])
-  @@unique([visitId], map: "orders_one_active_per_visit_key", where: raw("(visit_id IS NOT NULL AND status <> 'annulee')"))
   @@map("orders")
   @@schema("public")
 }
@@ -375,6 +401,37 @@ model OrderAssignment {
   @@index([driverId, unassignedAt])
   @@index([assignedById])
   @@map("order_assignments")
+  @@schema("public")
+}
+
+/// Tentatives de livraison (migration 007), append-only : une ligne par tentative, jamais écrasée.
+///  - « Commencer la livraison » crée une ligne `en_cours` (au plus une par commande, index partiel) ;
+///  - « Confirmer » la passe à `livree` (au plus une par commande, index partiel : pas de double
+///    comptage du chiffre d'affaires livré) ;
+///  - « Livraison non effectuée » la passe à `echec` avec un motif (comment obligatoire si « autre »).
+/// Le chiffre d'affaires livré d'un livreur = Σ des lignes des commandes ayant une tentative `livree`
+/// de ce livreur sur la période (ended_at) : jamais depuis un statut envoyé par le navigateur.
+model DeliveryAttempt {
+  id            String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId       String                 @map("order_id") @db.Uuid
+  driverId      String                 @map("driver_id") @db.Uuid
+  startedAt     DateTime               @default(now()) @map("started_at") @db.Timestamptz(6)
+  /// NULL tant que la tentative est `en_cours` (CHECK SQL).
+  endedAt       DateTime?              @map("ended_at") @db.Timestamptz(6)
+  result        DeliveryAttemptResult  @default(en_cours)
+  /// Renseigné si et seulement si result = echec (CHECK SQL).
+  failureReason DeliveryFailureReason? @map("failure_reason")
+  comment       String?
+  createdAt     DateTime               @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  order  Order   @relation(fields: [orderId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+  driver Profile @relation(fields: [driverId], references: [id], onDelete: Restrict, onUpdate: NoAction)
+
+  @@unique([orderId], map: "delivery_attempts_one_open_per_order_key", where: raw("(result = 'en_cours')"))
+  @@unique([orderId], map: "delivery_attempts_one_delivered_per_order_key", where: raw("(result = 'livree')"))
+  @@index([orderId, startedAt])
+  @@index([driverId, result, endedAt])
+  @@map("delivery_attempts")
   @@schema("public")
 }
 

@@ -202,6 +202,7 @@ export type ProfileWhereInput = {
   workDays?: Prisma.WorkDayListRelationFilter
   visits?: Prisma.VisitListRelationFilter
   customerSchedules?: Prisma.CustomerScheduleListRelationFilter
+  deliveryAttempts?: Prisma.DeliveryAttemptListRelationFilter
 }
 
 export type ProfileOrderByWithRelationInput = {
@@ -221,6 +222,7 @@ export type ProfileOrderByWithRelationInput = {
   workDays?: Prisma.WorkDayOrderByRelationAggregateInput
   visits?: Prisma.VisitOrderByRelationAggregateInput
   customerSchedules?: Prisma.CustomerScheduleOrderByRelationAggregateInput
+  deliveryAttempts?: Prisma.DeliveryAttemptOrderByRelationAggregateInput
 }
 
 export type ProfileWhereUniqueInput = Prisma.AtLeast<{
@@ -243,6 +245,7 @@ export type ProfileWhereUniqueInput = Prisma.AtLeast<{
   workDays?: Prisma.WorkDayListRelationFilter
   visits?: Prisma.VisitListRelationFilter
   customerSchedules?: Prisma.CustomerScheduleListRelationFilter
+  deliveryAttempts?: Prisma.DeliveryAttemptListRelationFilter
 }, "id">
 
 export type ProfileOrderByWithAggregationInput = {
@@ -286,6 +289,7 @@ export type ProfileCreateInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateInput = {
@@ -305,6 +309,7 @@ export type ProfileUncheckedCreateInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUpdateInput = {
@@ -324,6 +329,7 @@ export type ProfileUpdateInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateInput = {
@@ -343,6 +349,7 @@ export type ProfileUncheckedUpdateInput = {
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateManyInput = {
@@ -500,6 +507,20 @@ export type ProfileUpdateOneRequiredWithoutAssignmentsMadeNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutAssignmentsMadeInput, Prisma.ProfileUpdateWithoutAssignmentsMadeInput>, Prisma.ProfileUncheckedUpdateWithoutAssignmentsMadeInput>
 }
 
+export type ProfileCreateNestedOneWithoutDeliveryAttemptsInput = {
+  create?: Prisma.XOR<Prisma.ProfileCreateWithoutDeliveryAttemptsInput, Prisma.ProfileUncheckedCreateWithoutDeliveryAttemptsInput>
+  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutDeliveryAttemptsInput
+  connect?: Prisma.ProfileWhereUniqueInput
+}
+
+export type ProfileUpdateOneRequiredWithoutDeliveryAttemptsNestedInput = {
+  create?: Prisma.XOR<Prisma.ProfileCreateWithoutDeliveryAttemptsInput, Prisma.ProfileUncheckedCreateWithoutDeliveryAttemptsInput>
+  connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutDeliveryAttemptsInput
+  upsert?: Prisma.ProfileUpsertWithoutDeliveryAttemptsInput
+  connect?: Prisma.ProfileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProfileUpdateToOneWithWhereWithoutDeliveryAttemptsInput, Prisma.ProfileUpdateWithoutDeliveryAttemptsInput>, Prisma.ProfileUncheckedUpdateWithoutDeliveryAttemptsInput>
+}
+
 export type ProfileCreateNestedOneWithoutStockAdjustmentsInput = {
   create?: Prisma.XOR<Prisma.ProfileCreateWithoutStockAdjustmentsInput, Prisma.ProfileUncheckedCreateWithoutStockAdjustmentsInput>
   connectOrCreate?: Prisma.ProfileCreateOrConnectWithoutStockAdjustmentsInput
@@ -572,6 +593,7 @@ export type ProfileCreateWithoutCustomersCreatedInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutCustomersCreatedInput = {
@@ -590,6 +612,7 @@ export type ProfileUncheckedCreateWithoutCustomersCreatedInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutCustomersCreatedInput = {
@@ -624,6 +647,7 @@ export type ProfileUpdateWithoutCustomersCreatedInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutCustomersCreatedInput = {
@@ -642,6 +666,7 @@ export type ProfileUncheckedUpdateWithoutCustomersCreatedInput = {
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateWithoutCustomerPhotosAddedInput = {
@@ -660,6 +685,7 @@ export type ProfileCreateWithoutCustomerPhotosAddedInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutCustomerPhotosAddedInput = {
@@ -678,6 +704,7 @@ export type ProfileUncheckedCreateWithoutCustomerPhotosAddedInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutCustomerPhotosAddedInput = {
@@ -712,6 +739,7 @@ export type ProfileUpdateWithoutCustomerPhotosAddedInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutCustomerPhotosAddedInput = {
@@ -730,6 +758,7 @@ export type ProfileUncheckedUpdateWithoutCustomerPhotosAddedInput = {
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateWithoutOrdersCreatedInput = {
@@ -748,6 +777,7 @@ export type ProfileCreateWithoutOrdersCreatedInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutOrdersCreatedInput = {
@@ -766,6 +796,7 @@ export type ProfileUncheckedCreateWithoutOrdersCreatedInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutOrdersCreatedInput = {
@@ -800,6 +831,7 @@ export type ProfileUpdateWithoutOrdersCreatedInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutOrdersCreatedInput = {
@@ -818,6 +850,7 @@ export type ProfileUncheckedUpdateWithoutOrdersCreatedInput = {
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateWithoutStatusChangesInput = {
@@ -836,6 +869,7 @@ export type ProfileCreateWithoutStatusChangesInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutStatusChangesInput = {
@@ -854,6 +888,7 @@ export type ProfileUncheckedCreateWithoutStatusChangesInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutStatusChangesInput = {
@@ -888,6 +923,7 @@ export type ProfileUpdateWithoutStatusChangesInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutStatusChangesInput = {
@@ -906,6 +942,7 @@ export type ProfileUncheckedUpdateWithoutStatusChangesInput = {
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateWithoutAssignmentsAsDriverInput = {
@@ -924,6 +961,7 @@ export type ProfileCreateWithoutAssignmentsAsDriverInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutAssignmentsAsDriverInput = {
@@ -942,6 +980,7 @@ export type ProfileUncheckedCreateWithoutAssignmentsAsDriverInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutAssignmentsAsDriverInput = {
@@ -965,6 +1004,7 @@ export type ProfileCreateWithoutAssignmentsMadeInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutAssignmentsMadeInput = {
@@ -983,6 +1023,7 @@ export type ProfileUncheckedCreateWithoutAssignmentsMadeInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutAssignmentsMadeInput = {
@@ -1017,6 +1058,7 @@ export type ProfileUpdateWithoutAssignmentsAsDriverInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutAssignmentsAsDriverInput = {
@@ -1035,6 +1077,7 @@ export type ProfileUncheckedUpdateWithoutAssignmentsAsDriverInput = {
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUpsertWithoutAssignmentsMadeInput = {
@@ -1064,6 +1107,7 @@ export type ProfileUpdateWithoutAssignmentsMadeInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutAssignmentsMadeInput = {
@@ -1077,6 +1121,99 @@ export type ProfileUncheckedUpdateWithoutAssignmentsMadeInput = {
   customerPhotosAdded?: Prisma.CustomerPhotoUncheckedUpdateManyWithoutAddedByNestedInput
   ordersCreated?: Prisma.OrderUncheckedUpdateManyWithoutCreatedByNestedInput
   assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
+  statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
+  workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
+  visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
+  customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
+}
+
+export type ProfileCreateWithoutDeliveryAttemptsInput = {
+  id: string
+  fullName: string
+  role?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customersCreated?: Prisma.CustomerCreateNestedManyWithoutCreatedByInput
+  customerPhotosAdded?: Prisma.CustomerPhotoCreateNestedManyWithoutAddedByInput
+  ordersCreated?: Prisma.OrderCreateNestedManyWithoutCreatedByInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentCreateNestedManyWithoutDriverInput
+  assignmentsMade?: Prisma.OrderAssignmentCreateNestedManyWithoutAssignedByInput
+  statusChanges?: Prisma.OrderStatusHistoryCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
+  workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
+  visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
+  customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+}
+
+export type ProfileUncheckedCreateWithoutDeliveryAttemptsInput = {
+  id: string
+  fullName: string
+  role?: string
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  customersCreated?: Prisma.CustomerUncheckedCreateNestedManyWithoutCreatedByInput
+  customerPhotosAdded?: Prisma.CustomerPhotoUncheckedCreateNestedManyWithoutAddedByInput
+  ordersCreated?: Prisma.OrderUncheckedCreateNestedManyWithoutCreatedByInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutDriverInput
+  assignmentsMade?: Prisma.OrderAssignmentUncheckedCreateNestedManyWithoutAssignedByInput
+  statusChanges?: Prisma.OrderStatusHistoryUncheckedCreateNestedManyWithoutChangedByInput
+  stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
+  workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
+  visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
+  customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+}
+
+export type ProfileCreateOrConnectWithoutDeliveryAttemptsInput = {
+  where: Prisma.ProfileWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProfileCreateWithoutDeliveryAttemptsInput, Prisma.ProfileUncheckedCreateWithoutDeliveryAttemptsInput>
+}
+
+export type ProfileUpsertWithoutDeliveryAttemptsInput = {
+  update: Prisma.XOR<Prisma.ProfileUpdateWithoutDeliveryAttemptsInput, Prisma.ProfileUncheckedUpdateWithoutDeliveryAttemptsInput>
+  create: Prisma.XOR<Prisma.ProfileCreateWithoutDeliveryAttemptsInput, Prisma.ProfileUncheckedCreateWithoutDeliveryAttemptsInput>
+  where?: Prisma.ProfileWhereInput
+}
+
+export type ProfileUpdateToOneWithWhereWithoutDeliveryAttemptsInput = {
+  where?: Prisma.ProfileWhereInput
+  data: Prisma.XOR<Prisma.ProfileUpdateWithoutDeliveryAttemptsInput, Prisma.ProfileUncheckedUpdateWithoutDeliveryAttemptsInput>
+}
+
+export type ProfileUpdateWithoutDeliveryAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customersCreated?: Prisma.CustomerUpdateManyWithoutCreatedByNestedInput
+  customerPhotosAdded?: Prisma.CustomerPhotoUpdateManyWithoutAddedByNestedInput
+  ordersCreated?: Prisma.OrderUpdateManyWithoutCreatedByNestedInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentUpdateManyWithoutDriverNestedInput
+  assignmentsMade?: Prisma.OrderAssignmentUpdateManyWithoutAssignedByNestedInput
+  statusChanges?: Prisma.OrderStatusHistoryUpdateManyWithoutChangedByNestedInput
+  stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
+  workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
+  visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
+  customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+}
+
+export type ProfileUncheckedUpdateWithoutDeliveryAttemptsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.StringFieldUpdateOperationsInput | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  customersCreated?: Prisma.CustomerUncheckedUpdateManyWithoutCreatedByNestedInput
+  customerPhotosAdded?: Prisma.CustomerPhotoUncheckedUpdateManyWithoutAddedByNestedInput
+  ordersCreated?: Prisma.OrderUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignmentsAsDriver?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutDriverNestedInput
+  assignmentsMade?: Prisma.OrderAssignmentUncheckedUpdateManyWithoutAssignedByNestedInput
   statusChanges?: Prisma.OrderStatusHistoryUncheckedUpdateManyWithoutChangedByNestedInput
   stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
@@ -1100,6 +1237,7 @@ export type ProfileCreateWithoutStockAdjustmentsInput = {
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutStockAdjustmentsInput = {
@@ -1118,6 +1256,7 @@ export type ProfileUncheckedCreateWithoutStockAdjustmentsInput = {
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutStockAdjustmentsInput = {
@@ -1152,6 +1291,7 @@ export type ProfileUpdateWithoutStockAdjustmentsInput = {
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutStockAdjustmentsInput = {
@@ -1170,6 +1310,7 @@ export type ProfileUncheckedUpdateWithoutStockAdjustmentsInput = {
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateWithoutCustomerSchedulesInput = {
@@ -1188,6 +1329,7 @@ export type ProfileCreateWithoutCustomerSchedulesInput = {
   stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutCustomerSchedulesInput = {
@@ -1206,6 +1348,7 @@ export type ProfileUncheckedCreateWithoutCustomerSchedulesInput = {
   stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutCustomerSchedulesInput = {
@@ -1240,6 +1383,7 @@ export type ProfileUpdateWithoutCustomerSchedulesInput = {
   stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutCustomerSchedulesInput = {
@@ -1258,6 +1402,7 @@ export type ProfileUncheckedUpdateWithoutCustomerSchedulesInput = {
   stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateWithoutWorkDaysInput = {
@@ -1276,6 +1421,7 @@ export type ProfileCreateWithoutWorkDaysInput = {
   stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
   visits?: Prisma.VisitCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutWorkDaysInput = {
@@ -1294,6 +1440,7 @@ export type ProfileUncheckedCreateWithoutWorkDaysInput = {
   stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
   visits?: Prisma.VisitUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutWorkDaysInput = {
@@ -1328,6 +1475,7 @@ export type ProfileUpdateWithoutWorkDaysInput = {
   stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
   visits?: Prisma.VisitUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutWorkDaysInput = {
@@ -1346,6 +1494,7 @@ export type ProfileUncheckedUpdateWithoutWorkDaysInput = {
   stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
   visits?: Prisma.VisitUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileCreateWithoutVisitsInput = {
@@ -1364,6 +1513,7 @@ export type ProfileCreateWithoutVisitsInput = {
   stockAdjustments?: Prisma.StockAdjustmentCreateNestedManyWithoutChangedByInput
   workDays?: Prisma.WorkDayCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileUncheckedCreateWithoutVisitsInput = {
@@ -1382,6 +1532,7 @@ export type ProfileUncheckedCreateWithoutVisitsInput = {
   stockAdjustments?: Prisma.StockAdjustmentUncheckedCreateNestedManyWithoutChangedByInput
   workDays?: Prisma.WorkDayUncheckedCreateNestedManyWithoutVendeurInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedCreateNestedManyWithoutVendeurInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedCreateNestedManyWithoutDriverInput
 }
 
 export type ProfileCreateOrConnectWithoutVisitsInput = {
@@ -1416,6 +1567,7 @@ export type ProfileUpdateWithoutVisitsInput = {
   stockAdjustments?: Prisma.StockAdjustmentUpdateManyWithoutChangedByNestedInput
   workDays?: Prisma.WorkDayUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUpdateManyWithoutDriverNestedInput
 }
 
 export type ProfileUncheckedUpdateWithoutVisitsInput = {
@@ -1434,6 +1586,7 @@ export type ProfileUncheckedUpdateWithoutVisitsInput = {
   stockAdjustments?: Prisma.StockAdjustmentUncheckedUpdateManyWithoutChangedByNestedInput
   workDays?: Prisma.WorkDayUncheckedUpdateManyWithoutVendeurNestedInput
   customerSchedules?: Prisma.CustomerScheduleUncheckedUpdateManyWithoutVendeurNestedInput
+  deliveryAttempts?: Prisma.DeliveryAttemptUncheckedUpdateManyWithoutDriverNestedInput
 }
 
 
@@ -1452,6 +1605,7 @@ export type ProfileCountOutputType = {
   workDays: number
   visits: number
   customerSchedules: number
+  deliveryAttempts: number
 }
 
 export type ProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1465,6 +1619,7 @@ export type ProfileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extension
   workDays?: boolean | ProfileCountOutputTypeCountWorkDaysArgs
   visits?: boolean | ProfileCountOutputTypeCountVisitsArgs
   customerSchedules?: boolean | ProfileCountOutputTypeCountCustomerSchedulesArgs
+  deliveryAttempts?: boolean | ProfileCountOutputTypeCountDeliveryAttemptsArgs
 }
 
 /**
@@ -1547,6 +1702,13 @@ export type ProfileCountOutputTypeCountCustomerSchedulesArgs<ExtArgs extends run
   where?: Prisma.CustomerScheduleWhereInput
 }
 
+/**
+ * ProfileCountOutputType without action
+ */
+export type ProfileCountOutputTypeCountDeliveryAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeliveryAttemptWhereInput
+}
+
 
 export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1565,6 +1727,7 @@ export type ProfileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   workDays?: boolean | Prisma.Profile$workDaysArgs<ExtArgs>
   visits?: boolean | Prisma.Profile$visitsArgs<ExtArgs>
   customerSchedules?: boolean | Prisma.Profile$customerSchedulesArgs<ExtArgs>
+  deliveryAttempts?: boolean | Prisma.Profile$deliveryAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.ProfileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["profile"]>
 
@@ -1607,6 +1770,7 @@ export type ProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   workDays?: boolean | Prisma.Profile$workDaysArgs<ExtArgs>
   visits?: boolean | Prisma.Profile$visitsArgs<ExtArgs>
   customerSchedules?: boolean | Prisma.Profile$customerSchedulesArgs<ExtArgs>
+  deliveryAttempts?: boolean | Prisma.Profile$deliveryAttemptsArgs<ExtArgs>
   _count?: boolean | Prisma.ProfileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ProfileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1625,6 +1789,7 @@ export type $ProfilePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     workDays: Prisma.$WorkDayPayload<ExtArgs>[]
     visits: Prisma.$VisitPayload<ExtArgs>[]
     customerSchedules: Prisma.$CustomerSchedulePayload<ExtArgs>[]
+    deliveryAttempts: Prisma.$DeliveryAttemptPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -2037,6 +2202,7 @@ export interface Prisma__ProfileClient<T, Null = never, ExtArgs extends runtime.
   workDays<T extends Prisma.Profile$workDaysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$workDaysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorkDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   visits<T extends Prisma.Profile$visitsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$visitsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VisitPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   customerSchedules<T extends Prisma.Profile$customerSchedulesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$customerSchedulesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CustomerSchedulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deliveryAttempts<T extends Prisma.Profile$deliveryAttemptsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profile$deliveryAttemptsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeliveryAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2702,6 +2868,30 @@ export type Profile$customerSchedulesArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.CustomerScheduleScalarFieldEnum | Prisma.CustomerScheduleScalarFieldEnum[]
+}
+
+/**
+ * Profile.deliveryAttempts
+ */
+export type Profile$deliveryAttemptsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeliveryAttempt
+   */
+  select?: Prisma.DeliveryAttemptSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeliveryAttempt
+   */
+  omit?: Prisma.DeliveryAttemptOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeliveryAttemptInclude<ExtArgs> | null
+  where?: Prisma.DeliveryAttemptWhereInput
+  orderBy?: Prisma.DeliveryAttemptOrderByWithRelationInput | Prisma.DeliveryAttemptOrderByWithRelationInput[]
+  cursor?: Prisma.DeliveryAttemptWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeliveryAttemptScalarFieldEnum | Prisma.DeliveryAttemptScalarFieldEnum[]
 }
 
 /**

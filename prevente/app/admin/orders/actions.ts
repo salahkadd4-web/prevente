@@ -25,6 +25,11 @@ async function lockOrder(tx: Parameters<Parameters<typeof prisma.$transaction>[0
   return rows[0]?.status ?? null;
 }
 
+/** Journée de pré-vendeur d'origine (null = commande créée hors module pré-vendeur). */
+async function orderWorkDayId(tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0], id: string) {
+  return (await tx.order.findUnique({ where: { id }, select: { workDayId: true } }))?.workDayId ?? null;
+}
+
 class Refusal extends Error {}
 
 /** Table absente : la migration 003 n'a pas encore été appliquée. */
@@ -60,11 +65,25 @@ export async function changeOrderStatus(_: ActionResult, formData: FormData): Pr
       }
 
       if (from === "brouillon" && to === "en_attente") {
+        // Commande d'une journée de pré-vendeur : seule la clôture de la journée la transmet (après
+        // confirmation par le pré-vendeur), jamais une validation admin anticipée.
+        if (await orderWorkDayId(tx, id)) {
+          throw new Refusal("Cette commande sera transmise automatiquement à la clôture de la journée du pré-vendeur.");
+        }
         const lines = await tx.orderItem.count({ where: { orderId: id } });
         if (lines === 0) throw new Refusal("Une commande sans ligne ne peut pas être validée.");
         await reserveStockForOrder(tx, id);
       }
       if (to === "annulee") await releaseStockForOrder(tx, id);
+
+      // Livraison en cours terminée par l'admin (annulée ou livrée à la main) : la tentative du livreur
+      // est refermée « interrompue » (ni livrée ni échec du livreur), sinon elle resterait ouverte à vie.
+      if (from === "en_livraison") {
+        await tx.deliveryAttempt.updateMany({
+          where: { orderId: id, result: "en_cours" },
+          data: { result: "interrompue", endedAt: new Date() },
+        });
+      }
 
       await tx.order.update({ where: { id }, data: { status: to } });
       await tx.orderStatusHistory.create({

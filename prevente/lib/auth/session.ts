@@ -104,3 +104,16 @@ export async function requireVendeurAction(): Promise<Profile> {
   }
   return state.profile;
 }
+
+/**
+ * À appeler en tête de CHAQUE Server Action du module livreur (et de toute lecture exposée par une
+ * action) : le rôle est relu côté serveur depuis le profil authentifié. Lève une erreur si
+ * l'appelant n'est pas un livreur actif.
+ */
+export async function requireLivreurAction(): Promise<Profile> {
+  const state = await getSessionState();
+  if (state.status !== "ok" || state.profile.role !== "livreur") {
+    throw new Error("Accès refusé");
+  }
+  return state.profile;
+}
