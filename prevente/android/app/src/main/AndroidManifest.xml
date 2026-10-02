@@ -29,6 +29,16 @@
         </provider>
     </application>
 
+    <!--
+      Android 11+ : sans cette déclaration, l'application ne « voit » pas l'appareil photo et Capacitor
+      retombe sur le sélecteur de fichiers pour <input type="file" capture> (bouton « Prendre une photo »).
+    -->
+    <queries>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
+
     <!-- Permissions -->
 
     <uses-permission android:name="android.permission.INTERNET" />
