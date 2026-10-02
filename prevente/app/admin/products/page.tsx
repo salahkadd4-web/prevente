@@ -1,6 +1,5 @@
 import Link from "next/link";
 import AdminShell from "@/components/admin-shell";
-import CollapsibleSection from "@/components/collapsible-section";
 import EmptyState from "@/components/empty-state";
 import FilterChips from "@/components/filter-chips";
 import LiveSearch from "@/components/live-search";
@@ -9,13 +8,12 @@ import ToggleActiveForm from "@/components/admin/toggle-active-form";
 import { badgeCls, badgeTone, btnGhost, cardCls } from "@/components/ui";
 import type { Prisma } from "@/app/generated/prisma/client";
 import { requireRole } from "@/lib/auth/session";
-import { DEFAULT_FLAVOR_NAME, SALE_UNITS, SALE_UNIT_LABEL, itemLabel } from "@/lib/catalog";
-import { formatDateTime } from "@/lib/orders";
+import { DEFAULT_FLAVOR_NAME, SALE_UNITS, SALE_UNIT_LABEL } from "@/lib/catalog";
 import { effectiveSalePrice } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
 import { alertLimitDate, expiryInfo } from "@/lib/stock/expiry";
 import { productQuantity } from "@/lib/stock/quantity";
-import { createProduct, setProductActive } from "./actions";
+import { setProductActive } from "./actions";
 import NewProductForm from "./new-product-form";
 
 export const metadata = { title: "Produits et stock · Grossiste Pro" };
@@ -90,20 +88,12 @@ export default async function Page({ searchParams }: PageProps<"/admin/products"
   const qtyByVariant = new Map(stock.map((s) => [s.variantId, s._sum.availableQuantity ?? 0]));
   const expiryByVariant = new Map(stock.map((s) => [s.variantId, s._min.expiresAt]));
 
-  // Journal des corrections : dépend de la migration 003 — la page reste utilisable sans elle.
-  let adjustments: Awaited<ReturnType<typeof loadAdjustments>> | null = null;
-  try {
-    adjustments = await loadAdjustments();
-  } catch {
-    adjustments = null;
-  }
-
   const filtered = filter !== "all" || q !== "";
 
   return (
     <AdminShell current="products" title="Produits et stock">
       <section className={cardCls}>
-        <NewProductForm action={createProduct} units={SALE_UNITS.map((u) => ({ value: u, label: SALE_UNIT_LABEL[u] }))} />
+        <NewProductForm units={SALE_UNITS.map((u) => ({ value: u, label: SALE_UNIT_LABEL[u] }))} />
 
         <div className="mt-4">
           <FilterChips
@@ -187,40 +177,6 @@ export default async function Page({ searchParams }: PageProps<"/admin/products"
           </div>
         )}
       </section>
-
-      <section className={cardCls}>
-        <CollapsibleSection label="Journal des corrections de stock" hint="20 dernières">
-          {adjustments === null ? (
-            <p className="text-sm text-amber-900">Journal indisponible : la migration 003 (traçabilité du stock) n&apos;est pas encore appliquée sur la base.</p>
-          ) : adjustments.length === 0 ? (
-            <p className="text-sm text-slate-500">Aucune correction enregistrée.</p>
-          ) : (
-            <ul className="space-y-2">
-              {adjustments.map((a) => (
-                <li key={a.id} className="rounded-lg border border-slate-200 p-3 text-sm">
-                  <p className="text-slate-900">
-                    {itemLabel(a.lot.variant.product.name, a.lot.variant.name)}{a.lot.lotNumber ? ` · lot ${a.lot.lotNumber}` : ""} :{" "}
-                    <strong>{a.previousQuantity} → {a.newQuantity}</strong>
-                  </p>
-                  <p className="text-xs text-slate-500">{formatDateTime(a.createdAt)} · {a.changedBy.fullName}</p>
-                  <p className="mt-1 text-slate-600">Motif : {a.reason}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-        </CollapsibleSection>
-      </section>
     </AdminShell>
   );
-}
-
-function loadAdjustments() {
-  return prisma.stockAdjustment.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 20,
-    include: {
-      changedBy: { select: { fullName: true } },
-      lot: { select: { lotNumber: true, variant: { select: { name: true, product: { select: { name: true } } } } } },
-    },
-  });
 }
