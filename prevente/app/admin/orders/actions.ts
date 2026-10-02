@@ -14,7 +14,8 @@ function refresh(orderId: string) {
   revalidatePath("/admin/orders");
   revalidatePath(`/admin/orders/${orderId}`);
   revalidatePath("/admin/dashboard");
-  revalidatePath("/admin/stock");
+  revalidatePath("/admin/products");
+  revalidatePath("/admin/products/[id]", "page");
 }
 
 /** Verrouille la ligne de commande pour la durée de la transaction (sérialise les actions concurrentes). */

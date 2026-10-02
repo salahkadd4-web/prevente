@@ -33,7 +33,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
   return (
     <AdminShell current="dashboard" title={`Bonjour ${profile.full_name}`}>
       {alerts > 0 && (
-        <Link href="/admin/stock?filter=soon" className={`${alertCls.warn} flex items-center gap-3`}>
+        <Link href="/admin/products?filter=soon" className={`${alertCls.warn} flex items-center gap-3`}>
           <span aria-hidden="true" className="text-xl">⚠</span>
           <span className="flex-1">
             {stock.expired > 0 && (
@@ -207,7 +207,7 @@ export default async function Page({ searchParams }: PageProps<"/admin/dashboard
           <p className="font-display text-3xl text-slate-900">{counts.users}</p>
           <p className="mt-1 text-sm text-slate-600">vendeurs et livreurs actifs</p>
         </Link>
-        <Link href="/admin/stock" className={`${cardCls} hover:bg-slate-50`}>
+        <Link href="/admin/products?filter=available" className={`${cardCls} hover:bg-slate-50`}>
           <p className="font-display text-3xl text-slate-900">{stock.inStock}</p>
           <p className="mt-1 text-sm text-slate-600">parfums en stock</p>
           <p className="mt-2 flex flex-wrap gap-1">

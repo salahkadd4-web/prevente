@@ -180,7 +180,8 @@ export async function closeDay(_: ActionResult, formData: FormData): Promise<Act
 
   refresh(dayId);
   revalidatePath("/admin/dashboard");
-  revalidatePath("/admin/stock");
+  revalidatePath("/admin/products");
+  revalidatePath("/admin/products/[id]", "page");
   return { ok: "Journée clôturée. Les commandes validées sont transmises." };
 }
 

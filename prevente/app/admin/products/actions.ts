@@ -1,8 +1,8 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/prisma";
 import { requireAdminAction } from "@/lib/auth/session";
+import { revalidateCatalog } from "@/lib/admin/revalidate";
 import { deleteImage, uploadImage } from "@/lib/cloudinary";
 import { isSaleUnit } from "@/lib/catalog";
 import { validateJpeg } from "@/lib/image-upload";
@@ -10,12 +10,14 @@ import { isUniqueViolation, isUuid, optionalText, text, type ActionResult } from
 import { parseMoney } from "@/lib/money";
 
 const done = (ok: string): ActionResult => {
-  revalidatePath("/admin/products");
-  revalidatePath("/admin/stock");
+  revalidateCatalog();
   return { ok };
 };
 
-export async function createProduct(_: ActionResult, formData: FormData): Promise<ActionResult> {
+/** Résultat de createProduct : `id` permet d'ouvrir directement les détails ; `photoFailed` si l'envoi de la photo a échoué. */
+export type CreateProductResult = ActionResult & { id?: string; photoFailed?: boolean };
+
+export async function createProduct(_: ActionResult, formData: FormData): Promise<CreateProductResult> {
   await requireAdminAction();
   const name = text(formData, "name");
   const unit = text(formData, "saleUnit");
@@ -24,10 +26,35 @@ export async function createProduct(_: ActionResult, formData: FormData): Promis
   const price = parseMoney(text(formData, "salePrice"), "Prix de vente");
   if ("error" in price) return { error: price.error };
 
-  await prisma.product.create({
+  // Photo facultative à la création (prise ou choisie dans l'application) : validée AVANT de créer le produit.
+  const file = formData.get("image");
+  const hasImage = file instanceof File && file.size > 0;
+  if (hasImage) {
+    const invalid = await validateJpeg(file);
+    if (invalid) return { error: invalid };
+  }
+
+  const product = await prisma.product.create({
     data: { name, saleUnit: unit, description: optionalText(formData, "description"), salePrice: price.value },
+    select: { id: true },
   });
-  return done("Produit ajouté.");
+
+  if (hasImage) {
+    try {
+      const uploaded = await uploadImage(file as File, "prevente/products");
+      try {
+        await prisma.product.update({ where: { id: product.id }, data: { imagePublicId: uploaded.publicId, imageSecureUrl: uploaded.secureUrl } });
+      } catch (e) {
+        await deleteImage(uploaded.publicId).catch(() => {}); // pas de fichier orphelin
+        throw e;
+      }
+    } catch (e) {
+      console.error("[createProduct:image]", e instanceof Error ? e.message : e);
+      // Le produit existe : on ne le perd pas, la photo se rajoute depuis ses détails.
+      return { ...done("Produit ajouté, mais la photo n'a pas pu être enregistrée."), id: product.id, photoFailed: true };
+    }
+  }
+  return { ...done("Produit ajouté."), id: product.id };
 }
 
 export async function updateProduct(_: ActionResult, formData: FormData): Promise<ActionResult> {
@@ -135,8 +162,7 @@ export async function setVariantImage(_: ActionResult, formData: FormData): Prom
   }
   if (variant.imagePublicId) await deleteImage(variant.imagePublicId).catch(() => {}); // ancienne photo
 
-  revalidatePath("/admin/products");
-  revalidatePath("/admin/stock"); // vignettes de la page Stock
+  revalidateCatalog();
   return { ok: "Photo enregistrée." };
 }
 
@@ -157,8 +183,7 @@ export async function removeVariantImage(_: ActionResult, formData: FormData): P
     }
   }
   await prisma.productVariant.update({ where: { id }, data: { imagePublicId: null, imageSecureUrl: null } });
-  revalidatePath("/admin/products");
-  revalidatePath("/admin/stock"); // vignettes de la page Stock
+  revalidateCatalog();
   return { ok: "Photo supprimée." };
 }
 
@@ -204,8 +229,7 @@ export async function setProductImage(_: ActionResult, formData: FormData): Prom
   }
   if (product.imagePublicId) await deleteImage(product.imagePublicId).catch(() => {}); // ancienne photo
 
-  revalidatePath("/admin/products");
-  revalidatePath("/admin/stock"); // vignettes de la page Stock
+  revalidateCatalog();
   return { ok: "Photo du produit enregistrée." };
 }
 
@@ -233,7 +257,6 @@ export async function removeProductImage(_: ActionResult, formData: FormData): P
     }
   }
   await prisma.product.update({ where: { id }, data: { imagePublicId: null, imageSecureUrl: null } });
-  revalidatePath("/admin/products");
-  revalidatePath("/admin/stock"); // vignettes de la page Stock
+  revalidateCatalog();
   return { ok: "Photo du produit supprimée." };
 }

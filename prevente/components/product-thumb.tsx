@@ -1,6 +1,6 @@
 import { thumbUrl } from "@/lib/catalog";
 
-export const THUMB_SIZE = { 10: "h-10 w-10", 12: "h-12 w-12" } as const;
+export const THUMB_SIZE = { 10: "h-10 w-10", 12: "h-12 w-12", 16: "h-16 w-16" } as const;
 export type ThumbSize = keyof typeof THUMB_SIZE;
 
 /** Vignette carrée d'un produit ou d'un parfum (miniature Cloudinary), ou case vide sans photo. */
