@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import ActionForm from "@/components/action-form";
 import LiveSearch from "@/components/live-search";
+import PhotoZoom from "@/components/photo-zoom";
 import SubmitButton from "@/components/submit-button";
 import { badgeCls, badgeTone, btnPrimary, cardCls } from "@/components/ui";
 import { saveOrderDraft } from "@/app/vendeur/actions";
@@ -27,7 +28,8 @@ export type FormProduct = {
   variants: FormVariant[];
 };
 
-function Thumb({ url, size = 48 }: { url: string | null; size?: number }) {
+/** Vignette ; avec une photo, un appui l'ouvre en grand. */
+function Thumb({ url, label, size = 48 }: { url: string | null; label: string; size?: number }) {
   if (!url) {
     return (
       <span aria-hidden="true" style={{ width: size, height: size }} className="flex shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400">
@@ -36,8 +38,10 @@ function Thumb({ url, size = 48 }: { url: string | null; size?: number }) {
     );
   }
   return (
-    // eslint-disable-next-line @next/next/no-img-element -- miniature Cloudinary déjà optimisée
-    <img src={thumbUrl(url, size * 2)} alt="" width={size} height={size} loading="lazy" className="shrink-0 rounded-lg object-cover" style={{ width: size, height: size }} />
+    <PhotoZoom url={url} label={label}>
+      {/* eslint-disable-next-line @next/next/no-img-element -- miniature Cloudinary déjà optimisée */}
+      <img src={thumbUrl(url, size * 2)} alt="" width={size} height={size} loading="lazy" className="shrink-0 rounded-lg object-cover" style={{ width: size, height: size }} />
+    </PhotoZoom>
   );
 }
 
@@ -99,7 +103,7 @@ export default function OrderForm({
               return (
                 <li key={p.id} className={cardCls}>
                   <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-                    <Thumb url={p.imageUrl ?? (single ? p.variants[0].imageUrl : null)} />
+                    <Thumb url={p.imageUrl ?? (single ? p.variants[0].imageUrl : null)} label={p.name} />
                     <div className="min-w-0 flex-1 basis-32">
                       <p className="truncate font-medium text-slate-900">{p.name}</p>
                       <p className="text-xs text-slate-500">{p.unitLabel}</p>
@@ -110,7 +114,7 @@ export default function OrderForm({
                     <ul className="mt-3 divide-y divide-slate-100 border-t border-slate-100">
                       {p.variants.map((v) => (
                         <li key={v.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 py-2">
-                          <Thumb url={v.imageUrl ?? p.imageUrl} size={40} />
+                          <Thumb url={v.imageUrl ?? p.imageUrl} label={`${p.name} — ${v.name}`} size={40} />
                           <span className="min-w-0 flex-1 basis-24 truncate text-sm font-medium text-slate-800">{v.name}</span>
                           <VariantInput v={v} unit={p.unitLabel} qty={qty} setQty={setQty} readOnly={readOnly} compact />
                         </li>

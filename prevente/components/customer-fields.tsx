@@ -1,3 +1,4 @@
+import MapsLinkInput from "@/components/maps-link-input";
 import { inputCls, labelCls } from "@/components/ui";
 
 type Values = { businessName?: string; phone?: string | null; address?: string; googleMapsUrl?: string | null; notes?: string | null };
@@ -20,7 +21,7 @@ export default function CustomerFields({ prefix, v = {} }: { prefix: string; v?:
       </div>
       <div className="sm:col-span-2">
         <label htmlFor={`${prefix}-maps`} className={labelCls}>Lien Google Maps (facultatif)</label>
-        <input id={`${prefix}-maps`} name="googleMapsUrl" type="url" inputMode="url" placeholder="https://maps.app.goo.gl/…" defaultValue={v.googleMapsUrl ?? ""} className={inputCls} />
+        <MapsLinkInput id={`${prefix}-maps`} defaultValue={v.googleMapsUrl ?? ""} />
       </div>
       <div className="sm:col-span-2">
         <label htmlFor={`${prefix}-notes`} className={labelCls}>Notes (facultatif)</label>

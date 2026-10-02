@@ -4,16 +4,19 @@ import { useId, useState } from "react";
 
 /**
  * Ligne repliable accessible. `summary` (toujours visible) est DANS le bouton ; les actions
- * (modifier, désactiver…) sont passées à part dans `actions`, hors du bouton : un clic dessus
+ * (modifier, désactiver…) sont passées à part dans `actions` (ou `leading`, avant), hors du bouton : un clic dessus
  * n'ouvre ni ne ferme les détails. `children` = détails, rendus côté serveur puis affichés/masqués.
  */
 export default function ExpandableRow({
   summary,
+  leading,
   actions,
   children,
   label,
 }: {
   summary: React.ReactNode;
+  /** Élément interactif placé avant le bouton (ex. vignette photo modifiable) : hors du bouton, comme `actions`. */
+  leading?: React.ReactNode;
   actions?: React.ReactNode;
   children: React.ReactNode;
   /** Nom accessible de l'élément (ex. le nom du produit). */
@@ -25,6 +28,7 @@ export default function ExpandableRow({
   return (
     <div>
       <div className="flex items-center gap-2">
+        {leading && <div className="shrink-0 pl-2">{leading}</div>}
         <button
           type="button"
           aria-expanded={open}

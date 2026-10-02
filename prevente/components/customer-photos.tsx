@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useTransition } from "react";
+import PhotoSourceButtons from "@/components/photo-source-buttons";
 import { useRouter } from "next/navigation";
 import type { ActionResult } from "@/lib/form";
 import { btnGhost } from "@/components/ui";
@@ -25,7 +26,6 @@ export default function CustomerPhotos({
   removeAction: Action;
 }) {
   const router = useRouter();
-  const input = useRef<HTMLInputElement>(null);
   const nextKey = useRef(0);
   const [staged, setStaged] = useState<Staged[]>([]);
   const [messages, setMessages] = useState<{ tone: "error" | "ok"; text: string }[]>([]);
@@ -36,7 +36,6 @@ export default function CustomerPhotos({
 
   async function onPick(files: FileList | null) {
     const picked = Array.from(files ?? []);
-    if (input.current) input.current.value = "";
     if (picked.length === 0) return;
     const problems: { tone: "error"; text: string }[] = [];
     const ready: Staged[] = [];
@@ -140,12 +139,9 @@ export default function CustomerPhotos({
         </div>
       )}
 
-      <div className="mt-4">
-        <input ref={input} type="file" accept="image/*" multiple hidden onChange={(e) => onPick(e.target.files)} />
-        <button type="button" disabled={pending || room - staged.length <= 0} onClick={() => input.current?.click()} className={btnGhost}>
-          Ajouter des photos
-        </button>
-        <span className="ml-2 text-xs text-slate-500">{photos.length} / {maxPhotos}</span>
+      <div className="mt-4 flex flex-wrap items-center gap-2">
+        <PhotoSourceButtons onPick={onPick} multiple disabled={pending || room - staged.length <= 0} />
+        <span className="text-xs text-slate-500">{photos.length} / {maxPhotos}</span>
       </div>
 
       {messages.map((m, i) => (

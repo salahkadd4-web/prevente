@@ -136,6 +136,7 @@ export async function setVariantImage(_: ActionResult, formData: FormData): Prom
   if (variant.imagePublicId) await deleteImage(variant.imagePublicId).catch(() => {}); // ancienne photo
 
   revalidatePath("/admin/products");
+  revalidatePath("/admin/stock"); // vignettes de la page Stock
   return { ok: "Photo enregistrée." };
 }
 
@@ -157,6 +158,7 @@ export async function removeVariantImage(_: ActionResult, formData: FormData): P
   }
   await prisma.productVariant.update({ where: { id }, data: { imagePublicId: null, imageSecureUrl: null } });
   revalidatePath("/admin/products");
+  revalidatePath("/admin/stock"); // vignettes de la page Stock
   return { ok: "Photo supprimée." };
 }
 
@@ -203,6 +205,7 @@ export async function setProductImage(_: ActionResult, formData: FormData): Prom
   if (product.imagePublicId) await deleteImage(product.imagePublicId).catch(() => {}); // ancienne photo
 
   revalidatePath("/admin/products");
+  revalidatePath("/admin/stock"); // vignettes de la page Stock
   return { ok: "Photo du produit enregistrée." };
 }
 
@@ -231,5 +234,6 @@ export async function removeProductImage(_: ActionResult, formData: FormData): P
   }
   await prisma.product.update({ where: { id }, data: { imagePublicId: null, imageSecureUrl: null } });
   revalidatePath("/admin/products");
+  revalidatePath("/admin/stock"); // vignettes de la page Stock
   return { ok: "Photo du produit supprimée." };
 }

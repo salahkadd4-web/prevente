@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import PhotoZoom from "@/components/photo-zoom";
 import VendeurShell from "@/components/vendeur/vendeur-shell";
 import { ConfirmOrderForm } from "@/components/vendeur/visit-actions";
 import { btnGhost, cardCls } from "@/components/ui";
@@ -62,8 +63,10 @@ export default async function Page({ params }: PageProps<"/vendeur/jour/[dayId]/
             return (
               <li key={item.id} className="flex items-center gap-3 py-3">
                 {img ? (
-                  // eslint-disable-next-line @next/next/no-img-element -- miniature Cloudinary déjà optimisée
-                  <img src={thumbUrl(img, 96)} alt="" width={48} height={48} loading="lazy" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+                  <PhotoZoom url={img} label={itemLabel(item.productNameSnapshot, item.flavorNameSnapshot)}>
+                    {/* eslint-disable-next-line @next/next/no-img-element -- miniature Cloudinary déjà optimisée */}
+                    <img src={thumbUrl(img, 96)} alt="" width={48} height={48} loading="lazy" className="h-12 w-12 shrink-0 rounded-lg object-cover" />
+                  </PhotoZoom>
                 ) : (
                   <span aria-hidden="true" className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-xs text-slate-400">—</span>
                 )}

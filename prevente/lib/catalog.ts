@@ -21,6 +21,11 @@ export function thumbUrl(secureUrl: string, size = 96): string {
   return secureUrl.replace("/upload/", `/upload/c_fill,w_${size},h_${size},q_auto,f_auto/`);
 }
 
+/** Photo en grand (sans recadrage, largeur limitée), pour l'agrandissement plein écran. */
+export function photoUrl(secureUrl: string, maxSide = 1200): string {
+  return secureUrl.replace("/upload/", `/upload/c_limit,w_${maxSide},h_${maxSide},q_auto,f_auto/`);
+}
+
 /**
  * Nom du parfum technique créé automatiquement pour un produit SANS parfum : le stock et
  * les commandes se rattachent toujours à un parfum, cette variante unique en tient lieu.
